@@ -43,6 +43,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tvmenu = new System.Windows.Forms.TreeView();
             this.panlesep = new System.Windows.Forms.Panel();
+            this.businessGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -51,7 +52,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.businessGroupToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(813, 24);
@@ -176,6 +178,13 @@
             this.panlesep.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseMove);
             this.panlesep.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseUp);
             // 
+            // businessGroupToolStripMenuItem
+            // 
+            this.businessGroupToolStripMenuItem.Name = "businessGroupToolStripMenuItem";
+            this.businessGroupToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
+            this.businessGroupToolStripMenuItem.Text = "Business Group";
+            this.businessGroupToolStripMenuItem.Click += new System.EventHandler(this.businessGroupToolStripMenuItem_Click);
+            // 
             // FRM_MAIN
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,5 +232,6 @@
         private System.Windows.Forms.Panel panlesep;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel lbluserid;
+        private System.Windows.Forms.ToolStripMenuItem businessGroupToolStripMenuItem;
     }
 }

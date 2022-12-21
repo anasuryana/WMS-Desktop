@@ -190,7 +190,7 @@ namespace SMTCSHARP
                                 row.CreateCell(0).SetCellValue(rw["RETSCN_DATE"].ToString());
                                 row.CreateCell(1).SetCellValue(rw["RETSCN_SPLDOC"].ToString());
                                 row.CreateCell(2).SetCellValue(rw["RETSCN_ITMCD"].ToString());
-                                row.CreateCell(3).SetCellValue(rw["RTNQTY"].ToString().Substring(0, 1) == "." ? "0" : Convert.ToDouble(rw["RTNQTY"]).ToString("#,#"));
+                                row.CreateCell(3).SetCellValue(rw["RTNQTY"].ToString().Substring(0, 1) == "." ? "0" :rw["RTNQTY"].ToString());
                                 row.CreateCell(4).SetCellValue(rw["REFFDOC"].ToString());
                                 rowx++;
                             }                 

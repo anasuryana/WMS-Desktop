@@ -6,11 +6,13 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
+using NPOI.XSSF.UserModel;
+using NPOI.SS.UserModel;
+using System.IO;
 
 namespace SMTCSHARP
 {
@@ -38,7 +40,7 @@ namespace SMTCSHARP
 
         void initcolumn()
         {
-            dGV.ColumnCount = 9;
+            dGV.ColumnCount = 10;            
             dGV.Columns[0].Name = "ID";
             dGV.Columns[1].Name = "Line";
             dGV.Columns[1].Width = 45;
@@ -46,13 +48,14 @@ namespace SMTCSHARP
             dGV.Columns[2].Width = 120;
             dGV.Columns[3].Name = "Description";
             dGV.Columns[3].Width = 150;
-            dGV.Columns[4].Name = "SPT No";
+            dGV.Columns[4].Name = "Item Name";
             dGV.Columns[5].Name = "Lot No";
             dGV.Columns[6].Name = "Old QTY";
             dGV.Columns[6].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dGV.Columns[7].Name = "New QTY";
             dGV.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dGV.Columns[8].Name = "Rack";
+            dGV.Columns[9].Name = "Date";
 
             foreach (DataGridViewColumn column in dGV.Columns)
             {
@@ -187,7 +190,7 @@ namespace SMTCSHARP
                     string url = mserverAddress + "/RETPRD/rtn_without_psn";
                     string myparam = String.Format("itmcd={0}&oldqty={1}&newqty={2}&lotnum={3}&usrid={4}", txt3N1.Text,txt3N2.Text,txtActualQty.Text,txtLotNum.Text, ASettings.getmyuserid());
                     myparam = myparam.Replace("+", "%2B");
-                    string res = wc.UploadString(url, myparam);                    
+                    string res = wc.UploadString(url, myparam);
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     string msg = (string)res_jes["status"][0]["msg"];                    
@@ -222,27 +225,36 @@ namespace SMTCSHARP
         {
             using (WebClient wc = new WebClient())
             {
+                string txtdt1 = dt1.Value.ToString("yyyy-MM-dd");
+                string txtdt2 = dt2.Value.ToString("yyyy-MM-dd");
+                string txtitemcd = txtSearchItemcd.Text;
+                string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list_period?date1={0}&date2={1}&itemcd={2}&business={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
                 try
-                {
-                    string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list").ToString();
+                {                    
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
                     dGV.Rows.Clear();
+                    List<DataGridViewRow> rows = new List<DataGridViewRow>();
                     foreach (var rw in rsdata)
                     {
-                        dGV.Rows.Add(rw["RETRM_DOC"]
-                        , rw["RETRM_LINE"]
-                        , rw["RETRM_ITMCD"]
-                        , rw["ITMD1"]
-                        , rw["SPTNO"]
-                        , rw["RETRM_LOTNUM"]
-                        , Convert.ToDouble(rw["RETRM_OLDQTY"]).ToString("#,#")
-                        , Convert.ToDouble(rw["RETRM_NEWQTY"]).ToString("#,#")
-                        , rw["ITMLOC_LOC"]
-                        , false
-                        , "Cancel");
+                        DataGridViewRow row = new DataGridViewRow();
+                        row.CreateCells(dGV);
+                        row.Cells[0].Value = rw["RETRM_DOC"];
+                        row.Cells[1].Value = rw["RETRM_LINE"];
+                        row.Cells[2].Value = rw["RETRM_ITMCD"];
+                        row.Cells[3].Value = rw["ITMD1"];
+                        row.Cells[4].Value = rw["SPTNO"];
+                        row.Cells[5].Value = rw["RETRM_LOTNUM"];
+                        row.Cells[6].Value = Convert.ToDouble(rw["RETRM_OLDQTY"]).ToString("#,#");
+                        row.Cells[7].Value = Convert.ToDouble(rw["RETRM_NEWQTY"]).ToString("#,#");
+                        row.Cells[8].Value = rw["ITMLOC_LOC"];
+                        row.Cells[9].Value = rw["RETRM_CREATEDAT"];
+                        row.Cells[10].Value = false;
+                        row.Cells[11].Value = "Cancel";
+                        rows.Add(row);
                     }
+                    dGV.Rows.AddRange(rows.ToArray());
                 }
                 catch (Exception ex)
                 {
@@ -431,6 +443,109 @@ namespace SMTCSHARP
                             break;                       
                     }
                     break;
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            string txtdt1 = dt1.Value.ToString("yyyy-MM-dd");
+            string txtdt2 = dt2.Value.ToString("yyyy-MM-dd");
+            string txtitemcd = txtSearchItemcd.Text;
+            using (WebClient wc = new WebClient())
+            {
+                string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list_period?date1={0}&date2={1}&itemcd={2}&business={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
+                try
+                {                    
+                    var res = wc.DownloadString(url);
+                    
+                    JObject res_jes = JObject.Parse(res);
+                    var rsdata = from p in res_jes["data"] select p;
+                    dGV.Rows.Clear();
+                    List<DataGridViewRow> rows = new List<DataGridViewRow>();
+                    foreach (var rw in rsdata)
+                    {
+                        DataGridViewRow row = new DataGridViewRow();
+                        row.CreateCells(dGV);
+                        row.Cells[0].Value = rw["RETRM_DOC"];
+                        row.Cells[1].Value = rw["RETRM_LINE"];
+                        row.Cells[2].Value = rw["RETRM_ITMCD"];
+                        row.Cells[3].Value = rw["ITMD1"];
+                        row.Cells[4].Value = rw["SPTNO"];
+                        row.Cells[5].Value = rw["RETRM_LOTNUM"];
+                        row.Cells[6].Value = Convert.ToDouble(rw["RETRM_OLDQTY"]).ToString("#,#");
+                        row.Cells[7].Value = Convert.ToDouble(rw["RETRM_NEWQTY"]).ToString("#,#");
+                        row.Cells[8].Value = rw["ITMLOC_LOC"];
+                        row.Cells[9].Value = rw["RETRM_CREATEDAT"];
+                        row.Cells[10].Value = false;
+                        row.Cells[11].Value = "Cancel";
+                        rows.Add(row);                        
+                    }
+                    dGV.Rows.AddRange(rows.ToArray());
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(url);
+                    MessageBox.Show(ex.Message);
+                }
+            }
+        }
+
+        private void btnexport_Click(object sender, EventArgs e)
+        {
+            string txtdt1 = dt1.Value.ToString("yyyy-MM-dd");
+            string txtdt2 = dt2.Value.ToString("yyyy-MM-dd");
+            FolderBrowserDialog folderDlg = new FolderBrowserDialog();
+            DialogResult result = folderDlg.ShowDialog();
+            string selectedPath = folderDlg.SelectedPath;            
+            using (WebClient wc = new WebClient())
+            {
+                try
+                {
+                    string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list_period?date1={0}&date2={1}&itemcd=&business={2}", txtdt1, txtdt2,ASettings.getmyBusinessGroup()).ToString();
+                    var res = wc.DownloadString(url);
+                    JObject res_jes = JObject.Parse(res);
+                    var rsdata = from p in res_jes["data"] select p;
+
+                    using (var fs = new FileStream(selectedPath + "\\Return Without PSN " + txtdt1 + " to " + txtdt2 + ".xlsx", FileMode.Create, FileAccess.Write))
+                    {
+                        IWorkbook workbook = new XSSFWorkbook();
+                        ISheet sheet = workbook.CreateSheet("RET-WITHOUT-PSN");
+                        IRow row = sheet.CreateRow(0);
+                        int rowx = 0;
+                        row = sheet.CreateRow(rowx);
+                        row.CreateCell(0).SetCellValue("ID");
+                        row.CreateCell(1).SetCellValue("Line");
+                        row.CreateCell(2).SetCellValue("Item Code");
+                        row.CreateCell(3).SetCellValue("Description");
+                        row.CreateCell(4).SetCellValue("Item Name");
+                        row.CreateCell(5).SetCellValue("Lot No");
+                        row.CreateCell(6).SetCellValue("Old QTY");
+                        row.CreateCell(7).SetCellValue("New QTY");
+                        row.CreateCell(8).SetCellValue("Rack");
+                        row.CreateCell(9).SetCellValue("Date");
+                        rowx = 1;
+                        foreach (var rw in rsdata)
+                        {
+                            row = sheet.CreateRow(rowx);
+                            row.CreateCell(0).SetCellValue(rw["RETRM_DOC"].ToString());
+                            row.CreateCell(1).SetCellValue(rw["RETRM_LINE"].ToString());
+                            row.CreateCell(2).SetCellValue(rw["RETRM_ITMCD"].ToString());
+                            row.CreateCell(3).SetCellValue(rw["ITMD1"].ToString());
+                            row.CreateCell(4).SetCellValue(rw["SPTNO"].ToString());
+                            row.CreateCell(5).SetCellValue(rw["RETRM_LOTNUM"].ToString());
+                            row.CreateCell(6).SetCellValue(rw["RETRM_OLDQTY"].ToString());
+                            row.CreateCell(7).SetCellValue(rw["RETRM_NEWQTY"].ToString());
+                            row.CreateCell(8).SetCellValue(rw["ITMLOC_LOC"].ToString());
+                            rowx++;
+                        }
+                        workbook.Write(fs);                        
+                    }
+                    MessageBox.Show("Saved successfully");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
             }
         }
     }

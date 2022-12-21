@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FReturnWithoutPSN));
             this.label1 = new System.Windows.Forms.Label();
             this.cmbLoc = new System.Windows.Forms.ComboBox();
@@ -46,7 +47,18 @@
             this.btnreturnprint = new System.Windows.Forms.Button();
             this.btnsave = new System.Windows.Forms.Button();
             this.btnNew = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.dt2 = new System.Windows.Forms.DateTimePicker();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dt1 = new System.Windows.Forms.DateTimePicker();
+            this.btnexport = new System.Windows.Forms.Button();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtSearchItemcd = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -79,7 +91,7 @@
             // 
             this.btnsetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnsetting.Image = ((System.Drawing.Image)(resources.GetObject("btnsetting.Image")));
-            this.btnsetting.Location = new System.Drawing.Point(610, 23);
+            this.btnsetting.Location = new System.Drawing.Point(839, 23);
             this.btnsetting.Name = "btnsetting";
             this.btnsetting.Size = new System.Drawing.Size(33, 26);
             this.btnsetting.TabIndex = 57;
@@ -95,7 +107,7 @@
             this.dGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV.Location = new System.Drawing.Point(6, 246);
             this.dGV.Name = "dGV";
-            this.dGV.Size = new System.Drawing.Size(637, 229);
+            this.dGV.Size = new System.Drawing.Size(866, 229);
             this.dGV.TabIndex = 58;
             this.dGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellClick);
             // 
@@ -227,12 +239,114 @@
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.txtSearchItemcd);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.btnexport);
+            this.groupBox1.Controls.Add(this.btnSearch);
+            this.groupBox1.Controls.Add(this.dt2);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.dt1);
+            this.groupBox1.Location = new System.Drawing.Point(581, 55);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(290, 184);
+            this.groupBox1.TabIndex = 72;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Search";
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSearch.Location = new System.Drawing.Point(6, 150);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(133, 28);
+            this.btnSearch.TabIndex = 65;
+            this.btnSearch.Text = "Search";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // dt2
+            // 
+            this.dt2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dt2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dt2.Location = new System.Drawing.Point(6, 110);
+            this.dt2.Name = "dt2";
+            this.dt2.Size = new System.Drawing.Size(133, 24);
+            this.dt2.TabIndex = 64;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(2, 87);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(25, 20);
+            this.label8.TabIndex = 63;
+            this.label8.Text = "To";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(2, 27);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(43, 20);
+            this.label7.TabIndex = 62;
+            this.label7.Text = "From";
+            // 
+            // dt1
+            // 
+            this.dt1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dt1.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dt1.Location = new System.Drawing.Point(6, 50);
+            this.dt1.Name = "dt1";
+            this.dt1.Size = new System.Drawing.Size(133, 24);
+            this.dt1.TabIndex = 0;
+            // 
+            // btnexport
+            // 
+            this.btnexport.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.btnexport.Image = ((System.Drawing.Image)(resources.GetObject("btnexport.Image")));
+            this.btnexport.Location = new System.Drawing.Point(145, 150);
+            this.btnexport.Name = "btnexport";
+            this.btnexport.Size = new System.Drawing.Size(30, 28);
+            this.btnexport.TabIndex = 73;
+            this.toolTip1.SetToolTip(this.btnexport, "Export to spreadsheet file");
+            this.btnexport.UseVisualStyleBackColor = true;
+            this.btnexport.Click += new System.EventHandler(this.btnexport_Click);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(141, 27);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(78, 20);
+            this.label9.TabIndex = 74;
+            this.label9.Text = "Item Code";
+            // 
+            // txtSearchItemcd
+            // 
+            this.txtSearchItemcd.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearchItemcd.Location = new System.Drawing.Point(145, 50);
+            this.txtSearchItemcd.Name = "txtSearchItemcd";
+            this.txtSearchItemcd.Size = new System.Drawing.Size(139, 24);
+            this.txtSearchItemcd.TabIndex = 75;
+            // 
             // FReturnWithoutPSN
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SkyBlue;
-            this.ClientSize = new System.Drawing.Size(655, 487);
+            this.ClientSize = new System.Drawing.Size(884, 487);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnreturnprint);
             this.Controls.Add(this.btnsave);
             this.Controls.Add(this.btnNew);
@@ -252,10 +366,13 @@
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
+            this.MinimumSize = new System.Drawing.Size(736, 526);
             this.Name = "FReturnWithoutPSN";
             this.Text = "Return Without PSN";
             this.Load += new System.EventHandler(this.FReturnWithoutPSN_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -280,5 +397,15 @@
         private System.Windows.Forms.Button btnreturnprint;
         private System.Windows.Forms.Button btnsave;
         private System.Windows.Forms.Button btnNew;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.DateTimePicker dt1;
+        private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.DateTimePicker dt2;
+        private System.Windows.Forms.Button btnexport;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.TextBox txtSearchItemcd;
+        private System.Windows.Forms.Label label9;
     }
 }

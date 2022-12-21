@@ -12,7 +12,6 @@ using IniParser.Model;
 using NPOI.SS.UserModel;
 using System.IO;
 using NPOI.XSSF.UserModel;
-using System.Data.SqlClient;
 
 namespace SMTCSHARP
 {
@@ -361,8 +360,7 @@ namespace SMTCSHARP
 
                     string url = txtserver.Text + "/RETPRD/editing_byitempsn_desktop";
                     string myparam = String.Format("inpsn={0}&{1}indate={2}&inuser={3}&inwh={4}", txtpsn.Text, datas, datepc.Value.ToString("yyyy-MM-dd"), ASettings.getmyuserid(), mwarehouse);
-                    string res = wc.UploadString(url, myparam);
-                    Console.WriteLine(res);
+                    string res = wc.UploadString(url, myparam);                    
                     SetTextinfo(res);
                     SetTextBtnConform("");
                     //MessageBox.Show(res);

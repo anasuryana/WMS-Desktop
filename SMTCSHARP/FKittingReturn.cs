@@ -190,8 +190,10 @@ namespace SMTCSHARP
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
                     dGV.Rows.Clear();
+                    List<DataGridViewRow> rows = new List<DataGridViewRow>();
                     foreach (var rw in rsdata)
                     {
+                        
                         string savedorno = rw["RETSCN_SAVED"].ToString();
                         string flghold = rw["FLG_HOLD"].ToString();
                         if (savedorno == "1")
@@ -209,24 +211,28 @@ namespace SMTCSHARP
                                 flghold = "RELEASE";
                             }
                         }
-                        dGV.Rows.Add(rw["RETSCN_ID"]
-                        , rw["RETSCN_SPLDOC"]
-                        , rw["RETSCN_CAT"]
-                        , rw["RETSCN_LINE"]
-                        , rw["RETSCN_FEDR"]
-                        , rw["RETSCN_ORDERNO"]
-                        , rw["RETSCN_ITMCD"]
-                        , rw["MITM_SPTNO"]
-                        , rw["RETSCN_LOT"]
-                        , Convert.ToDouble(rw["RETSCN_QTYBEF"]).ToString("#,#")
-                        , Convert.ToDouble(rw["RETSCN_QTYAFT"]).ToString("#,#")
-                        , rw["RETSCN_ROHS"]
-                        , rw["MMADE_NM"]
-                        , false
-                        , savedorno
-                        , flghold
-                        , rw["SPL_RACKNO"]);                        
+                        DataGridViewRow row = new DataGridViewRow();
+                        row.CreateCells(dGV);
+                        row.Cells[0].Value = rw["RETSCN_ID"];
+                        row.Cells[1].Value = rw["RETSCN_SPLDOC"];
+                        row.Cells[2].Value = rw["RETSCN_CAT"];
+                        row.Cells[3].Value = rw["RETSCN_LINE"];
+                        row.Cells[4].Value = rw["RETSCN_FEDR"];
+                        row.Cells[5].Value = rw["RETSCN_ORDERNO"];
+                        row.Cells[6].Value = rw["RETSCN_ITMCD"];
+                        row.Cells[7].Value = rw["MITM_SPTNO"];
+                        row.Cells[8].Value = rw["RETSCN_LOT"];
+                        row.Cells[9].Value = Convert.ToDouble(rw["RETSCN_QTYBEF"]).ToString("#,#");
+                        row.Cells[10].Value = Convert.ToDouble(rw["RETSCN_QTYAFT"]).ToString("#,#");
+                        row.Cells[11].Value = rw["RETSCN_ROHS"];
+                        row.Cells[12].Value = rw["MMADE_NM"];                        
+                        row.Cells[13].Value = false;
+                        row.Cells[14].Value = savedorno;
+                        row.Cells[15].Value = flghold;
+                        row.Cells[16].Value = rw["SPL_RACKNO"];
+                        rows.Add(row);                                          
                     }
+                    dGV.Rows.AddRange(rows.ToArray());
                 }
                 catch (Exception ex)
                 {                    
@@ -254,24 +260,13 @@ namespace SMTCSHARP
             {
                 straddres = listView1.SelectedItems[0].Text;
             }
-            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
-            //rk.SetValue("SERVER_API", txtserver.Text);            
+            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                   
             rk.SetValue("PRINTER_DARK", trackbdark.Value.ToString());
             rk.SetValue("PRINTER_TICK", trackbthick.Value.ToString());
             rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value.ToString());
             rk.SetValue("PRINTER_TYPE", type.ToString());
             rk.SetValue("PRINTER_ADDRESS", straddres);
-            rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());
-
-            //var parser = new FileIniDataParser();
-            //IniData data = parser.ReadFile("config.ini");
-            //data["PRINTER"]["TYPE"] = type.ToString();
-            //data["PRINTER"]["ADDRESS"] = straddres;
-            //data["PRINTER"]["DARKNESS"] = trackbdark.Value.ToString();
-            //data["PRINTER"]["THICKNESS"] = trackbthick.Value.ToString();
-            //data["PRINTER"]["NARROW"] = trackbnarrow.Value.ToString();
-            //data["SERVER"]["ADDRESS"] = txtserver.Text;
-            //parser.WriteFile("config.ini", data);
+            rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());           
             MessageBox.Show("Saved");
         }
 

@@ -6,7 +6,7 @@ namespace SMTCSHARP
 {
     static class ASettings
     {
-        const string myversion = "1.0.6";
+        const string myversion = "1.0.7";
         static string myuser;
         static string myuserfname;
         static string myuserid;
@@ -19,6 +19,7 @@ namespace SMTCSHARP
         static string mysuser;
         static string myspw;
         static string mysdb;
+        static string myBusinessGroup;
         static bool runsess = false;
 
         public static string getVersion()
@@ -34,6 +35,17 @@ namespace SMTCSHARP
         public static string getmyuserfname()
         {
             return myuserfname;
+        }
+
+        public static void setmyBusinessGroup(string p1)
+        {
+            myBusinessGroup = p1;
+        }
+
+        public static string getmyBusinessGroup()
+        {
+
+            return myBusinessGroup ?? "";
         }
 
 

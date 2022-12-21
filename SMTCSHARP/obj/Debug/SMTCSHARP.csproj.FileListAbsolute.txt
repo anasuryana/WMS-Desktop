@@ -1,0 +1,114 @@
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.exe.config
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.exe
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.pdb
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csprojResolveAssemblyReference.cache
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FLOGIN.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.Properties.Resources.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.GenerateResource.Cache
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.exe
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.pdb
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FRM_MAIN.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FMSTItem.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FCustomer.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.exe.config
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.exe
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.pdb
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csprojAssemblyReference.cache
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FCustomer.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FLOGIN.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FMSTItem.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FRM_MAIN.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.Properties.Resources.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.GenerateResource.cache
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.CoreCompileInputs.cache
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.exe
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.pdb
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\INIFileParser.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\INIFileParser.xml
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.CopyComplete
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\Newtonsoft.Json.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\Newtonsoft.Json.xml
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FKitting.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\CSJLabelLib.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FKittingReturn.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\INIFileParser.dll
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\Newtonsoft.Json.dll
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\INIFileParser.xml
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\Newtonsoft.Json.xml
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FKittingReturn.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FKitting.resources
+D:\ana\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FP_PSNList.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FP_PSNList.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnAnalyze.resources
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\BouncyCastle.Crypto.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.OOXML.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.OpenXml4Net.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.OpenXmlFormats.dll
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\BouncyCastle.Crypto.xml
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.pdb
+F:\masana\projek\SMT_WMS\SMTCSHARP\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.xml
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.exe.config
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.exe
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.pdb
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.exe
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\SMTCSHARP.pdb
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\BouncyCastle.Crypto.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\INIFileParser.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\Newtonsoft.Json.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.OOXML.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.OpenXml4Net.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\NPOI.OpenXmlFormats.dll
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\BouncyCastle.Crypto.xml
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.pdb
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.xml
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\INIFileParser.xml
+D:\c#sc\SMTCSHARP\SMTCSHARP\bin\Debug\Newtonsoft.Json.xml
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csprojResolveAssemblyReference.cache
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FCustomer.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FKittingReturn.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FLOGIN.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FMSTItem.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FKitting.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FP_PSNList.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnAnalyze.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.FRM_MAIN.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.Properties.Resources.resources
+D:\c#sc\SMTCSHARP\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.GenerateResource.Cache
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\SMTCSHARP.exe.config
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.exe
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.pdb
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\SMTCSHARP.exe
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\SMTCSHARP.pdb
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\BouncyCastle.Crypto.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\INIFileParser.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\Newtonsoft.Json.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\NPOI.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\NPOI.OOXML.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\NPOI.OpenXml4Net.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\NPOI.OpenXmlFormats.dll
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\BouncyCastle.Crypto.xml
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.pdb
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.xml
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\INIFileParser.xml
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\Newtonsoft.Json.xml
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csprojResolveAssemblyReference.cache
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FCustomer.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FKittingReturn.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FLOGIN.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FMSTItem.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FKitting.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FP_PSNList.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnAnalyze.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FRM_MAIN.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.Properties.Resources.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.GenerateResource.Cache
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnResume.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FCombineRMLabel.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnWithoutPSN.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FSettings.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FBusinessGroup.resources
