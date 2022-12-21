@@ -184,4 +184,17 @@
         AN+TmDqtQOJ9AAAAAElFTkSuQmCC
 </value>
   </data>
+  <data name="btnexport.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAPhJREFUOE9j
+        iJtT9p8QTp5XdY3hPwMjAzYAUoAPgORzljf9S55fdR6qBRUQY8CW2zv+5y5v/J88v/oCVBsCEGPArgd7
+        IYasaPqXNL/qFFQrBBBjADqGaoUAkAApgCQDDl479T99VjWUBwEEDUibWf1/3ckd/xfsX/M/bnLx/7sv
+        HkFlIICgAU/fvvhftLD1f+XS7v+fvn2BiiIAQQNAmqqWdf8vXtgGNgwdgGIEqhUCkA0AORfkbJDzQd5A
+        9z8I4DUApAEUcPiAmYMvGEO1Y3qBECDbgIXL1sA1I7BPPdgAQrhzz3Sw32umdqJqJgeYOfg1gDCEx8AA
+        ADATitAhezhUAAAAAElFTkSuQmCC
+</value>
+  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

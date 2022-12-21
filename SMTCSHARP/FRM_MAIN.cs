@@ -368,5 +368,24 @@ namespace SMTCSHARP
         {
 
         }
+
+        private void businessGroupToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            bool isoopen = false;
+            foreach (Form frm in this.MdiChildren)
+            {
+                //iterate through
+                if (frm.Name == "FBusinessGroup")
+                {
+                    isoopen = true;
+                }
+            }
+            if (!isoopen)
+            {
+                FBusinessGroup fmitem = new FBusinessGroup();
+                fmitem.MdiParent = this;
+                fmitem.Show();
+            }
+        }
     }
 }
