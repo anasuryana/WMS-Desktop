@@ -74,10 +74,10 @@
             this.tabPage1.Controls.Add(this.btnsignin);
             this.tabPage1.Controls.Add(this.txtpassword);
             this.tabPage1.Controls.Add(this.txtusername);
-            this.tabPage1.Location = new System.Drawing.Point(4, 23);
+            this.tabPage1.Location = new System.Drawing.Point(4, 27);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(299, 185);
+            this.tabPage1.Size = new System.Drawing.Size(299, 181);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Enter";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -101,7 +101,7 @@
             this.btnsignin.Name = "btnsignin";
             this.btnsignin.Size = new System.Drawing.Size(233, 35);
             this.btnsignin.TabIndex = 2;
-            this.btnsignin.Text = "Sign in";
+            this.btnsignin.Text = "Log in";
             this.btnsignin.UseVisualStyleBackColor = true;
             this.btnsignin.Click += new System.EventHandler(this.btnsignin_Click);
             // 
@@ -110,7 +110,7 @@
             this.txtpassword.Font = new System.Drawing.Font("Consolas", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtpassword.Location = new System.Drawing.Point(19, 68);
             this.txtpassword.Name = "txtpassword";
-            this.txtpassword.Size = new System.Drawing.Size(256, 31);
+            this.txtpassword.Size = new System.Drawing.Size(256, 37);
             this.txtpassword.TabIndex = 1;
             this.txtpassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip1.SetToolTip(this.txtpassword, "Password");
@@ -124,7 +124,7 @@
             this.txtusername.ForeColor = System.Drawing.Color.Silver;
             this.txtusername.Location = new System.Drawing.Point(19, 31);
             this.txtusername.Name = "txtusername";
-            this.txtusername.Size = new System.Drawing.Size(256, 31);
+            this.txtusername.Size = new System.Drawing.Size(256, 37);
             this.txtusername.TabIndex = 0;
             this.txtusername.Text = "UserID";
             this.txtusername.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -146,10 +146,10 @@
             this.tabPage2.Controls.Add(this.label2);
             this.tabPage2.Controls.Add(this.txts_server);
             this.tabPage2.Controls.Add(this.label1);
-            this.tabPage2.Location = new System.Drawing.Point(4, 23);
+            this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(299, 185);
+            this.tabPage2.Size = new System.Drawing.Size(299, 181);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Setting";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -187,7 +187,7 @@
             this.txts_pw.Location = new System.Drawing.Point(96, 95);
             this.txts_pw.Name = "txts_pw";
             this.txts_pw.ReadOnly = true;
-            this.txts_pw.Size = new System.Drawing.Size(179, 22);
+            this.txts_pw.Size = new System.Drawing.Size(179, 25);
             this.txts_pw.TabIndex = 7;
             this.txts_pw.UseSystemPasswordChar = true;
             // 
@@ -196,7 +196,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(16, 95);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(63, 14);
+            this.label4.Size = new System.Drawing.Size(72, 18);
             this.label4.TabIndex = 6;
             this.label4.Text = "Password";
             // 
@@ -205,7 +205,7 @@
             this.txts_user.Location = new System.Drawing.Point(96, 67);
             this.txts_user.Name = "txts_user";
             this.txts_user.ReadOnly = true;
-            this.txts_user.Size = new System.Drawing.Size(179, 22);
+            this.txts_user.Size = new System.Drawing.Size(179, 25);
             this.txts_user.TabIndex = 5;
             // 
             // label3
@@ -213,7 +213,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(16, 67);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 14);
+            this.label3.Size = new System.Drawing.Size(40, 18);
             this.label3.TabIndex = 4;
             this.label3.Text = "User";
             // 
@@ -222,7 +222,7 @@
             this.txts_db.Location = new System.Drawing.Point(96, 38);
             this.txts_db.Name = "txts_db";
             this.txts_db.ReadOnly = true;
-            this.txts_db.Size = new System.Drawing.Size(179, 22);
+            this.txts_db.Size = new System.Drawing.Size(179, 25);
             this.txts_db.TabIndex = 3;
             // 
             // label2
@@ -230,7 +230,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 41);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 14);
+            this.label2.Size = new System.Drawing.Size(72, 18);
             this.label2.TabIndex = 2;
             this.label2.Text = "Database";
             // 
@@ -239,7 +239,7 @@
             this.txts_server.Location = new System.Drawing.Point(96, 10);
             this.txts_server.Name = "txts_server";
             this.txts_server.ReadOnly = true;
-            this.txts_server.Size = new System.Drawing.Size(179, 22);
+            this.txts_server.Size = new System.Drawing.Size(179, 25);
             this.txts_server.TabIndex = 1;
             // 
             // label1
@@ -247,7 +247,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(16, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 14);
+            this.label1.Size = new System.Drawing.Size(56, 18);
             this.label1.TabIndex = 0;
             this.label1.Text = "Server";
             // 
@@ -271,7 +271,7 @@
             // 
             // FLOGIN
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 14F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightSkyBlue;
             this.ClientSize = new System.Drawing.Size(331, 231);
