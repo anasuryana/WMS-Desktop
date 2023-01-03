@@ -147,8 +147,7 @@ namespace SMTCSHARP
                     try
                     {
                         string url = String.Format(mserverAddress + "/ITMLOC/check_item_WithoutPSN?itemcd={0}", txt3N1.Text);
-                        var res = wc.DownloadString(url);
-                        Console.WriteLine(res);
+                        var res = wc.DownloadString(url);                        
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (sts.Equals("0"))
@@ -410,14 +409,14 @@ namespace SMTCSHARP
         private void dGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             string idscan = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[0].Value.ToString();
-            string itemcd = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[2].Value.ToString();
+            string itemcd = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[2].Value.ToString();            
             switch (dGV.CurrentCell.ColumnIndex)
             {                                    
-                case 10:
+                case 11:
                     switch (dGV.CurrentCell.Value.ToString())
                     {
                         case "Cancel":
-                            if (MessageBox.Show("Are You sure ? " + idscan, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                            if (MessageBox.Show("Are You sure want to cancel ? " + idscan, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                             {
                                 using (WebClient wc = new WebClient())
                                 {
@@ -483,8 +482,7 @@ namespace SMTCSHARP
                     dGV.Rows.AddRange(rows.ToArray());
                 }
                 catch (Exception ex)
-                {
-                    Console.WriteLine(url);
+                {                    
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -547,6 +545,11 @@ namespace SMTCSHARP
                     MessageBox.Show(ex.Message);
                 }
             }
+        }
+
+        private void dGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }

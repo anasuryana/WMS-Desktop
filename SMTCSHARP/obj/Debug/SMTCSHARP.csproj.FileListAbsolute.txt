@@ -112,3 +112,7 @@ D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FCombineRMLabel.r
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnWithoutPSN.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FSettings.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FBusinessGroup.resources
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\SMTCSHARP.exe.manifest
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\SMTCSHARP.application
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.exe.manifest
+D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.application
