@@ -56,6 +56,8 @@
             this.bgworkexport = new System.ComponentModel.BackgroundWorker();
             this.lblinfo = new System.Windows.Forms.Label();
             this.bgworkconform = new System.ComponentModel.BackgroundWorker();
+            this.txtReffDoc = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -68,9 +70,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dGV.Location = new System.Drawing.Point(11, 164);
+            this.dGV.Location = new System.Drawing.Point(11, 204);
             this.dGV.Name = "dGV";
-            this.dGV.Size = new System.Drawing.Size(848, 285);
+            this.dGV.Size = new System.Drawing.Size(848, 245);
             this.dGV.TabIndex = 52;
             // 
             // label1
@@ -113,7 +115,7 @@
             // 
             this.btnnew.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnnew.Image = ((System.Drawing.Image)(resources.GetObject("btnnew.Image")));
-            this.btnnew.Location = new System.Drawing.Point(408, 132);
+            this.btnnew.Location = new System.Drawing.Point(408, 174);
             this.btnnew.Name = "btnnew";
             this.btnnew.Size = new System.Drawing.Size(30, 26);
             this.btnnew.TabIndex = 57;
@@ -124,7 +126,7 @@
             // 
             this.btnexport.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnexport.Image = ((System.Drawing.Image)(resources.GetObject("btnexport.Image")));
-            this.btnexport.Location = new System.Drawing.Point(444, 132);
+            this.btnexport.Location = new System.Drawing.Point(444, 174);
             this.btnexport.Name = "btnexport";
             this.btnexport.Size = new System.Drawing.Size(30, 26);
             this.btnexport.TabIndex = 58;
@@ -134,7 +136,7 @@
             // btnconform
             // 
             this.btnconform.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnconform.Location = new System.Drawing.Point(480, 132);
+            this.btnconform.Location = new System.Drawing.Point(480, 174);
             this.btnconform.Name = "btnconform";
             this.btnconform.Size = new System.Drawing.Size(83, 26);
             this.btnconform.TabIndex = 59;
@@ -287,7 +289,7 @@
             // 
             this.ckall.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ckall.AutoSize = true;
-            this.ckall.Location = new System.Drawing.Point(752, 136);
+            this.ckall.Location = new System.Drawing.Point(752, 178);
             this.ckall.Name = "ckall";
             this.ckall.Size = new System.Drawing.Size(107, 22);
             this.ckall.TabIndex = 64;
@@ -304,7 +306,7 @@
             this.lblinfo.AutoSize = true;
             this.lblinfo.BackColor = System.Drawing.Color.DeepSkyBlue;
             this.lblinfo.ForeColor = System.Drawing.Color.White;
-            this.lblinfo.Location = new System.Drawing.Point(14, 137);
+            this.lblinfo.Location = new System.Drawing.Point(14, 179);
             this.lblinfo.Name = "lblinfo";
             this.lblinfo.Size = new System.Drawing.Size(24, 18);
             this.lblinfo.TabIndex = 65;
@@ -313,6 +315,25 @@
             // bgworkconform
             // 
             this.bgworkconform.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgworkconform_DoWork);
+            // 
+            // txtReffDoc
+            // 
+            this.txtReffDoc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtReffDoc.Location = new System.Drawing.Point(162, 124);
+            this.txtReffDoc.Name = "txtReffDoc";
+            this.txtReffDoc.ReadOnly = true;
+            this.txtReffDoc.Size = new System.Drawing.Size(697, 25);
+            this.txtReffDoc.TabIndex = 67;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 124);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(144, 18);
+            this.label7.TabIndex = 66;
+            this.label7.Text = "Kitting Reference";
             // 
             // FReturnAnalyze
             // 
@@ -333,6 +354,8 @@
             this.Controls.Add(this.dGV);
             this.Controls.Add(this.ckall);
             this.Controls.Add(this.lblinfo);
+            this.Controls.Add(this.txtReffDoc);
+            this.Controls.Add(this.label7);
             this.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FReturnAnalyze";
@@ -377,5 +400,7 @@
         private System.ComponentModel.BackgroundWorker bgworkexport;
         private System.Windows.Forms.Label lblinfo;
         private System.ComponentModel.BackgroundWorker bgworkconform;
+        private System.Windows.Forms.TextBox txtReffDoc;
+        private System.Windows.Forms.Label label7;
     }
 }

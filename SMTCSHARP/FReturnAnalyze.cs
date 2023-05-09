@@ -56,6 +56,19 @@ namespace SMTCSHARP
             }
         }
 
+        private void SetTextinfoReffdoc(string text)
+        {
+            if (this.txtReffDoc.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetTextinfoReffdoc);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                txtReffDoc.Text = text;
+            }
+        }
+
         private void SetTextinfopsn(string text)
         {
             if (this.txtpsn.InvokeRequired)
@@ -153,6 +166,7 @@ namespace SMTCSHARP
         {
             txtpsn.Text = "";
             txtjob.Text = "";
+            txtReffDoc.Text = "";
             txtpsn.ReadOnly = false;
             txtpsn.Focus();
             dGV.Rows.Clear();
@@ -240,13 +254,21 @@ namespace SMTCSHARP
                     {
                         SetTextinfo("Done");
                         var rsdata = from p in res_jes["datahead"] select p;
+                        var rsdataReff = from p in res_jes["dataReff"] select p;
                         string joblist = "";
                         foreach (var rw in rsdata)
                         {
                             joblist += rw["PPSN1_WONO"] + ",";
                         }
-                        
                         SetTextinfojob(joblist.Substring(0, joblist.Length - 1));
+
+                        joblist = "";
+                        foreach (var rw in rsdataReff)
+                        {
+                            joblist += rw["SPL_REFDOCNO"] + ",";
+                        }
+                        SetTextinfoReffdoc(joblist.Substring(0, joblist.Length - 1));
+
                         SetTextinfopsn("");
                         //get detail
                         res = wc.DownloadString(String.Format(txtserver.Text + "/RETPRD/getlistrecap_psnonly?inpsn={0}", txtpsn.Text));

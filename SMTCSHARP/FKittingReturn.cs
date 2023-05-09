@@ -830,8 +830,8 @@ namespace SMTCSHARP
 
             using (WebClient wc = new WebClient())
             {
-                try
-                {
+                //try
+                //{
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                     string url = txtserver.Text + "/RETPRD/save_desktop_v02";
                     string myparam = String.Format("inpsn={0}&incat={1}&inline={2}&initmcd={3}&inrohs={4}&inqtybef={5}&inqtyaft={6}&inlot={7}&incountry={8}&inuser={9}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtbefqty.Text, txtaftqty.Text, txtlot.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
@@ -871,12 +871,12 @@ namespace SMTCSHARP
                         txtbefqty.Text = "";
                         txtitemcd.Focus();
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                    txtbefqty.ReadOnly = false;
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    MessageBox.Show(ex.Message);
+                //    txtbefqty.ReadOnly = false;
+                //}
             }
         }
 
