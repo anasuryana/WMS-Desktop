@@ -6,7 +6,7 @@ namespace SMTCSHARP
 {
     static class ASettings
     {
-        const string myversion = "1.0.7.1";
+        const string myversion = "1.0.7.2";
         static string myuser;
         static string myuserfname;
         static string myuserid;
