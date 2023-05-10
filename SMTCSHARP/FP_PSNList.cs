@@ -73,11 +73,6 @@ namespace SMTCSHARP
             ActiveControl = txtsearch;
         }
 
-        private void txtsearch_KeyUp(object sender, KeyEventArgs e)
-        {
-            searchpsnlist();
-        }
-
         private void dGV_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dGV.CurrentCell.ColumnIndex.Equals(0))
