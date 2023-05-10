@@ -23,9 +23,9 @@ namespace SMTCSHARP
         public FReturnAnalyze()
         {
             InitializeComponent();
-            
+
         }
-        delegate void SetTextCallback(string text);        
+        delegate void SetTextCallback(string text);
         private void SetTextinfo(string text)
         {
             // InvokeRequired required compares the thread ID of the
@@ -44,7 +44,7 @@ namespace SMTCSHARP
         }
 
         private void SetTextinfojob(string text)
-        {         
+        {
             if (this.txtjob.InvokeRequired)
             {
                 SetTextCallback d = new SetTextCallback(SetTextinfojob);
@@ -78,7 +78,7 @@ namespace SMTCSHARP
             }
             else
             {
-                txtpsn.ReadOnly=true;
+                txtpsn.ReadOnly = true;
             }
         }
 
@@ -126,7 +126,7 @@ namespace SMTCSHARP
         }
 
         void ShowConfig()
-        {           
+        {
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
             txtserver.Text = data["SERVER"]["ADDRESS"];
@@ -136,7 +136,7 @@ namespace SMTCSHARP
         private void FReturnAnalyze_Load(object sender, EventArgs e)
         {
             initcolumn();
-            ShowConfig();            
+            ShowConfig();
             datepc.Value = DateTime.Now;
         }
 
@@ -147,7 +147,7 @@ namespace SMTCSHARP
         }
 
         private void btnsave_config_Click(object sender, EventArgs e)
-        {           
+        {
 
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
@@ -190,11 +190,11 @@ namespace SMTCSHARP
                     var mdiff = Convert.ToDouble(rw["TTLRET"]) - Convert.ToDouble(rw["LOGIC"]);
                     dGV.Rows.Add(rw["SPL_ITMCD"]
                     , rw["MITM_SPTNO"].ToString().Trim()
-                    , rw["LOGIC"].ToString().Substring(0,1) == "." ? "0": Convert.ToDouble(rw["LOGIC"]).ToString("#,#")
-                    , rw["TTLRET"].ToString().Substring(0,1)=="." ? "0" : Convert.ToDouble(rw["TTLRET"]).ToString("#,#")
-                    , mdiff.ToString() == "0" ? "0" :Convert.ToDouble(mdiff).ToString("#,#")                    
-                    ,false
-                    );                    
+                    , rw["LOGIC"].ToString().Substring(0, 1) == "." ? "0" : Convert.ToDouble(rw["LOGIC"]).ToString("#,#")
+                    , rw["TTLRET"].ToString().Substring(0, 1) == "." ? "0" : Convert.ToDouble(rw["TTLRET"]).ToString("#,#")
+                    , mdiff.ToString() == "0" ? "0" : Convert.ToDouble(mdiff).ToString("#,#")
+                    , false
+                    );
                 }
 
                 foreach (DataGridViewRow row in dGV.Rows)
@@ -233,12 +233,13 @@ namespace SMTCSHARP
                 mpsn = txtpsn.Text;
                 SetTextinfo("Please wait...");
                 bgworkexport.RunWorkerAsync();
-            } else
+            }
+            else
             {
                 txtpsn.Focus();
                 MessageBox.Show("Please press enter");
             }
-            
+
         }
 
         private void bgworksearch_DoWork(object sender, DoWorkEventArgs e)
@@ -260,14 +261,19 @@ namespace SMTCSHARP
                         {
                             joblist += rw["PPSN1_WONO"] + ",";
                         }
-                        SetTextinfojob(joblist.Substring(0, joblist.Length - 1));
-
+                        if (joblist.Length != 0)
+                        {
+                            SetTextinfojob(joblist.Substring(0, joblist.Length - 1));
+                        }
                         joblist = "";
                         foreach (var rw in rsdataReff)
                         {
                             joblist += rw["SPL_REFDOCNO"] + ",";
                         }
-                        SetTextinfoReffdoc(joblist.Substring(0, joblist.Length - 1));
+                        if (joblist.Length != 0)
+                        {
+                            SetTextinfoReffdoc(joblist.Substring(0, joblist.Length - 1));
+                        }
 
                         SetTextinfopsn("");
                         //get detail
@@ -300,7 +306,7 @@ namespace SMTCSHARP
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)
                     {
-                        
+
                         var rsdata = from p in res_jes["datahead"] select p;
                         string joblist = "";
                         foreach (var rw in rsdata)
@@ -309,7 +315,7 @@ namespace SMTCSHARP
                         }
 
                         SetTextinfojob(joblist.Substring(0, joblist.Length - 1));
-                       
+
                         //get detail
                         res = wc.DownloadString(String.Format(txtserver.Text + "/RETPRD/export_to_xls_desktop?inpsn={0}", txtpsn.Text));
                         res_jes = JObject.Parse(res);
@@ -352,7 +358,7 @@ namespace SMTCSHARP
         {
             if (txtpsn.ReadOnly)
             {
-               
+
                 if (MessageBox.Show("Are You sure ? ", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
                 {
                     SetTextinfo("Please wait...");
@@ -382,7 +388,7 @@ namespace SMTCSHARP
 
                     string url = txtserver.Text + "/RETPRD/editing_byitempsn_desktop";
                     string myparam = String.Format("inpsn={0}&{1}indate={2}&inuser={3}&inwh={4}", txtpsn.Text, datas, datepc.Value.ToString("yyyy-MM-dd"), ASettings.getmyuserid(), mwarehouse);
-                    string res = wc.UploadString(url, myparam);                    
+                    string res = wc.UploadString(url, myparam);
                     SetTextinfo(res);
                     SetTextBtnConform("");
                     //MessageBox.Show(res);

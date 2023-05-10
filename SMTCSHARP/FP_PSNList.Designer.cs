@@ -77,7 +77,6 @@
             this.txtsearch.Size = new System.Drawing.Size(187, 25);
             this.txtsearch.TabIndex = 0;
             this.txtsearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtsearch_KeyPress);
-            this.txtsearch.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtsearch_KeyUp);
             // 
             // FP_PSNList
             // 
