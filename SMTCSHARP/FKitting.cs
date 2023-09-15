@@ -1,7 +1,5 @@
 ﻿using IniParser;
 using IniParser.Model;
-using Microsoft.Win32;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -41,7 +39,7 @@ namespace SMTCSHARP
             {
                 txtinfo.Text = text;
             }
-           
+
         }
 
         private void SetDgvinfo(IEnumerable<JToken> text)
@@ -55,8 +53,6 @@ namespace SMTCSHARP
             }
             else
             {
-                //DataSet dsku = JsonConvert.DeserializeObject<DataSet>("");
-                //dGV.DataSource = dsku.Tables[0];
                 foreach (var rw in text)
                 {
                     dGV.Rows.Add(rw["SPLSCN_ID"]
@@ -74,7 +70,6 @@ namespace SMTCSHARP
                     );
                 }
             }
-
         }
 
         void initcolumn()
@@ -104,34 +99,10 @@ namespace SMTCSHARP
             {
                 column.ReadOnly = true;
             }
-
-
         }
-       
-
 
         void ShowConfig()
         {
-
-            //RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-            //if (ckrk == null)
-            //{
-            //    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                
-            //    rk.SetValue("USR_ADDRESS_KITTING", txtpath.Text);
-            //} else
-            //{
-            //    var kchild = ckrk.GetValue("USR_ADDRESS_KITTING");
-            //    if (kchild == null)
-            //    {
-            //        //MessageBox.Show("ke sini");
-            //        RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                    
-            //        rk.SetValue("USR_ADDRESS_KITTING", txtpath.Text);
-            //    } else
-            //    {                    
-            //        txtpath.Text = ckrk.GetValue("USR_ADDRESS_KITTING").ToString();
-            //    }                
-            //}
-            //ckrk.Close();
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
             txtserver.Text = data["SERVER"]["ADDRESS"];
@@ -151,11 +122,6 @@ namespace SMTCSHARP
 
         private void btnsave_config_Click(object sender, EventArgs e)
         {
-
-            //RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);            
-            //rk.SetValue("USR_ADDRESS_KITTING", txtpath.Text);
-
-
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
             data["SERVER"]["ADDRESS"] = txtserver.Text;
@@ -168,7 +134,7 @@ namespace SMTCSHARP
         {
             ShowConfig();
             initcolumn();
-        }        
+        }
 
         private void txtcat_DropDown(object sender, EventArgs e)
         {
@@ -179,7 +145,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = String.Format(txtserver.Text + "/SPL/checkPSN?inpsn={0}", txtpsn.Text);
+                    string url = String.Format(txtserver.Text + "/supply/part-category?doc={0}&outstanding={1}", txtpsn.Text, ckOutstaningOnly.Checked ? 1 : 0);
 
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
@@ -214,7 +180,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = String.Format(txtserver.Text + "/SPL/checkPSNCAT?inpsn={0}&incat={1}", txtpsn.Text, txtcat.Text);
+                    string url = String.Format(txtserver.Text + "/supply/part-line?doc={0}&category={1}", txtpsn.Text, txtcat.Text);
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -248,25 +214,25 @@ namespace SMTCSHARP
 
         private void btnexport_csv_Click(object sender, EventArgs e)
         {
-            mpath = txtpath.Text + "\\RESULT_" + txtpsn.Text + ".csv";            
+            mpath = txtpath.Text + "\\RESULT_" + txtpsn.Text + ".csv";
             txtinfo.Text = "Please wait...exporting...";
             mpsn = txtpsn.Text;
             mcat = txtcat.Text;
             mline = txtline.Text;
             bgworkexport.RunWorkerAsync();
-            
+
         }
 
         private void bgworksearch_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             using (WebClient wc = new WebClient())
-            {                
-                string url = String.Format(txtserver.Text + "/SPL/tobexported_list?inpsn={0}&incat={1}&inline={2}", mpsn, mcat, mline);
+            {
+                string url = String.Format(txtserver.Text + "/supply/outstanding-upload?doc={0}&category={1}&line={2}", mpsn, mcat, mline);
                 var res = wc.DownloadString(url);
                 JObject res_jes = JObject.Parse(res);
                 var rsdata = from p in res_jes["data"] select p;
-                SetTextinfo( "Done");
-                SetDgvinfo(rsdata);             
+                SetTextinfo("Done");
+                SetDgvinfo(rsdata);
             }
         }
 
@@ -278,7 +244,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        string url = String.Format(txtserver.Text + "/SPL/tobexported_list?inpsn={0}&incat={1}&inline={2}", mpsn, mcat, mline);
+                        string url = String.Format(txtserver.Text + "/supply/outstanding-upload?doc={0}&category={1}&line={2}", mpsn, mcat, mline);
                         var res = wc.DownloadString(url);
                         JObject res_jes = JObject.Parse(res);
                         var rsdata = from p in res_jes["data"] select p;
@@ -316,7 +282,6 @@ namespace SMTCSHARP
                     }
                 }
                 MessageBox.Show("Updated");
-
             }
             else
             {
@@ -324,7 +289,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        string url = String.Format(txtserver.Text + "/SPL/tobexported_list?inpsn={0}&incat={1}&inline={2}", mpsn, mcat, mline);
+                        string url = String.Format(txtserver.Text + "/supply/outstanding-upload?doc={0}&category={1}&line={2}", mpsn, mcat, mline);
                         var res = wc.DownloadString(url);
                         JObject res_jes = JObject.Parse(res);
                         var rsdata = from p in res_jes["data"] select p;
@@ -367,6 +332,7 @@ namespace SMTCSHARP
 
         private void btnFindpsn_Click(object sender, EventArgs e)
         {
+            ASettings.setmyflag(ckOutstaningOnly.Checked ? '0' : '1');
             using (var pf = new FP_PSNList())
             {
                 var res = pf.ShowDialog();
@@ -375,7 +341,7 @@ namespace SMTCSHARP
                     txtpsn.Text = pf.ReturnValue1;
                 }
             }
-                
+
         }
     }
 }

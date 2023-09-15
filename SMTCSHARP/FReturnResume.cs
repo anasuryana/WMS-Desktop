@@ -131,7 +131,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    var res = wc.DownloadString(String.Format(txtserver.Text + "/RETPRD/resume_desktop?date1={0}&date2={1}", datefr.Value.ToString("yyyy-MM-dd"), datepc.Value.ToString("yyyy-MM-dd")));
+                    var res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?dateFrom={0}&dateTo={1}", datefr.Value.ToString("yyyy-MM-dd"), datepc.Value.ToString("yyyy-MM-dd")));
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)
@@ -161,7 +161,7 @@ namespace SMTCSHARP
             {
                 try
                 { 
-                    var res = wc.DownloadString(String.Format(txtserver.Text + "/RETPRD/resume_desktop?date1={0}&date2={1}", datefr.Value.ToString("yyyy-MM-dd"), datepc.Value.ToString("yyyy-MM-dd")));
+                    var res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?dateFrom={0}&dateTo={1}", datefr.Value.ToString("yyyy-MM-dd"), datepc.Value.ToString("yyyy-MM-dd")));
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)

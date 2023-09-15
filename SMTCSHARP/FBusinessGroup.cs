@@ -29,7 +29,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = mserverAddress + "/BGROUPHistory/list";
+                    string url = mserverAddress + "/business-group";
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;

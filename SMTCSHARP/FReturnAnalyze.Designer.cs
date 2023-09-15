@@ -58,6 +58,8 @@
             this.bgworkconform = new System.ComponentModel.BackgroundWorker();
             this.txtReffDoc = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.btnFindpsn = new System.Windows.Forms.Button();
+            this.ckOutstaningOnly = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -89,7 +91,7 @@
             this.txtpsn.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtpsn.Location = new System.Drawing.Point(126, 62);
             this.txtpsn.Name = "txtpsn";
-            this.txtpsn.Size = new System.Drawing.Size(437, 25);
+            this.txtpsn.Size = new System.Drawing.Size(326, 25);
             this.txtpsn.TabIndex = 54;
             this.txtpsn.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtpsn_KeyPress);
             // 
@@ -191,9 +193,9 @@
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.btnsave_config);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(11, 24);
+            this.panel2.Location = new System.Drawing.Point(11, 60);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(848, 425);
+            this.panel2.Size = new System.Drawing.Size(848, 389);
             this.panel2.TabIndex = 61;
             this.panel2.Visible = false;
             // 
@@ -335,6 +337,25 @@
             this.label7.TabIndex = 66;
             this.label7.Text = "Kitting Reference";
             // 
+            // btnFindpsn
+            // 
+            this.btnFindpsn.Image = ((System.Drawing.Image)(resources.GetObject("btnFindpsn.Image")));
+            this.btnFindpsn.Location = new System.Drawing.Point(458, 60);
+            this.btnFindpsn.Name = "btnFindpsn";
+            this.btnFindpsn.Size = new System.Drawing.Size(33, 29);
+            this.btnFindpsn.TabIndex = 68;
+            this.btnFindpsn.UseVisualStyleBackColor = true;
+            // 
+            // ckOutstaningOnly
+            // 
+            this.ckOutstaningOnly.AutoSize = true;
+            this.ckOutstaningOnly.Location = new System.Drawing.Point(497, 65);
+            this.ckOutstaningOnly.Name = "ckOutstaningOnly";
+            this.ckOutstaningOnly.Size = new System.Drawing.Size(91, 22);
+            this.ckOutstaningOnly.TabIndex = 69;
+            this.ckOutstaningOnly.Text = "O/S Only";
+            this.ckOutstaningOnly.UseVisualStyleBackColor = true;
+            // 
             // FReturnAnalyze
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -356,6 +377,8 @@
             this.Controls.Add(this.lblinfo);
             this.Controls.Add(this.txtReffDoc);
             this.Controls.Add(this.label7);
+            this.Controls.Add(this.btnFindpsn);
+            this.Controls.Add(this.ckOutstaningOnly);
             this.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FReturnAnalyze";
@@ -402,5 +425,7 @@
         private System.ComponentModel.BackgroundWorker bgworkconform;
         private System.Windows.Forms.TextBox txtReffDoc;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Button btnFindpsn;
+        private System.Windows.Forms.CheckBox ckOutstaningOnly;
     }
 }

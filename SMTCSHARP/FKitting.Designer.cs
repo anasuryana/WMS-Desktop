@@ -43,6 +43,7 @@
             this.btnexport_csv = new System.Windows.Forms.Button();
             this.btnsearch = new System.Windows.Forms.Button();
             this.btnFindpsn = new System.Windows.Forms.Button();
+            this.ckOutstaningOnly = new System.Windows.Forms.CheckBox();
             this.txtcat = new System.Windows.Forms.ComboBox();
             this.dGV = new System.Windows.Forms.DataGridView();
             this.label3 = new System.Windows.Forms.Label();
@@ -128,9 +129,9 @@
             this.panel2.Controls.Add(this.txtserver);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(11, 60);
+            this.panel2.Location = new System.Drawing.Point(11, 55);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(848, 399);
+            this.panel2.Size = new System.Drawing.Size(848, 404);
             this.panel2.TabIndex = 54;
             this.panel2.Visible = false;
             // 
@@ -177,6 +178,17 @@
             this.toolTip1.SetToolTip(this.btnFindpsn, "Find PSN No");
             this.btnFindpsn.UseVisualStyleBackColor = true;
             this.btnFindpsn.Click += new System.EventHandler(this.btnFindpsn_Click);
+            // 
+            // ckOutstaningOnly
+            // 
+            this.ckOutstaningOnly.AutoSize = true;
+            this.ckOutstaningOnly.Location = new System.Drawing.Point(490, 60);
+            this.ckOutstaningOnly.Name = "ckOutstaningOnly";
+            this.ckOutstaningOnly.Size = new System.Drawing.Size(91, 22);
+            this.ckOutstaningOnly.TabIndex = 60;
+            this.ckOutstaningOnly.Text = "O/S Only";
+            this.toolTip1.SetToolTip(this.ckOutstaningOnly, "Outstanding \'Upload to MEGA\'");
+            this.ckOutstaningOnly.UseVisualStyleBackColor = true;
             // 
             // txtcat
             // 
@@ -334,6 +346,7 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.txtpsn);
             this.Controls.Add(this.btnFindpsn);
+            this.Controls.Add(this.ckOutstaningOnly);
             this.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -381,5 +394,6 @@
         private System.ComponentModel.BackgroundWorker bgworkexport;
         private System.Windows.Forms.Button btnFindpsn;
         private System.Windows.Forms.TextBox txtpsn;
+        private System.Windows.Forms.CheckBox ckOutstaningOnly;
     }
 }

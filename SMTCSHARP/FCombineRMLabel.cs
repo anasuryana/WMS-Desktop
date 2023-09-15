@@ -228,7 +228,8 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        string url = String.Format(txtserver.Text + "/MSTITM/getbyid_desktop?cid={0}", itemcode);                        
+                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(itemcode);                        
+                        string url = String.Format(txtserver.Text + "/item/{0}/location", Convert.ToBase64String(plainTextBytes));                        
                         var res = wc.DownloadString(url);                        
 
                         JObject res_jes = JObject.Parse(res);
@@ -242,7 +243,7 @@ namespace SMTCSHARP
                         {
                             textBox1.ReadOnly = true;
                             txtlotno.Focus();
-                            itemname = (string)res_jes["data"][0]["MITM_SPTNO"];
+                            itemname = (string)res_jes["data"][0]["SPTNO"];
                         }
                     }
                     catch (Exception ex)
@@ -361,9 +362,9 @@ namespace SMTCSHARP
                     foreach (DataGridViewRow row in dGV_lbljoin.Rows)
                     {
                         itmcode_print = row.Cells[0].Value.ToString();
-                        itmcode += "initmcd[]=" + row.Cells[0].Value.ToString() + "&";
-                        qtybefore += "inqtycom[]=" + row.Cells[1].Value.ToString() + "&";
-                        lotno += "inlot[]=" + row.Cells[2].Value.ToString() + "&";
+                        itmcode += "item[]=" + row.Cells[0].Value.ToString() + "&";
+                        qtybefore += "qty[]=" + row.Cells[1].Value.ToString() + "&";
+                        lotno += "lotNumber[]=" + row.Cells[2].Value.ToString() + "&";
                         itmname_print = row.Cells[3].Value.ToString();
                     }
                     using (WebClient wc = new WebClient())
@@ -371,11 +372,11 @@ namespace SMTCSHARP
                         try
                         {
                             wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                            string url = txtserver.Text + "/SER/combine_rmlbl_desktop";
-                            string myparam = String.Format("{0}{1}{2}inuser={3}",itmcode, lotno, qtybefore , ASettings.getmyuserid());
+                            string url = txtserver.Text + "/label/combine-raw-material";
+                            string myparam = String.Format("{0}{1}{2}userId={3}",itmcode, lotno, qtybefore , ASettings.getmyuserid());
                             myparam = myparam.Replace("+", "%2B");
                             string res = wc.UploadString(url, myparam);
-                            //Console.WriteLine(res);
+                            
                             JObject res_jes = JObject.Parse(res);
                             string sts = (string)res_jes["status"][0]["cd"];
                             string msg = (string)res_jes["status"][0]["msg"];
