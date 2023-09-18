@@ -10,6 +10,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
@@ -46,7 +47,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = txtserver.Text + "/RETPRD/listofcountry";
+                    string url = txtserver.Text + "/country";
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -72,7 +73,7 @@ namespace SMTCSHARP
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
             if (ckrk == null)
             {
-                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                
+                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
                 rk.SetValue("PRINTER_DARK", trackbdark.Value);
                 rk.SetValue("PRINTER_TICK", trackbthick.Value);
                 rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
@@ -82,10 +83,10 @@ namespace SMTCSHARP
             }
             else
             {
-                var kchild = ckrk.GetValue("PRINTER_DARK");                
-                if (kchild == null )
-                {                    
-                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                    
+                var kchild = ckrk.GetValue("PRINTER_DARK");
+                if (kchild == null)
+                {
+                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
                     rk.SetValue("PRINTER_DARK", trackbdark.Value);
                     rk.SetValue("PRINTER_TICK", trackbthick.Value);
                     rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
@@ -94,7 +95,7 @@ namespace SMTCSHARP
                     rk.SetValue("PRINTER_SPEED", "17");
                 }
                 else
-                {                                   
+                {
                     trackbdark.Value = UInt16.Parse(ckrk.GetValue("PRINTER_DARK").ToString());
                     trackbthick.Value = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
                     trackbnarrow.Value = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
@@ -104,7 +105,7 @@ namespace SMTCSHARP
             ckrk.Close();
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
-            txtserver.Text = data["SERVER"]["ADDRESS"];           
+            txtserver.Text = data["SERVER"]["ADDRESS"];
         }
 
         void initcolumn()
@@ -148,11 +149,11 @@ namespace SMTCSHARP
             htx.ReadOnly = true;
             dGV.Columns.Add(htx);
 
-            
+
 
             DataGridViewButtonColumn hbt = new DataGridViewButtonColumn();
             hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            hbt.Width = 100;                                   
+            hbt.Width = 100;
             dGV.Columns.Add(hbt);
 
             htx = new DataGridViewTextBoxColumn();
@@ -176,16 +177,16 @@ namespace SMTCSHARP
             dGV_lbljoin.Columns[2].Name = "Lot No";
             dGV_lbljoin.Columns[2].Width = 200;
             dGV_lbljoin.Columns[3].Name = "Item Name";
-            
+
         }
 
         void ret_e_getlist()
         {
             using (WebClient wc = new WebClient())
-            {                
+            {
                 try
                 {
-                    string url = String.Format(txtserver.Text + "/RETPRD/getlist_nofr?inpsn={0}&incat={1}&inline={2}", txtpsn.Text, txtcat.Text, txtline.Text).ToString();
+                    string url = String.Format(txtserver.Text + "/return/counted?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text).ToString();
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -193,20 +194,22 @@ namespace SMTCSHARP
                     List<DataGridViewRow> rows = new List<DataGridViewRow>();
                     foreach (var rw in rsdata)
                     {
-                        
+
                         string savedorno = rw["RETSCN_SAVED"].ToString();
                         string flghold = rw["FLG_HOLD"].ToString();
                         if (savedorno == "1")
                         {
                             savedorno = "ü";
                             flghold = "";
-                        } else
+                        }
+                        else
                         {
                             savedorno = "û";
                             if (flghold.Equals("0"))
                             {
                                 flghold = "HOLD";
-                            } else
+                            }
+                            else
                             {
                                 flghold = "RELEASE";
                             }
@@ -225,17 +228,17 @@ namespace SMTCSHARP
                         row.Cells[9].Value = Convert.ToDouble(rw["RETSCN_QTYBEF"]).ToString("#,#");
                         row.Cells[10].Value = Convert.ToDouble(rw["RETSCN_QTYAFT"]).ToString("#,#");
                         row.Cells[11].Value = rw["RETSCN_ROHS"];
-                        row.Cells[12].Value = rw["MMADE_NM"];                        
+                        row.Cells[12].Value = rw["MMADE_NM"];
                         row.Cells[13].Value = false;
                         row.Cells[14].Value = savedorno;
                         row.Cells[15].Value = flghold;
                         row.Cells[16].Value = rw["SPL_RACKNO"];
-                        rows.Add(row);                                          
+                        rows.Add(row);
                     }
                     dGV.Rows.AddRange(rows.ToArray());
                 }
                 catch (Exception ex)
-                {                    
+                {
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -245,7 +248,7 @@ namespace SMTCSHARP
         private void btnsetting_Click(object sender, EventArgs e)
         {
             panel2.Show();
-        }             
+        }
 
         private void btnSaveconfig_Click(object sender, EventArgs e)
         {
@@ -260,17 +263,17 @@ namespace SMTCSHARP
             {
                 straddres = listView1.SelectedItems[0].Text;
             }
-            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                   
+            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
             rk.SetValue("PRINTER_DARK", trackbdark.Value.ToString());
             rk.SetValue("PRINTER_TICK", trackbthick.Value.ToString());
             rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value.ToString());
             rk.SetValue("PRINTER_TYPE", type.ToString());
             rk.SetValue("PRINTER_ADDRESS", straddres);
-            rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());           
+            rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());
             MessageBox.Show("Saved");
         }
 
-        
+
         private void txtpsn_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -279,7 +282,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(txtserver.Text + "/SPL/checkPSN?inpsn=" + txtpsn.Text);
+                        var res = wc.DownloadString(txtserver.Text + "/supply/validate-document?doc=" + txtpsn.Text);
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (!sts.Equals("0"))
@@ -325,7 +328,7 @@ namespace SMTCSHARP
             UInt16 myTHICKNESS = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
             UInt16 myNARROW = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
             UInt16 mySPEED = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
-           
+
             int ret = printer.Connect(mytype, myaddr);
             if (ret != LabelConst.CLS_SUCCESS)
             {
@@ -343,17 +346,17 @@ namespace SMTCSHARP
             int startx = 35;
             int mhratio = 105; //105, 75
             int mvratio = 110; //150,75
-            
+
             lbldsg.DrawTextPCFont(String.Format("RACK : {0}    {1}", mrackcd, Environment.MachineName.ToString()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 410 + 20);
             lbldsg.DrawTextPCFont(String.Format("QTY : {0}    LOT NO : {1}", mretqty, mretlot), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 385 + 10);
             lbldsg.DrawTextPCFont(String.Format("(3N1) {0}", mretitemcd), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 360);
-            lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL,myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
+            lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("(3N2) {0} {1}", mretqty, mretlot.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 255);
             lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", mretqty.Replace(",", string.Empty), mretlot.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("(1P) {0}", mretitemnm), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
-            lbldsg.DrawBarCode(String.Format("1P{0}", mretitemnm.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);            
+            lbldsg.DrawBarCode(String.Format("1P{0}", mretitemnm.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
-            
+
             if (mretrohs.Equals("1"))
             {
                 lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
@@ -361,15 +364,15 @@ namespace SMTCSHARP
             lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
             lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
             lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
-
-            //int result = lblprn.Connect(LabelConst.CLS_PORT_USB, "");
+            
             if (ret == LabelConst.CLS_SUCCESS)
             {
-                printer.SetPrintDarkness(UInt16.Parse(myDARk));                
+                printer.SetPrintDarkness(UInt16.Parse(myDARk));
                 printer.SetPrintSpeed(mySPEED);
                 printer.Print(lbldsg, 1);
                 printer.Disconnect();
-            } else
+            }
+            else
             {
                 printer.Preview(lbldsg, LabelConst.CLS_PRT_RES_203, LabelConst.CLS_UNIT_MILLI, 700, 500);
             }
@@ -377,10 +380,10 @@ namespace SMTCSHARP
         }
 
         private void btnreturnprint_Click(object sender, EventArgs e)
-        {            
+        {
             foreach (DataGridViewRow row in dGV.Rows)
             {
-                
+
                 if (Convert.ToBoolean(row.Cells[13].Value))
                 {
                     mretitemcd = row.Cells[6].Value.ToString().Trim();
@@ -393,7 +396,7 @@ namespace SMTCSHARP
                     printsmtlabel();
                 }
             }
-            
+
         }
 
         private void txtcat_KeyPress(object sender, KeyPressEventArgs e)
@@ -404,7 +407,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(String.Format(txtserver.Text + "/SPL/checkPSNCAT?inpsn={0}&incat={1}", txtpsn.Text, txtcat.Text));
+                        var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}", txtpsn.Text, txtcat.Text));
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (!sts.Equals("0"))
@@ -433,13 +436,13 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(String.Format(txtserver.Text + "/SPL/checkPSNCATLINENoFR?inpsn={0}&incat={1}&inline={2}", txtpsn.Text, txtcat.Text, txtline.Text));
+                        var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text));
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (sts.Equals("1"))
                         {
                             txtitemcd.Focus();
-                            var rsdata = from p in res_jes["datahead"] select p;
+                            var rsdata = from p in res_jes["WorkOrder"] select p;
                             string joblist = "";
                             foreach (var rw in rsdata)
                             {
@@ -612,24 +615,25 @@ namespace SMTCSHARP
                     return;
                 }
 
-                if(txtitemcd.Text.Contains(" "))
+                if (txtitemcd.Text.Contains(" "))
                 {
                     string[] an1 = txtitemcd.Text.Split(' ');
                     msupqty = an1[1];
                     int strleng = an1[0].Length - 3;
                     txtitemcd.Text = an1[0].Substring(3, strleng);
-                } else
+                }
+                else
                 {
                     int strleng = txtitemcd.Text.Length - 3;
                     txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
                     msupqty = "";
                 }
-                
+
                 using (WebClient wc = new WebClient())
                 {
                     try
                     {
-                        string url = String.Format(txtserver.Text + "/SPL/checkPSN_itmret_nofr?inpsn={0}&incat={1}&inline={2}&incode={3}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text);
+                        string url = String.Format(txtserver.Text + "/supply/validate-item?doc={0}&category={1}&line={2}&item={3}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text);
                         var res = wc.DownloadString(url);
 
                         JObject res_jes = JObject.Parse(res);
@@ -639,6 +643,7 @@ namespace SMTCSHARP
                             MessageBox.Show((string)res_jes["data"][0]["msg"]);
                             txtitemcd.Text = "";
                             txtRackcd.Text = "";
+                            txtitmname.Text = "";
                         }
                         else
                         {
@@ -677,13 +682,14 @@ namespace SMTCSHARP
                 else
                 {
                     string[] mthis_ar = txtbefqty.Text.Split(' ');
-                    if(msupqty!="")
+                    if (msupqty != "")
                     {
                         txtbefqty.Text = msupqty;
-                        
+
                         txtbefqty.ReadOnly = true;
                         txtlot.Text = mthis_ar[1];
-                    } else
+                    }
+                    else
                     {
                         if (mthis_ar[1].All(char.IsNumber))
                         {
@@ -692,17 +698,17 @@ namespace SMTCSHARP
                             txtbefqty.ReadOnly = true;
                         }
                     }
-                    
+
 
                     using (WebClient wc = new WebClient())
                     {
-                        string url = String.Format(txtserver.Text + "/RETPRD/checklot_nofr_new");
-                        string myparam = String.Format("inpsn={0}&incat={1}&inline={2}&initem={3}&inlot={4}&inqty={5}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, txtlot.Text, txtbefqty.Text);
-                        myparam =  myparam.Replace("+", "%2B");
+                        string url = String.Format(txtserver.Text + "/supply/validate-supplied-item");
+                        string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&lotNumber={4}&qty={5}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, txtlot.Text, txtbefqty.Text);
+                        myparam = myparam.Replace("+", "%2B");
                         try
                         {
                             wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                            var res = wc.UploadString(url,myparam);
+                            var res = wc.UploadString(url, myparam);
                             JObject res_jes = JObject.Parse(res);
                             string sts = (string)res_jes["status"][0]["cd"];
                             if (!sts.Equals("0"))
@@ -725,22 +731,24 @@ namespace SMTCSHARP
                                         {
                                             MessageBox.Show("Could not join different Item Code");
                                         }
-                                    } else
+                                    }
+                                    else
                                     {
                                         dGV_lbljoin.Rows.Add(txtitemcd.Text, txtbefqty.Text, txtlot.Text, txtitmname.Text);
-                                    }                                                                        
+                                    }
                                     txtitemcd.Text = "";
                                     txtitmname.Text = "";
                                     txtbefqty.Text = "";
-                                    txtlot.Text = "";                                    
+                                    txtlot.Text = "";
                                     txtitemcd.Focus();
-                                } else
+                                }
+                                else
                                 {
                                     txtaftqty.Focus();
-                                }                                
+                                }
                             }
                             else
-                            {                              
+                            {
                                 txtbefqty.Text = "";
                                 txtlot.Text = "";
                                 MessageBox.Show("Item and PSN were not match");
@@ -749,7 +757,7 @@ namespace SMTCSHARP
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.Message+ "["+url+"]");
+                            MessageBox.Show(ex.Message + "[" + url + "]");
                             txtbefqty.ReadOnly = false;
                         }
                     }
@@ -830,11 +838,11 @@ namespace SMTCSHARP
 
             using (WebClient wc = new WebClient())
             {
-                //try
-                //{
+                try
+                {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = txtserver.Text + "/RETPRD/save_desktop_v02";
-                    string myparam = String.Format("inpsn={0}&incat={1}&inline={2}&initmcd={3}&inrohs={4}&inqtybef={5}&inqtyaft={6}&inlot={7}&incountry={8}&inuser={9}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtbefqty.Text, txtaftqty.Text, txtlot.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
+                    string url = txtserver.Text + "/return";
+                    string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&roHs={4}&qtyBefore={5}&qtyAfter={6}&lotNumber={7}&countryId={8}&userId={9}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtbefqty.Text, txtaftqty.Text, txtlot.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
                     Console.WriteLine(res);
@@ -856,7 +864,7 @@ namespace SMTCSHARP
                         {
                             mretitemcd = txtitemcd.Text.Trim();
                             mretqty = txtaftqty.Text.Trim();
-                            mretlot = txtlot.Text.Trim().Length>12 && txtpsn.Text.ToUpper().Contains("IEI") ? txtlot.Text.Trim().Substring(0,12) : txtlot.Text.Trim();
+                            mretlot = txtlot.Text.Trim().Length > 12 && txtpsn.Text.ToUpper().Contains("IEI") ? txtlot.Text.Trim().Substring(0, 12) : txtlot.Text.Trim();
                             mretitemnm = txtitmname.Text.Trim();
                             mrackcd = txtRackcd.Text.Trim();
                             printsmtlabel();
@@ -871,12 +879,12 @@ namespace SMTCSHARP
                         txtbefqty.Text = "";
                         txtitemcd.Focus();
                     }
-                //}
-                //catch (Exception ex)
-                //{
-                //    MessageBox.Show(ex.Message);
-                //    txtbefqty.ReadOnly = false;
-                //}
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    txtbefqty.ReadOnly = false;
+                }
             }
         }
 
@@ -929,8 +937,8 @@ namespace SMTCSHARP
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = txtserver.Text + "/RETPRD/save_alt_desktop";
-                    string myparam = String.Format("inpsn={0}&incat={1}&inline={2}&initmcd={3}&inrohs={4}&inqtyaft={5}&incountry={6}&inuser={7}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtaftqty.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
+                    string url = txtserver.Text + "/return/alternative-saving";
+                    string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&roHs={4}&qtyAfter={5}&countryId={6}&userId={7}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtaftqty.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
 
@@ -943,8 +951,8 @@ namespace SMTCSHARP
 
                     if (sts.Equals("11"))
                     {
-                        mretitemcd = (string)res_jes["status"][0]["xitem"];  
-                        mretqty = (string)res_jes["status"][0]["xqty"]; 
+                        mretitemcd = (string)res_jes["status"][0]["xitem"];
+                        mretqty = (string)res_jes["status"][0]["xqty"];
                         mretlot = (string)res_jes["status"][0]["xlot"];
                         mretitemnm = (string)res_jes["status"][0]["xitemnm"];
                         mrackcd = txtRackcd.Text;
@@ -992,37 +1000,45 @@ namespace SMTCSHARP
         {
             string idscan = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[0].Value.ToString();
             switch (dGV.CurrentCell.ColumnIndex)
-            {               
+            {
                 case 14:
                     if (dGV.CurrentCell.Value.ToString().Equals("û"))
                     {
-                        
+
                         if (MessageBox.Show("Are You sure ? " + idscan, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                         {
-                            using (WebClient wc = new WebClient())
+                            try
                             {
-                                string url = String.Format(txtserver.Text + "/RETPRD/remove?inid={0}", idscan);
-                                try
+                                using (HttpClient client = new HttpClient())
                                 {
-                                    var res = wc.DownloadString(url);
-                                    JObject res_jes = JObject.Parse(res);
-                                    string sts = (string)res_jes["status"][0]["cd"];
-                                    string msg = (string)res_jes["status"][0]["msg"];
-                                    if (sts.Equals("1"))
+                                    client.BaseAddress = new Uri(txtserver.Text + '/');
+                                    var response = client.DeleteAsync("return/items/" + idscan).Result;
+                                    if (response.IsSuccessStatusCode)
                                     {
-                                        ret_e_getlist();
-                                        MessageBox.Show(msg);
+                                        string product = response.Content.ReadAsStringAsync().Result;
+                                        JObject responseJobject = JObject.Parse(product);
+                                        string sts = (string)responseJobject["status"][0]["cd"];
+                                        string msg = (string)responseJobject["status"][0]["msg"];
+                                        if (sts.Equals("1"))
+                                        {
+                                            ret_e_getlist();
+                                            MessageBox.Show(msg);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show(msg);
+                                        }
                                     }
                                     else
                                     {
-                                        MessageBox.Show(msg);
+                                        MessageBox.Show(response.ReasonPhrase);
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show(ex.Message);
-                                    txtbefqty.ReadOnly = false;
-                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MessageBox.Show(ex.Message);
+                                txtbefqty.ReadOnly = false;
                             }
                         }
 
@@ -1039,34 +1055,53 @@ namespace SMTCSHARP
                             break;
                     }
                     break;
-            }         
+            }
         }
 
         private void sethold(string pscanid, string state)
         {
             if (MessageBox.Show("Are You sure ? " + pscanid, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                using (WebClient wc = new WebClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    string url = String.Format(txtserver.Text + "/RETPRD/setholdrelease");
-                    string myparam = String.Format("inid={0}&instatus={1}", pscanid, state);
                     try
                     {
-                        wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                        var res = wc.UploadString(url, myparam);
-                        JObject res_jes = JObject.Parse(res);
-                        string sts = (string)res_jes["status"][0]["cd"];
-                        string sts_message = (string)res_jes["status"][0]["msg"];
-                        MessageBox.Show(sts_message);
-                        ret_e_getlist();
+                        client.BaseAddress = new Uri(txtserver.Text + '/');
+                        var stringContent = new FormUrlEncodedContent(new[]
+                        {
+                           new KeyValuePair<string, string>("status", state)
+                        });
+                        HttpResponseMessage response = client.PutAsync("return/status/" + pscanid, stringContent).Result;
+                        if (response.IsSuccessStatusCode)
+                        {
+                            string product = response.Content.ReadAsStringAsync().Result;
+                            JObject responseJobject = JObject.Parse(product);
+                            string sts = (string)responseJobject["status"][0]["cd"];
+                            string msg = (string)responseJobject["status"][0]["msg"];
+                            if (sts.Equals("1"))
+                            {
+                                ret_e_getlist();
+                                MessageBox.Show(msg);
+                            }
+                            else
+                            {
+                                MessageBox.Show(msg);
+                            }
+                        }
+                        else
+                        {
+
+                            MessageBox.Show(response.ReasonPhrase);
+                        }
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message + "[" + url + "]");
+                        MessageBox.Show(ex.Message);
                         txtbefqty.ReadOnly = false;
                     }
+
                 }
-            }                
+            }
         }
 
         private void btnclose_Click(object sender, EventArgs e)
@@ -1111,7 +1146,7 @@ namespace SMTCSHARP
         }
 
         private void dGV_lbljoin_KeyDown(object sender, KeyEventArgs e)
-        {         
+        {
         }
 
         private void txtcombinedqty_KeyPress(object sender, KeyPressEventArgs e)
@@ -1128,8 +1163,9 @@ namespace SMTCSHARP
                 if (ttlRows == 0)
                 {
                     MessageBox.Show("Nothing to be processed");
-                } else
-                {                   
+                }
+                else
+                {
                     //validate qty
                     UInt32 ttlqty = 0;
                     foreach (DataGridViewRow row in dGV_lbljoin.Rows)
@@ -1141,11 +1177,12 @@ namespace SMTCSHARP
                         MessageBox.Show("After Qty > Before Qty (" + txtcombinedqty.Text + " > " + ttlqty.ToString() + ")");
                         txtcombinedqty.Focus();
                         txtcombinedqty.Select();
-                    } else
+                    }
+                    else
                     {
                         btnSaveCombine.Focus();
                     }
-                }                
+                }
             }
         }
 
@@ -1179,17 +1216,17 @@ namespace SMTCSHARP
 
             foreach (DataGridViewRow row in dGV_lbljoin.Rows)
             {
-                itmcode_print = row.Cells[0].Value.ToString();                
-                itmcode += "initmcd[]="+row.Cells[0].Value.ToString()+"&";
-                qtybefore += "inqtybef[]=" + row.Cells[1].Value.ToString() + "&";
-                lotno += "inlot[]=" + row.Cells[2].Value.ToString() + "&";
+                itmcode_print = row.Cells[0].Value.ToString();
+                itmcode += "item[]=" + row.Cells[0].Value.ToString() + "&";
+                qtybefore += "qtyBefore[]=" + row.Cells[1].Value.ToString() + "&";
+                lotno += "lotNumber[]=" + row.Cells[2].Value.ToString() + "&";
                 itmname_print = row.Cells[3].Value.ToString();
             }
             if (itmcode.Equals(""))
             {
                 MessageBox.Show("Please fill Item Code");
                 return;
-            }            
+            }
 
             if (txtcombinedqty.Text.Equals(""))
             {
@@ -1197,7 +1234,7 @@ namespace SMTCSHARP
                 MessageBox.Show("Please fill Actual Qty");
                 return;
             }
-            
+
             string mrohs = radioButton1.Checked ? "1" : "0";
 
             using (WebClient wc = new WebClient())
@@ -1205,11 +1242,11 @@ namespace SMTCSHARP
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = txtserver.Text + "/RETPRD/save_combine_desktop_v01";
-                    string myparam = String.Format("inpsn={0}&incat={1}&inline={2}&{3}inrohs={4}&{5}inqtyaft={6}&{7}incountry={8}&inuser={9}", txtpsn.Text, 
+                    string url = txtserver.Text + "/return/combine";
+                    string myparam = String.Format("doc={0}&category={1}&line={2}&{3}roHs={4}&{5}qtyAfter={6}&{7}countryId={8}&userId={9}", txtpsn.Text,
                         txtcat.Text, txtline.Text, itmcode, mrohs, qtybefore, txtcombinedqty.Text, lotno, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
                     myparam = myparam.Replace("+", "%2B");
-                    string res = wc.UploadString(url, myparam);               
+                    string res = wc.UploadString(url, myparam);
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     string msg = (string)res_jes["status"][0]["msg"];

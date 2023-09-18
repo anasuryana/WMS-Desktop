@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Text;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
@@ -29,7 +30,7 @@ namespace SMTCSHARP
             SHA256Managed managed = new SHA256Managed();
             byte[] hash = managed.ComputeHash(bytes);
             string hashStr = string.Empty;
-            foreach(byte x in hash)
+            foreach (byte x in hash)
             {
                 hashStr += String.Format("{0:x2}", x);
             }
@@ -42,7 +43,7 @@ namespace SMTCSHARP
             if (txtusername.Text == "UserID")
             {
                 txtusername.Text = "";
-            }            
+            }
         }
 
         private void txtusername_Leave(object sender, EventArgs e)
@@ -60,7 +61,7 @@ namespace SMTCSHARP
             showImageInfo("Please \n wait...");
             pictureBox1.BackColor = Color.LightSkyBlue;
             backgroundWorker1.RunWorkerAsync();
-            
+
         }
 
         private void showImageInfo(string thetext)
@@ -73,7 +74,7 @@ namespace SMTCSHARP
                     using (Font myFont = new Font("Consolas", 8))
                     {
                         g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                        g.DrawString(thetext , myFont, myBrush, 0,  0);
+                        g.DrawString(thetext, myFont, myBrush, 0, 0);
                         pictureBox1.Image = bm;
                     }
                 }
@@ -81,13 +82,14 @@ namespace SMTCSHARP
         }
 
         private void FLOGIN_Load(object sender, EventArgs e)
-        {            
-                
+        {
+
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
             if (ckrk == null)
             {
                 savesetting();
-            } else
+            }
+            else
             {
                 txts_server.Text = ckrk.GetValue("SERVER").ToString();
                 txts_db.Text = ckrk.GetValue("DB").ToString();
@@ -99,7 +101,7 @@ namespace SMTCSHARP
                 ASettings.setmys_pw(txts_pw.Text);
             }
             ActiveControl = txtusername;
-            this.Text = string.Concat(this.Text, " ", ASettings.getVersion());     
+            this.Text = string.Concat(this.Text, " ", ASettings.getVersion());
         }
 
         void savesetting()
@@ -131,7 +133,8 @@ namespace SMTCSHARP
                 setstatesettingRO_ctl(false);
                 btnsave.Text = "Save";
                 txts_server.Focus();
-            } else
+            }
+            else
             {
                 btnsave.Text = "Edit";
                 savesetting();
@@ -144,7 +147,68 @@ namespace SMTCSHARP
             lblinfo.Text = "Please wait ...";
             ASettings.setmyuserid(txtusername.Text);
             ASettings.setmypw(txtpassword.Text);
-            bgworklog.RunWorkerAsync();
+            string constr = String.Format(ASettings.getconstr(), txts_server.Text, txts_db.Text, txts_user.Text, txts_pw.Text);
+            int i = 0;
+            bool isvalid = false;
+            btnsignin.Enabled = false;
+            Task.Factory.StartNew(() =>
+            {
+                SqlConnection conn = new SqlConnection(constr);
+                conn.Open();
+                SqlCommand cmd = new SqlCommand("SELECT MSTEMP_ID, concat(MSTEMP_FNM, ' ', MSTEMP_LNM) FULLNAME,MSTEMP_FNM,MSTEMP_GRP, MSTEMP_PW FROM MSTEMP_TBL WHERE MSTEMP_ID='" + txtusername.Text + "'", conn);
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+
+                    if (dr["MSTEMP_PW"].ToString() == getHashSHA256(txtpassword.Text))
+                    {
+                        ASettings.setmyuser(dr["FULLNAME"].ToString());
+                        ASettings.setmygroup(dr["MSTEMP_GRP"].ToString());
+                        ASettings.setmyuserfname(dr["MSTEMP_FNM"].ToString());
+                        isvalid = true;
+                        islogedin = true;
+                        ASettings.setmyrunsess(true);
+                    }
+                    i++;
+                }
+                dr.Close();
+                conn.Close();
+            }).ContinueWith(task =>
+            {
+                if (i > 0)
+                {
+                    if (isvalid)
+                    {
+                        lblinfo.Text = "go";
+                        txtpassword.Text = "";
+                        txtusername.Text = "";
+                        this.Hide();
+                        FormCollection fc = Application.OpenForms;
+                        bool isviewed = false;
+                        foreach (Form frm in fc)
+                        {
+                            if (frm.Name == "FRM_MAIN")
+                            {
+                                isviewed = true;
+                            }
+                        }
+                        if (isviewed == false && ASettings.getmyrunsess())
+                        {
+                            fmain = new FRM_MAIN();
+                            fmain.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        lblinfo.Text = "Invalid password";
+                    }
+                }
+                else
+                {
+                    lblinfo.Text = "Failed";
+                }
+                btnsignin.Enabled = true;
+            }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -157,14 +221,12 @@ namespace SMTCSHARP
                     conn.Open();
                     pictureBox1.BackColor = Color.SeaGreen;
                     showImageInfo("Success");
-                    //toolTip1.SetToolTip(pictureBox1, "Success");
                     SetText("Success");
                 }
                 catch (SqlException exx)
                 {
                     showImageInfo("Sorry");
                     pictureBox1.BackColor = Color.DarkRed;
-                    //toolTip1.SetToolTip(pictureBox1, exx.Message);
                     SetText(exx.Message);
                 }
 
@@ -191,108 +253,11 @@ namespace SMTCSHARP
             }
         }
 
-        private void SetTextinfo(string text)
-        {
-            // InvokeRequired required compares the thread ID of the
-            // calling thread to the thread ID of the creating thread.
-            // If these threads are different, it returns true.
-            if (this.lblinfo.InvokeRequired)
-            {
-                SetTextCallbacklog d = new SetTextCallbacklog(SetTextinfo);
-                this.Invoke(d, new object[] { text });
-            }
-            else
-            {                
-                lblinfo.Text = text;
-            }
-
-            if (this.txtpassword.InvokeRequired)
-            {
-                SetTextCallbacklog d = new SetTextCallbacklog(SetTextinfo);
-                this.Invoke(d, new object[] { text });
-            }
-            else
-            {
-                txtpassword.Text = "";
-            }
-        }
-
-        private void lblinfo_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void bgworklog_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            string constr = String.Format(ASettings.getconstr(), txts_server.Text, txts_db.Text, txts_user.Text, txts_pw.Text);
-            using (SqlConnection conn = new SqlConnection(constr))
-            {
-                try
-                {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("SELECT MSTEMP_ID, concat(MSTEMP_FNM, ' ', MSTEMP_LNM) FULLNAME,MSTEMP_FNM,MSTEMP_GRP, MSTEMP_PW FROM MSTEMP_TBL WHERE MSTEMP_ID='" + txtusername.Text + "'", conn))
-                    {
-                        using (SqlDataReader dr = cmd.ExecuteReader())
-                        {
-                            int i = 0;
-                            bool isvalid = false;
-                            while (dr.Read())
-                            {
-                                
-                                if (dr["MSTEMP_PW"].ToString() ==  getHashSHA256(txtpassword.Text))
-                                {
-                                    ASettings.setmyuser(dr["FULLNAME"].ToString());
-                                    ASettings.setmygroup(dr["MSTEMP_GRP"].ToString());
-                                    ASettings.setmyuserfname(dr["MSTEMP_FNM"].ToString());
-                                    isvalid = true;
-                                    islogedin = true;
-                                    ASettings.setmyrunsess(true);                           
-                                }
-                                i++;
-                            }
-                            if (i > 0)
-                            {
-                                if (isvalid)
-                                {                                    
-                                    SetTextinfo("go");
-                                } else
-                                {
-                                    SetTextinfo("Invalid password");
-                                }                              
-                            } else
-                            {
-                                SetTextinfo("Failed");
-                            }                  
-                            
-                        }
-                    }
-                } catch (SqlException exx)
-                {
-                    SetTextinfo(exx.Message);
-                }
-                
-            }
-        }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (islogedin)
             {
-                this.Hide();
-                FormCollection fc = Application.OpenForms;
-                bool isviewed = false;
-                foreach(Form frm in fc)
-                {
-                    if (frm.Name == "FRM_MAIN")
-                    {
-                        isviewed = true;
-                    }
-                }
-                if (isviewed == false && ASettings.getmyrunsess())
-                {
-                    fmain = new FRM_MAIN();
-                    fmain.ShowDialog();
-                }
+
             }
             if (!ASettings.getmyrunsess())
             {
@@ -301,19 +266,14 @@ namespace SMTCSHARP
                 {
                     this.Visible = true;
                 }
-                
+
             }
-        }
-
-        private void txtpassword_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         private void txtpassword_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)13)
-            {                
+            if (e.KeyChar == (char)13)
+            {
                 btnsignin.Focus();
             }
         }
@@ -324,6 +284,31 @@ namespace SMTCSHARP
             {
                 txtpassword.Focus();
             }
+        }
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl1.SelectedIndex == 1)
+            {
+                panel1.Visible = true;
+                textBox1.Text = "";
+            }
+        }
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (textBox1.Text.Equals("setSetting"))
+                {
+                    panel1.Visible = false;
+                }
+                else
+                {
+                    MessageBox.Show("Not authorized", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+
         }
     }
 }

@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -27,43 +23,54 @@ namespace SMTCSHARP
             dGV.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
             dGV.Columns[0].Name = "PSN Number";
             dGV.Columns[0].Width = 200;
+            ckOutstaningOnly.Checked = ASettings.getmyflag().Equals('0') ? true : false; 
         }
 
-        void searchpsnlist()
+        async
+        Task
+searchpsnlist(char flag)
         {
-            //dGV.Rows.Clear();
-            string constr = String.Format(ASettings.getconstr(), ASettings.getmys_server(), ASettings.getmys_db(), ASettings.getmys_user(), ASettings.getmys_pw());
-            using (SqlConnection conn = new SqlConnection(constr))
+            lblInfo.Text = "Please wait";
+            if (txtsearch.Text.Length < 7 && flag.Equals('1'))
             {
-                try
-                {
-                    conn.Open();
-                    using (SqlCommand cmd = new SqlCommand("sp_psnno_list", conn))
-                    {
-                        cmd.Parameters.Add("@psnno", SqlDbType.VarChar).Value = txtsearch.Text;
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        SqlDataAdapter da = new SqlDataAdapter(cmd);
-                        DataTable ds = new DataTable();
-                        da.Fill(ds);
-                        dGV.AutoGenerateColumns = true;
-                        dGV.Columns.Clear();
-                        dGV.DataSource = ds;
-                        dGV.Columns[0].HeaderText = "PSN Number";
-                        dGV.Columns[0].Width = 300;                       
-                    }
-                }
-                catch (SqlException exx)
-                {
-                    MessageBox.Show(exx.Message);
-                }
+                MessageBox.Show("At least 7 chars required", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                txtsearch.ReadOnly = true;
+                btnSearch.Enabled = false;
+
+                string constr = String.Format(ASettings.getconstr(), ASettings.getmys_server(), ASettings.getmys_db(), ASettings.getmys_user(), ASettings.getmys_pw());
+                SqlConnection conn = new SqlConnection(constr);
+                DataTable ds = new DataTable();
+                conn.Open();
+
+
+                SqlCommand cmd = new SqlCommand(flag.Equals('1') ? "sp_psnno_list" : "wms_sp_psnno_ost_upload_mega_list", conn);
+                cmd.Parameters.Add("@psnno", SqlDbType.VarChar).Value = txtsearch.Text;
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.CommandTimeout = 120;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(ds);
+                da.Dispose();
+
+
+                txtsearch.ReadOnly = false;
+                btnSearch.Enabled = true;
+                dGV.AutoGenerateColumns = true;
+                dGV.Columns.Clear();
+                ds.Columns[0].ColumnName = "PSN Number";
+                dGV.DataSource = ds;
+                dGV.Columns[0].Width = 200;
+                conn.Close();
             }
         }
 
-        private void txtsearch_KeyPress(object sender, KeyPressEventArgs e)
+        private async void txtsearch_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)13)
+            if (e.KeyChar == (char)13)
             {
-                searchpsnlist();
+                await searchpsnlist(ckOutstaningOnly.Checked ? '0' : '1');
             }
         }
 
@@ -81,6 +88,26 @@ namespace SMTCSHARP
                 DialogResult = DialogResult.OK;
                 Close();
             }
-        }        
+        }
+
+        private async void btnSearch_Click(object sender, EventArgs e)
+        {
+            lblInfo.Text = "Please wait";
+            btnSearch.Enabled = false;
+            await Task.Delay(TimeSpan.FromSeconds(0.5));
+            try
+            {
+                await searchpsnlist(ckOutstaningOnly.Checked ? '0' : '1');
+                lblInfo.Text = dGV.Rows.Count + " row(s) found";
+            }
+            catch (Exception ex)
+            {
+                lblInfo.Text = "";
+                btnSearch.Enabled = true;
+                txtsearch.ReadOnly = false;
+                MessageBox.Show(ex.Message);
+            }
+        }
+
     }
 }

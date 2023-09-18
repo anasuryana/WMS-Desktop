@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SMTCSHARP</RootNamespace>
     <AssemblyName>SMTCSHARP</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -29,6 +29,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -118,12 +119,6 @@
     <Compile Include="FCombineRMLabel.Designer.cs">
       <DependentUpon>FCombineRMLabel.cs</DependentUpon>
     </Compile>
-    <Compile Include="FCustomer.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FCustomer.Designer.cs">
-      <DependentUpon>FCustomer.cs</DependentUpon>
-    </Compile>
     <Compile Include="FKittingReturn.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -135,12 +130,6 @@
     </Compile>
     <Compile Include="FLOGIN.Designer.cs">
       <DependentUpon>FLOGIN.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FMSTItem.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FMSTItem.Designer.cs">
-      <DependentUpon>FMSTItem.cs</DependentUpon>
     </Compile>
     <Compile Include="FKitting.cs">
       <SubType>Form</SubType>
@@ -192,17 +181,11 @@
     <EmbeddedResource Include="FCombineRMLabel.resx">
       <DependentUpon>FCombineRMLabel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FCustomer.resx">
-      <DependentUpon>FCustomer.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="FKittingReturn.resx">
       <DependentUpon>FKittingReturn.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FLOGIN.resx">
       <DependentUpon>FLOGIN.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FMSTItem.resx">
-      <DependentUpon>FMSTItem.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FKitting.resx">
       <DependentUpon>FKitting.cs</DependentUpon>
@@ -233,6 +216,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

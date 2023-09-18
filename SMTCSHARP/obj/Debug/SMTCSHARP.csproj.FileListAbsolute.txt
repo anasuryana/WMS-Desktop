@@ -97,10 +97,8 @@ D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\ICSharpCode.SharpZipLib.xml
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\INIFileParser.xml
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\Newtonsoft.Json.xml
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csprojResolveAssemblyReference.cache
-D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FCustomer.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FKittingReturn.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FLOGIN.resources
-D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FMSTItem.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FKitting.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FP_PSNList.resources
 D:\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FReturnAnalyze.resources

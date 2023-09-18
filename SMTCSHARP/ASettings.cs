@@ -6,7 +6,7 @@ namespace SMTCSHARP
 {
     static class ASettings
     {
-        const string myversion = "1.0.7.3";
+        const string myversion = "2.0.0b";
         static string myuser;
         static string myuserfname;
         static string myuserid;
@@ -21,6 +21,7 @@ namespace SMTCSHARP
         static string mysdb;
         static string myBusinessGroup;
         static bool runsess = false;
+        static char myflag; 
 
         public static string getVersion()
         {
@@ -154,6 +155,16 @@ namespace SMTCSHARP
         public static bool getmyrunsess()
         {
             return runsess;
+        }
+
+        public static void setmyflag(char p1)
+        {
+            myflag = p1;
+        }
+
+        public static char getmyflag()
+        {
+            return myflag;
         }
 
         static string Encrypt(string string_to_encrypt)

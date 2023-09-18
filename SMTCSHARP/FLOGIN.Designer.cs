@@ -52,10 +52,14 @@
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.bgworklog = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -67,6 +71,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(307, 212);
             this.tabControl1.TabIndex = 0;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.tabControl1_SelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -92,7 +97,6 @@
             this.lblinfo.Size = new System.Drawing.Size(299, 23);
             this.lblinfo.TabIndex = 3;
             this.lblinfo.Text = "Welcome ...";
-            this.lblinfo.Click += new System.EventHandler(this.lblinfo_Click);
             // 
             // btnsignin
             // 
@@ -115,7 +119,6 @@
             this.txtpassword.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.toolTip1.SetToolTip(this.txtpassword, "Password");
             this.txtpassword.UseSystemPasswordChar = true;
-            this.txtpassword.TextChanged += new System.EventHandler(this.txtpassword_TextChanged);
             this.txtpassword.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtpassword_KeyPress);
             // 
             // txtusername
@@ -135,6 +138,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.panel1);
             this.tabPage2.Controls.Add(this.pictureBox1);
             this.tabPage2.Controls.Add(this.btnsave);
             this.tabPage2.Controls.Add(this.btntest);
@@ -259,15 +263,38 @@
             // 
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
-            // bgworklog
-            // 
-            this.bgworklog.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgworklog_DoWork);
-            // 
             // timer1
             // 
             this.timer1.Enabled = true;
             this.timer1.Interval = 5000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label5);
+            this.panel1.Controls.Add(this.textBox1);
+            this.panel1.Location = new System.Drawing.Point(7, 6);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(268, 176);
+            this.panel1.TabIndex = 11;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(39, 78);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(187, 22);
+            this.textBox1.TabIndex = 0;
+            this.textBox1.UseSystemPasswordChar = true;
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(36, 61);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(28, 14);
+            this.label5.TabIndex = 1;
+            this.label5.Text = "PIN";
             // 
             // FLOGIN
             // 
@@ -289,6 +316,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -317,6 +346,9 @@
         private System.Windows.Forms.Label lblinfo;
         private System.ComponentModel.BackgroundWorker bgworklog;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }
 

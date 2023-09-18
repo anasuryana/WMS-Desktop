@@ -248,13 +248,13 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    var res = wc.DownloadString(String.Format(txtserver.Text + "/SPL/checkPSN_only?inpsn={0}", mpsn));
+                    var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}", mpsn));
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)
                     {
                         SetTextinfo("Done");
-                        var rsdata = from p in res_jes["datahead"] select p;
+                        var rsdata = from p in res_jes["WorkOrder"] select p;
                         var rsdataReff = from p in res_jes["dataReff"] select p;
                         string joblist = "";
                         foreach (var rw in rsdata)
@@ -277,7 +277,7 @@ namespace SMTCSHARP
 
                         SetTextinfopsn("");
                         //get detail
-                        res = wc.DownloadString(String.Format(txtserver.Text + "/RETPRD/getlistrecap_psnonly?inpsn={0}", txtpsn.Text));
+                        res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?doc={0}", txtpsn.Text));
                         res_jes = JObject.Parse(res);
                         rsdata = from p in res_jes["data"] select p;
                         //end get detail
@@ -301,13 +301,13 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    var res = wc.DownloadString(String.Format(txtserver.Text + "/SPL/checkPSN_only?inpsn={0}", mpsn));
+                    var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}", mpsn));
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)
                     {
 
-                        var rsdata = from p in res_jes["datahead"] select p;
+                        var rsdata = from p in res_jes["WorkOrder"] select p;
                         string joblist = "";
                         foreach (var rw in rsdata)
                         {
@@ -317,7 +317,7 @@ namespace SMTCSHARP
                         SetTextinfojob(joblist.Substring(0, joblist.Length - 1));
 
                         //get detail
-                        res = wc.DownloadString(String.Format(txtserver.Text + "/RETPRD/export_to_xls_desktop?inpsn={0}", txtpsn.Text));
+                        res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?doc={0}&output=spreadsheet", txtpsn.Text));
                         res_jes = JObject.Parse(res);
                         rsdata = from p in res_jes["data"] select p;
                         //end get detail
@@ -381,19 +381,18 @@ namespace SMTCSHARP
                     {
                         if (Convert.ToBoolean(row.Cells[5].Value))
                         {
-                            datas += "initemcd[]=" + row.Cells[0].Value.ToString() + "&";
+                            datas += "item[]=" + row.Cells[0].Value.ToString() + "&";
                             ke++;
                         }
                     }
 
-                    string url = txtserver.Text + "/RETPRD/editing_byitempsn_desktop";
-                    string myparam = String.Format("inpsn={0}&{1}indate={2}&inuser={3}&inwh={4}", txtpsn.Text, datas, datepc.Value.ToString("yyyy-MM-dd"), ASettings.getmyuserid(), mwarehouse);
+                    string url = txtserver.Text + "/return/confirm";
+                    string myparam = String.Format("doc={0}&{1}dateConfirm={2}&userId={3}", txtpsn.Text, datas, datepc.Value.ToString("yyyy-MM-dd"), ASettings.getmyuserid());
                     string res = wc.UploadString(url, myparam);
-                    SetTextinfo(res);
+                    JObject res_jes = JObject.Parse(res);
+                    string sts = (string)res_jes["message"];
+                    SetTextinfo(sts);
                     SetTextBtnConform("");
-                    //MessageBox.Show(res);
-
-
                 }
                 catch (Exception ex)
                 {

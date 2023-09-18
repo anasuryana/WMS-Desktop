@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using System.IO;
+using System.Net.Http;
 
 namespace SMTCSHARP
 {
@@ -40,7 +41,7 @@ namespace SMTCSHARP
 
         void initcolumn()
         {
-            dGV.ColumnCount = 10;            
+            dGV.ColumnCount = 10;
             dGV.Columns[0].Name = "ID";
             dGV.Columns[1].Name = "Line";
             dGV.Columns[1].Width = 45;
@@ -81,7 +82,7 @@ namespace SMTCSHARP
             IniData data = parser.ReadFile("config.ini");
             mserverAddress = data["SERVER"]["ADDRESS"];
 
-            var cmbsourc = new Dictionary<string, string>();           
+            var cmbsourc = new Dictionary<string, string>();
             cmbsourc.Add("PLANT1", "PLANT1");
             cmbsourc.Add("PLANT2", "PLANT2");
             cmbsourc.Add("PLANT_NA", "PLANT_NA");
@@ -105,7 +106,7 @@ namespace SMTCSHARP
         private void txt3N1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
-            {                
+            {
 
                 if (txt3N1.Text == "")
                 {
@@ -146,20 +147,22 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        string url = String.Format(mserverAddress + "/ITMLOC/check_item_WithoutPSN?itemcd={0}", txt3N1.Text);
-                        var res = wc.DownloadString(url);                        
+                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(txt3N1.Text);
+                        Console.WriteLine(plainTextBytes);
+                        string url = String.Format(mserverAddress + "/item/{0}/location", Convert.ToBase64String(plainTextBytes));
+                        var res = wc.DownloadString(url);
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (sts.Equals("0"))
                         {
                             MessageBox.Show((string)res_jes["status"][0]["msg"]);
-                            txt3N1.Text = "";                            
+                            txt3N1.Text = "";
                         }
                         else
                         {
                             txt3N2.Focus();
                             txt3N2.ReadOnly = false;
-                            txtitemname.Text = (string)res_jes["data"][0]["ITMD1"];
+                            txtitemname.Text = (string)res_jes["data"][0]["SPTNO"];
                             mrackcd = (string)res_jes["data"][0]["ITMLOC_LOC"];
                         }
                     }
@@ -186,20 +189,20 @@ namespace SMTCSHARP
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = mserverAddress + "/RETPRD/rtn_without_psn";
-                    string myparam = String.Format("itmcd={0}&oldqty={1}&newqty={2}&lotnum={3}&usrid={4}", txt3N1.Text,txt3N2.Text,txtActualQty.Text,txtLotNum.Text, ASettings.getmyuserid());
+                    string url = mserverAddress + "/return/without-psn";
+                    string myparam = String.Format("item={0}&qtyBefore={1}&qtyAfter={2}&lotNumber={3}&userId={4}", txt3N1.Text, txt3N2.Text, txtActualQty.Text, txtLotNum.Text, ASettings.getmyuserid());
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
-                    string msg = (string)res_jes["status"][0]["msg"];                    
+                    string msg = (string)res_jes["status"][0]["msg"];
                     MessageBox.Show(msg);
                     if (sts.Equals("1"))
                     {
                         mretitemcd = txt3N1.Text.Trim();
                         mretqty = txtActualQty.Text.Trim();
                         mretlot = txtLotNum.Text.Trim().Length > 12 ? txtLotNum.Text.Trim().Substring(0, 12) : txtLotNum.Text.Trim();
-                        mretitemnm = txtitemname.Text.Trim();                            
+                        mretitemnm = txtitemname.Text.Trim();
                         printsmtlabel();
                     }
                     ret_e_getlist();
@@ -211,13 +214,13 @@ namespace SMTCSHARP
                     txt3N2.Text = "";
                     txtActualQty.Text = "";
                     txt3N1.Focus();
-            }
+                }
                 catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                txt3N2.ReadOnly = false;
+                {
+                    MessageBox.Show(ex.Message);
+                    txt3N2.ReadOnly = false;
+                }
             }
-        }
         }
 
         void ret_e_getlist()
@@ -227,9 +230,9 @@ namespace SMTCSHARP
                 string txtdt1 = dt1.Value.ToString("yyyy-MM-dd");
                 string txtdt2 = dt2.Value.ToString("yyyy-MM-dd");
                 string txtitemcd = txtSearchItemcd.Text;
-                string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list_period?date1={0}&date2={1}&itemcd={2}&business={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
+                string url = String.Format(mserverAddress + "/report/return-without-psn?dateFrom={0}&dateTo={1}&item={2}&businessGroup={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
                 try
-                {                    
+                {
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -306,7 +309,7 @@ namespace SMTCSHARP
             lbldsg.DrawBarCode(String.Format("1P{0}", mretitemnm.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
 
-            
+
             lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
             lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
             lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
@@ -382,7 +385,7 @@ namespace SMTCSHARP
                 {
                     MessageBox.Show("Qty After > Qty Before");
                     txtActualQty.Focus();
-                    txtActualQty.Select();                    
+                    txtActualQty.Select();
                     return;
                 }
                 btnsave.Focus();
@@ -409,37 +412,52 @@ namespace SMTCSHARP
         private void dGV_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             string idscan = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[0].Value.ToString();
-            string itemcd = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[2].Value.ToString();            
+            string itemcd = dGV.Rows[dGV.CurrentCell.RowIndex].Cells[2].Value.ToString();
             switch (dGV.CurrentCell.ColumnIndex)
-            {                                    
+            {
                 case 11:
                     switch (dGV.CurrentCell.Value.ToString())
                     {
                         case "Cancel":
                             if (MessageBox.Show("Are You sure want to cancel ? " + idscan, "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                             {
-                                using (WebClient wc = new WebClient())
+                                var stringContent = new FormUrlEncodedContent(new[]
                                 {
-                                    string url = String.Format(mserverAddress+ "/RETPRD/cancel_rtn_without_psn");
-                                    string myparam = String.Format("inid={0}&itemcd={1}", idscan, itemcd);
-                                    try
+                                    new KeyValuePair<string, string>("id", idscan),
+                                    new KeyValuePair<string, string>("item", itemcd)
+                                });
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    HttpRequestMessage request = new HttpRequestMessage
                                     {
-                                        wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                                        var res = wc.UploadString(url, myparam);
-                                        JObject res_jes = JObject.Parse(res);
-                                        string sts = (string)res_jes["status"][0]["cd"];
-                                        string sts_message = (string)res_jes["status"][0]["msg"];
-                                        MessageBox.Show(sts_message);
-                                        ret_e_getlist();
+                                        Method = HttpMethod.Delete,
+                                        RequestUri = new Uri(mserverAddress + "/return/without-psn/" + idscan),
+                                        Content = stringContent
+                                    };
+                                    var response = client.SendAsync(request).Result;
+                                    if (response.IsSuccessStatusCode)
+                                    {
+                                        string product = response.Content.ReadAsStringAsync().Result;
+                                        JObject responseJobject = JObject.Parse(product);
+                                        string sts = (string)responseJobject["status"][0]["cd"];
+                                        string msg = (string)responseJobject["status"][0]["msg"];
+                                        if (sts.Equals("1"))
+                                        {
+                                            ret_e_getlist();
+                                            MessageBox.Show(msg);
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show(msg);
+                                        }
                                     }
-                                    catch (Exception ex)
+                                    else
                                     {
-                                        MessageBox.Show(ex.Message + "[" + url + "]");
-                                        txt3N2.ReadOnly = false;
+                                        MessageBox.Show(response.ReasonPhrase);
                                     }
                                 }
                             }
-                            break;                       
+                            break;
                     }
                     break;
             }
@@ -452,11 +470,11 @@ namespace SMTCSHARP
             string txtitemcd = txtSearchItemcd.Text;
             using (WebClient wc = new WebClient())
             {
-                string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list_period?date1={0}&date2={1}&itemcd={2}&business={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
+                string url = String.Format(mserverAddress + "/report/return-without-psn?dateFrom={0}&dateTo={1}&item={2}&businessGroup={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
                 try
-                {                    
+                {
                     var res = wc.DownloadString(url);
-                    
+
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
                     dGV.Rows.Clear();
@@ -477,12 +495,12 @@ namespace SMTCSHARP
                         row.Cells[9].Value = rw["RETRM_CREATEDAT"];
                         row.Cells[10].Value = false;
                         row.Cells[11].Value = "Cancel";
-                        rows.Add(row);                        
+                        rows.Add(row);
                     }
                     dGV.Rows.AddRange(rows.ToArray());
                 }
                 catch (Exception ex)
-                {                    
+                {
                     MessageBox.Show(ex.Message);
                 }
             }
@@ -494,12 +512,12 @@ namespace SMTCSHARP
             string txtdt2 = dt2.Value.ToString("yyyy-MM-dd");
             FolderBrowserDialog folderDlg = new FolderBrowserDialog();
             DialogResult result = folderDlg.ShowDialog();
-            string selectedPath = folderDlg.SelectedPath;            
+            string selectedPath = folderDlg.SelectedPath;
             using (WebClient wc = new WebClient())
             {
                 try
                 {
-                    string url = String.Format(mserverAddress + "/RETPRD/rtn_without_psn_list_period?date1={0}&date2={1}&itemcd=&business={2}", txtdt1, txtdt2,ASettings.getmyBusinessGroup()).ToString();
+                    string url = String.Format(mserverAddress + "/report/return-without-psn?dateFrom={0}&dateTo={1}&item=&businessGroup={2}", txtdt1, txtdt2, ASettings.getmyBusinessGroup()).ToString();
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -536,7 +554,7 @@ namespace SMTCSHARP
                             row.CreateCell(8).SetCellValue(rw["ITMLOC_LOC"].ToString());
                             rowx++;
                         }
-                        workbook.Write(fs);                        
+                        workbook.Write(fs);
                     }
                     MessageBox.Show("Saved successfully");
                 }
@@ -545,11 +563,6 @@ namespace SMTCSHARP
                     MessageBox.Show(ex.Message);
                 }
             }
-        }
-
-        private void dGV_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
     }
 }
