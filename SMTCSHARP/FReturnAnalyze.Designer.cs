@@ -74,6 +74,7 @@
             this.dGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV.Location = new System.Drawing.Point(11, 204);
             this.dGV.Name = "dGV";
+            this.dGV.RowHeadersWidth = 51;
             this.dGV.Size = new System.Drawing.Size(848, 245);
             this.dGV.TabIndex = 52;
             // 
@@ -193,9 +194,9 @@
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.btnsave_config);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(11, 60);
+            this.panel2.Location = new System.Drawing.Point(11, 145);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(848, 389);
+            this.panel2.Size = new System.Drawing.Size(848, 304);
             this.panel2.TabIndex = 61;
             this.panel2.Visible = false;
             // 
@@ -340,11 +341,12 @@
             // btnFindpsn
             // 
             this.btnFindpsn.Image = ((System.Drawing.Image)(resources.GetObject("btnFindpsn.Image")));
-            this.btnFindpsn.Location = new System.Drawing.Point(458, 60);
+            this.btnFindpsn.Location = new System.Drawing.Point(458, 61);
             this.btnFindpsn.Name = "btnFindpsn";
-            this.btnFindpsn.Size = new System.Drawing.Size(33, 29);
+            this.btnFindpsn.Size = new System.Drawing.Size(33, 27);
             this.btnFindpsn.TabIndex = 68;
             this.btnFindpsn.UseVisualStyleBackColor = true;
+            this.btnFindpsn.Click += new System.EventHandler(this.btnFindpsn_Click);
             // 
             // ckOutstaningOnly
             // 
@@ -355,6 +357,7 @@
             this.ckOutstaningOnly.TabIndex = 69;
             this.ckOutstaningOnly.Text = "O/S Only";
             this.ckOutstaningOnly.UseVisualStyleBackColor = true;
+            this.ckOutstaningOnly.CheckedChanged += new System.EventHandler(this.ckOutstaningOnly_CheckedChanged);
             // 
             // FReturnAnalyze
             // 

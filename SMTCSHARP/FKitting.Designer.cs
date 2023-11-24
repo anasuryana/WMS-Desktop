@@ -79,7 +79,7 @@
             this.txtpath.Location = new System.Drawing.Point(162, 79);
             this.txtpath.Name = "txtpath";
             this.txtpath.ReadOnly = true;
-            this.txtpath.Size = new System.Drawing.Size(349, 25);
+            this.txtpath.Size = new System.Drawing.Size(349, 29);
             this.txtpath.TabIndex = 30;
             // 
             // label6
@@ -87,7 +87,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(25, 79);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(88, 18);
+            this.label6.Size = new System.Drawing.Size(110, 22);
             this.label6.TabIndex = 29;
             this.label6.Text = "CSV Folder";
             // 
@@ -95,7 +95,7 @@
             // 
             this.txtserver.Location = new System.Drawing.Point(162, 48);
             this.txtserver.Name = "txtserver";
-            this.txtserver.Size = new System.Drawing.Size(407, 25);
+            this.txtserver.Size = new System.Drawing.Size(407, 29);
             this.txtserver.TabIndex = 2;
             // 
             // label5
@@ -103,7 +103,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(26, 48);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(56, 18);
+            this.label5.Size = new System.Drawing.Size(70, 22);
             this.label5.TabIndex = 1;
             this.label5.Text = "Server";
             // 
@@ -113,7 +113,7 @@
             this.label4.Font = new System.Drawing.Font("Consolas", 17F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(14, 8);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(181, 27);
+            this.label4.Size = new System.Drawing.Size(223, 34);
             this.label4.TabIndex = 0;
             this.label4.Text = "Configuration";
             // 
@@ -129,9 +129,9 @@
             this.panel2.Controls.Add(this.txtserver);
             this.panel2.Controls.Add(this.label5);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(11, 55);
+            this.panel2.Location = new System.Drawing.Point(11, 253);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(848, 404);
+            this.panel2.Size = new System.Drawing.Size(848, 206);
             this.panel2.TabIndex = 54;
             this.panel2.Visible = false;
             // 
@@ -184,7 +184,7 @@
             this.ckOutstaningOnly.AutoSize = true;
             this.ckOutstaningOnly.Location = new System.Drawing.Point(490, 60);
             this.ckOutstaningOnly.Name = "ckOutstaningOnly";
-            this.ckOutstaningOnly.Size = new System.Drawing.Size(91, 22);
+            this.ckOutstaningOnly.Size = new System.Drawing.Size(112, 26);
             this.ckOutstaningOnly.TabIndex = 60;
             this.ckOutstaningOnly.Text = "O/S Only";
             this.toolTip1.SetToolTip(this.ckOutstaningOnly, "Outstanding \'Upload to MEGA\'");
@@ -196,7 +196,7 @@
             this.txtcat.FormattingEnabled = true;
             this.txtcat.Location = new System.Drawing.Point(135, 88);
             this.txtcat.Name = "txtcat";
-            this.txtcat.Size = new System.Drawing.Size(139, 26);
+            this.txtcat.Size = new System.Drawing.Size(139, 30);
             this.txtcat.TabIndex = 52;
             this.txtcat.DropDown += new System.EventHandler(this.txtcat_DropDown);
             // 
@@ -209,6 +209,7 @@
             this.dGV.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV.Location = new System.Drawing.Point(11, 181);
             this.dGV.Name = "dGV";
+            this.dGV.RowHeadersWidth = 51;
             this.dGV.Size = new System.Drawing.Size(848, 278);
             this.dGV.TabIndex = 51;
             // 
@@ -218,7 +219,7 @@
             this.label3.Location = new System.Drawing.Point(9, 120);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 18);
+            this.label3.Size = new System.Drawing.Size(50, 22);
             this.label3.TabIndex = 48;
             this.label3.Text = "Line";
             // 
@@ -228,7 +229,7 @@
             this.label2.Location = new System.Drawing.Point(9, 88);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(72, 18);
+            this.label2.Size = new System.Drawing.Size(90, 22);
             this.label2.TabIndex = 47;
             this.label2.Text = "Category";
             // 
@@ -238,7 +239,7 @@
             this.label1.Location = new System.Drawing.Point(9, 59);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(64, 18);
+            this.label1.Size = new System.Drawing.Size(80, 22);
             this.label1.TabIndex = 46;
             this.label1.Text = "PSN No.";
             // 
@@ -249,7 +250,7 @@
             this.lblname.Location = new System.Drawing.Point(377, 12);
             this.lblname.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblname.Name = "lblname";
-            this.lblname.Size = new System.Drawing.Size(0, 14);
+            this.lblname.Size = new System.Drawing.Size(0, 18);
             this.lblname.TabIndex = 32;
             // 
             // btnshowhidesetting
@@ -270,7 +271,7 @@
             this.txtline.FormattingEnabled = true;
             this.txtline.Location = new System.Drawing.Point(135, 120);
             this.txtline.Name = "txtline";
-            this.txtline.Size = new System.Drawing.Size(139, 26);
+            this.txtline.Size = new System.Drawing.Size(139, 30);
             this.txtline.TabIndex = 53;
             this.txtline.DropDown += new System.EventHandler(this.txtline_DropDown);
             // 
@@ -325,12 +326,12 @@
             this.txtpsn.Location = new System.Drawing.Point(135, 60);
             this.txtpsn.Name = "txtpsn";
             this.txtpsn.ReadOnly = true;
-            this.txtpsn.Size = new System.Drawing.Size(310, 25);
+            this.txtpsn.Size = new System.Drawing.Size(310, 29);
             this.txtpsn.TabIndex = 59;
             // 
             // FKitting
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 461);
             this.Controls.Add(this.panel2);

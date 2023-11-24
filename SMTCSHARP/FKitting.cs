@@ -333,6 +333,7 @@ namespace SMTCSHARP
         private void btnFindpsn_Click(object sender, EventArgs e)
         {
             ASettings.setmyflag(ckOutstaningOnly.Checked ? '0' : '1');
+            ASettings.setmyContext('k');
             using (var pf = new FP_PSNList())
             {
                 var res = pf.ShowDialog();
