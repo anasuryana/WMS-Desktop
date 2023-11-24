@@ -16,21 +16,28 @@ namespace SMTCSHARP
             InitializeComponent();
         }
 
-        void initcolumn()
+        void Initcolumn()
         {
             dGV.ColumnCount = 1;
             dGV.RowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             dGV.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
             dGV.Columns[0].Name = "PSN Number";
             dGV.Columns[0].Width = 200;
-            ckOutstaningOnly.Checked = ASettings.getmyflag().Equals('0') ? true : false; 
+            ckOutstaningOnly.Checked = ASettings.getmyflag().Equals('0') ? true : false;
+            switch (ASettings.getmyContext())
+            {
+                case 'r':
+                    lblContextValue.Text = "Return PSN"; break;
+                case 'k':
+                    lblContextValue.Text = "Supply PSN"; break;
+            }
         }
 
         async
         Task
-searchpsnlist(char flag)
+        Searchpsnlist(char flag)
         {
-            lblInfo.Text = "Please wait";
+            
             if (txtsearch.Text.Length < 7 && flag.Equals('1'))
             {
                 MessageBox.Show("At least 7 chars required", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -45,8 +52,9 @@ searchpsnlist(char flag)
                 DataTable ds = new DataTable();
                 conn.Open();
 
+                string StoredProcedureName = lblContextValue.Text.ToLower().Contains("return") ? "wms_sp_psnno_ost_upload_return_mega_list" : "wms_sp_psnno_ost_upload_mega_list";                
 
-                SqlCommand cmd = new SqlCommand(flag.Equals('1') ? "sp_psnno_list" : "wms_sp_psnno_ost_upload_mega_list", conn);
+                SqlCommand cmd = new SqlCommand(flag.Equals('1') ? "sp_psnno_list" : StoredProcedureName, conn);
                 cmd.Parameters.Add("@psnno", SqlDbType.VarChar).Value = txtsearch.Text;
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.CommandTimeout = 120;
@@ -70,13 +78,13 @@ searchpsnlist(char flag)
         {
             if (e.KeyChar == (char)13)
             {
-                await searchpsnlist(ckOutstaningOnly.Checked ? '0' : '1');
+                await Searchpsnlist(ckOutstaningOnly.Checked ? '0' : '1');
             }
         }
 
         private void FP_PSNList_Load(object sender, EventArgs e)
         {
-            initcolumn();
+            Initcolumn();
             ActiveControl = txtsearch;
         }
 
@@ -97,7 +105,7 @@ searchpsnlist(char flag)
             await Task.Delay(TimeSpan.FromSeconds(0.5));
             try
             {
-                await searchpsnlist(ckOutstaningOnly.Checked ? '0' : '1');
+                await Searchpsnlist(ckOutstaningOnly.Checked ? '0' : '1');
                 lblInfo.Text = dGV.Rows.Count + " row(s) found";
             }
             catch (Exception ex)

@@ -6,7 +6,7 @@ namespace SMTCSHARP
 {
     static class ASettings
     {
-        const string myversion = "2.0.0b";
+        const string myversion = "2.0.1";
         static string myuser;
         static string myuserfname;
         static string myuserid;
@@ -22,6 +22,7 @@ namespace SMTCSHARP
         static string myBusinessGroup;
         static bool runsess = false;
         static char myflag; 
+        static char myContext; 
 
         public static string getVersion()
         {
@@ -196,6 +197,16 @@ namespace SMTCSHARP
             {
                 throw new Exception(ex.Message, ex.InnerException);
             }            
+        }
+
+        public static void setmyContext(char p1)
+        {
+            myContext = p1;
+        }
+
+        public static char getmyContext()
+        {
+            return myContext;
         }
 
     }

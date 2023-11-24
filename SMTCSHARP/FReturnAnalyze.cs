@@ -1,24 +1,23 @@
-﻿using System;
+﻿using IniParser;
+using IniParser.Model;
+using Newtonsoft.Json.Linq;
+using NPOI.SS.UserModel;
+using NPOI.XSSF.UserModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Net;
-using Newtonsoft.Json.Linq;
 using System.Windows.Forms;
-using IniParser;
-using IniParser.Model;
-using NPOI.SS.UserModel;
-using System.IO;
-using NPOI.XSSF.UserModel;
 
 namespace SMTCSHARP
 {
     public partial class FReturnAnalyze : Form
     {
         string mpsn = "";
-        string mwarehouse = "";
 
         public FReturnAnalyze()
         {
@@ -111,8 +110,6 @@ namespace SMTCSHARP
             dGV.Columns[4].Name = "Discrepancy";
             dGV.Columns[4].Width = 100;
             dGV.Columns[4].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-
-
 
             foreach (DataGridViewColumn column in dGV.Columns)
             {
@@ -276,8 +273,9 @@ namespace SMTCSHARP
                         }
 
                         SetTextinfopsn("");
+
                         //get detail
-                        res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?doc={0}", txtpsn.Text));
+                        res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?doc={0}&outstanding={1}", txtpsn.Text, ckOutstaningOnly.Checked ? '0' : '1'));
                         res_jes = JObject.Parse(res);
                         rsdata = from p in res_jes["data"] select p;
                         //end get detail
@@ -398,6 +396,34 @@ namespace SMTCSHARP
                 {
                     MessageBox.Show(ex.Message);
                 }
+            }
+        }
+
+        private void btnFindpsn_Click(object sender, EventArgs e)
+        {
+            ASettings.setmyflag(ckOutstaningOnly.Checked ? '0' : '1');
+            ASettings.setmyContext('r');
+            using (var pf = new FP_PSNList())
+            {
+                var res = pf.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    txtpsn.Text = pf.ReturnValue1;
+
+                    mpsn = txtpsn.Text;
+                    SetTextinfo("Please wait...");
+                    bgworksearch.RunWorkerAsync();
+
+                }
+            }
+        }
+
+        private void ckOutstaningOnly_CheckedChanged(object sender, EventArgs e)
+        {
+            if (txtpsn.Text.Length > 0)
+            {
+                SetTextinfo("Please wait...");
+                bgworksearch.RunWorkerAsync();
             }
         }
     }
