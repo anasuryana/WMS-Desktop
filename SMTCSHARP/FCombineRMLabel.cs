@@ -19,12 +19,12 @@ namespace SMTCSHARP
         string itemqty = "";
         string itemlotno = "";
         string msupqty = "";
-        
+
         string mretitemcd = "";
         string mretqty = "";
         string mretlot = "";
         string mretitemnm = "";
-        string mretrohs = "";
+        string mUniqueCode = "";
         public FCombineRMLabel()
         {
             InitializeComponent();
@@ -77,12 +77,8 @@ namespace SMTCSHARP
             if (ret != LabelConst.CLS_SUCCESS)
             {
                 MessageBox.Show("Connect error: " + ret.ToString(), "Error");
-                //return;
             }
-            else
-            {
-                //MessageBox.Show("terhubung");
-            }
+
             LabelDesign lbldsg = new LabelDesign();
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeFormatInfo dtfi = culture.DateTimeFormat;
@@ -99,18 +95,16 @@ namespace SMTCSHARP
             lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("(3N2) {0} {1}", mretqty, mretlot.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 255);
             lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", mretqty.Replace(",", string.Empty), mretlot.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(1P) {0}", mretitemnm), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
-            lbldsg.DrawBarCode(String.Format("1P{0}", mretitemnm.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
+            lbldsg.DrawTextPCFont(String.Format("(UC) {0}", mUniqueCode), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
+            lbldsg.DrawBarCode(String.Format(mUniqueCode), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
-            if (mretrohs.Equals("1"))
-            {
-                lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
-            }
+            lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", mretitemcd, mretqty.Replace(",", string.Empty), mretlot.Trim(), mUniqueCode), LabelConst.CLS_ENC_CDPG_IBM850, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 29);
+
+            lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
             lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
             lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
             lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
 
-            //int result = lblprn.Connect(LabelConst.CLS_PORT_USB, "");
             if (ret == LabelConst.CLS_SUCCESS)
             {
                 printer.SetPrintDarkness(UInt16.Parse(myDARk));
@@ -122,7 +116,6 @@ namespace SMTCSHARP
             {
                 printer.Preview(lbldsg, LabelConst.CLS_PRT_RES_203, LabelConst.CLS_UNIT_MILLI, 700, 500);
             }
-            //                        
         }
 
         private void FCombineRMLabel_Load(object sender, EventArgs e)
@@ -167,6 +160,7 @@ namespace SMTCSHARP
                     txthick.Text = trackbthick.Value.ToString();
                     textnarrow.Text = trackbnarrow.Value.ToString();
                     textspeed.Text = trackbarspeed.Value.ToString();
+                    ifCmbBox.SelectedValue = ckrk.GetValue("PRINTER_TYPE");
                 }
             }
             ckrk.Close();
@@ -184,12 +178,13 @@ namespace SMTCSHARP
                     if (textBox1.Text.Substring(0, 3) != "3N1")
                     {
                         MessageBox.Show("Unknown Format C3 Label");
-                        textBox1.Text = "";                        
+                        textBox1.Text = "";
                         return;
                     }
 
-                    
-                } else
+
+                }
+                else
                 {
                     MessageBox.Show("Unknown Format C3 Label.");
                     return;
@@ -199,14 +194,14 @@ namespace SMTCSHARP
                     string[] an1 = textBox1.Text.Split(' ');
                     msupqty = an1[1];
                     int strleng = an1[0].Length - 3;
-                    itemcode = an1[0].Substring(3, strleng);                    
+                    itemcode = an1[0].Substring(3, strleng);
                 }
                 else
                 {
                     int strleng = textBox1.Text.Length - 3;
                     itemcode = textBox1.Text.Substring(3, strleng);
                     msupqty = "";
-                }                
+                }
                 textBox1.Text = itemcode;
 
 
@@ -221,16 +216,16 @@ namespace SMTCSHARP
                     {
                         MessageBox.Show("Could not join different Item Code");
                         return;
-                    }                   
+                    }
                 }
 
                 using (WebClient wc = new WebClient())
                 {
                     try
                     {
-                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(itemcode);                        
-                        string url = String.Format(txtserver.Text + "/item/{0}/location", Convert.ToBase64String(plainTextBytes));                        
-                        var res = wc.DownloadString(url);                        
+                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(itemcode);
+                        string url = String.Format(txtserver.Text + "/item/{0}/location", Convert.ToBase64String(plainTextBytes));
+                        var res = wc.DownloadString(url);
 
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
@@ -276,7 +271,7 @@ namespace SMTCSHARP
 
         private void txtlotno_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(e.KeyChar == (char)13)
+            if (e.KeyChar == (char)13)
             {
                 if (txtlotno.Text.Length > 3)
                 {
@@ -351,7 +346,7 @@ namespace SMTCSHARP
         {
             if (dGV_lbljoin.Rows.Count > 1)
             {
-                if (MessageBox.Show("Are You sure ?" , "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                if (MessageBox.Show("Are You sure ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
                     string itmcode_print = "";
                     string itmname_print = "";
@@ -373,10 +368,15 @@ namespace SMTCSHARP
                         {
                             wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                             string url = txtserver.Text + "/label/combine-raw-material";
-                            string myparam = String.Format("{0}{1}{2}userId={3}",itmcode, lotno, qtybefore , ASettings.getmyuserid());
+                            string myparam = String.Format("{0}{1}{2}userId={3}&machineName={4}",
+                                itmcode,
+                                lotno,
+                                qtybefore,
+                                ASettings.getmyuserid(),
+                                Environment.MachineName.ToString());
                             myparam = myparam.Replace("+", "%2B");
                             string res = wc.UploadString(url, myparam);
-                            
+
                             JObject res_jes = JObject.Parse(res);
                             string sts = (string)res_jes["status"][0]["cd"];
                             string msg = (string)res_jes["status"][0]["msg"];
@@ -389,14 +389,15 @@ namespace SMTCSHARP
                                 mretqty = newqty;
                                 mretlot = lotnoashome;
                                 mretitemnm = itmname_print;
+                                mUniqueCode = (string)res_jes["data"][0]["SER_ID"];
                                 printsmtlabel();
                             }
-                            dGV_lbljoin.Rows.Clear();                            
+                            dGV_lbljoin.Rows.Clear();
                             textBox1.Focus();
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show(ex.Message);                            
+                            MessageBox.Show(ex.Message);
                         }
                     }
                 }
@@ -529,22 +530,23 @@ namespace SMTCSHARP
             else
             {
                 straddres = listView1.SelectedItems[0].Text;
+                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
+                rk.SetValue("PRINTER_DARK", trackbdark.Value.ToString());
+                rk.SetValue("PRINTER_TICK", trackbthick.Value.ToString());
+                rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value.ToString());
+                rk.SetValue("PRINTER_TYPE", type.ToString());
+                rk.SetValue("PRINTER_ADDRESS", straddres);
+                rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());
             }
-            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);            
-            rk.SetValue("PRINTER_DARK", trackbdark.Value.ToString());
-            rk.SetValue("PRINTER_TICK", trackbthick.Value.ToString());
-            rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value.ToString());
-            rk.SetValue("PRINTER_TYPE", type.ToString());
-            rk.SetValue("PRINTER_ADDRESS", straddres);
-            rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());            
+
             MessageBox.Show("Saved");
         }
 
         private void btnreturnprint_Click(object sender, EventArgs e)
         {
-            if(mretitemcd.Length==0 ||
-            mretqty.Length==0 ||
-            mretlot.Length==0 ||
+            if (mretitemcd.Length == 0 ||
+            mretqty.Length == 0 ||
+            mretlot.Length == 0 ||
             mretitemnm.Length == 0)
             {
                 MessageBox.Show("Nothing to be printed");
@@ -556,7 +558,7 @@ namespace SMTCSHARP
         private void btnCancelScan_Click(object sender, EventArgs e)
         {
             int ttlrows = dGV_lbljoin.Rows.Count;
-            if(ttlrows > 0)
+            if (ttlrows > 0)
             {
                 if (MessageBox.Show("Cancel last scan ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
