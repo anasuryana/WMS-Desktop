@@ -43,6 +43,8 @@ namespace SMTCSHARP
             ifCmbBox.DisplayMember = "Display";
             ifCmbBox.ValueMember = "Value";
             ifCmbBox.SelectedIndex = 0;
+
+            txtRackcd.ReadOnly = true;
         }
 
         void get_countrylist()

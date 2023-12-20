@@ -19,6 +19,7 @@ namespace SMTCSHARP
         string itemqty = "";
         string itemlotno = "";
         string msupqty = "";
+        string mrackcd = "";
 
         string mretitemcd = "";
         string mretqty = "";
@@ -89,7 +90,7 @@ namespace SMTCSHARP
 
 
 
-            lbldsg.DrawTextPCFont(String.Format("ITEM CODE : {0}    {1}", mretitemcd, Environment.MachineName.ToString()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 410 + 20);
+            lbldsg.DrawTextPCFont(String.Format("RACK : {0}    {1}", mrackcd, Environment.MachineName.ToString()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 410 + 20);
             lbldsg.DrawTextPCFont(String.Format("QTY : {0}    LOT NO : {1}", mretqty, mretlot), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 385 + 10);
             lbldsg.DrawTextPCFont(String.Format("(3N1) {0}", mretitemcd), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 360);
             lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
@@ -390,6 +391,7 @@ namespace SMTCSHARP
                                 mretlot = lotnoashome;
                                 mretitemnm = itmname_print;
                                 mUniqueCode = (string)res_jes["data"][0]["SER_ID"];
+                                mrackcd = (string)res_jes["data"][0]["rackCode"];
                                 printsmtlabel();
                             }
                             dGV_lbljoin.Rows.Clear();
