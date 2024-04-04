@@ -32,6 +32,7 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.businessGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,7 +44,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tvmenu = new System.Windows.Forms.TreeView();
             this.panlesep = new System.Windows.Forms.Panel();
-            this.businessGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -51,12 +51,14 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem,
             this.businessGroupToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(813, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1220, 36);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -65,19 +67,27 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(65, 30);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(164, 34);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // businessGroupToolStripMenuItem
+            // 
+            this.businessGroupToolStripMenuItem.Name = "businessGroupToolStripMenuItem";
+            this.businessGroupToolStripMenuItem.Size = new System.Drawing.Size(150, 30);
+            this.businessGroupToolStripMenuItem.Text = "Business Group";
+            this.businessGroupToolStripMenuItem.Click += new System.EventHandler(this.businessGroupToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
@@ -85,42 +95,43 @@
             this.toolStripStatusLabel4,
             this.lbluserid,
             this.toolStripStatusLabel3});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 359);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 553);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(813, 24);
+            this.statusStrip1.Padding = new System.Windows.Forms.Padding(2, 0, 21, 0);
+            this.statusStrip1.Size = new System.Drawing.Size(1220, 36);
             this.statusStrip1.TabIndex = 1;
             this.statusStrip1.Text = "statusStrip1";
             // 
             // toolStripStatusLabel1
             // 
             this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(31, 19);
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(47, 29);
             this.toolStripStatusLabel1.Text = "EMP";
             // 
             // toolStripStatusLabel2
             // 
             this.toolStripStatusLabel2.Name = "toolStripStatusLabel2";
-            this.toolStripStatusLabel2.Size = new System.Drawing.Size(10, 19);
+            this.toolStripStatusLabel2.Size = new System.Drawing.Size(16, 29);
             this.toolStripStatusLabel2.Text = ":";
             // 
             // lbluser
             // 
             this.lbluser.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.lbluser.Name = "lbluser";
-            this.lbluser.Size = new System.Drawing.Size(41, 19);
+            this.lbluser.Size = new System.Drawing.Size(63, 29);
             this.lbluser.Text = "ROOT";
             // 
             // toolStripStatusLabel4
             // 
             this.toolStripStatusLabel4.Name = "toolStripStatusLabel4";
-            this.toolStripStatusLabel4.Size = new System.Drawing.Size(24, 19);
+            this.toolStripStatusLabel4.Size = new System.Drawing.Size(39, 29);
             this.toolStripStatusLabel4.Text = "ID :";
             // 
             // lbluserid
             // 
             this.lbluserid.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
             this.lbluserid.Name = "lbluserid";
-            this.lbluserid.Size = new System.Drawing.Size(16, 19);
+            this.lbluserid.Size = new System.Drawing.Size(23, 29);
             this.lbluserid.Text = "-";
             // 
             // toolStripStatusLabel3
@@ -129,18 +140,19 @@
             this.toolStripStatusLabel3.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
             this.toolStripStatusLabel3.ForeColor = System.Drawing.SystemColors.Control;
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
-            this.toolStripStatusLabel3.Size = new System.Drawing.Size(676, 19);
+            this.toolStripStatusLabel3.Size = new System.Drawing.Size(1009, 29);
             this.toolStripStatusLabel3.Spring = true;
-            this.toolStripStatusLabel3.Text = "WMS";            
+            this.toolStripStatusLabel3.Text = "WMS";
             // 
             // naTabForm
             // 
             this.naTabForm.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.naTabForm.Location = new System.Drawing.Point(205, 24);
+            this.naTabForm.Location = new System.Drawing.Point(308, 37);
+            this.naTabForm.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.naTabForm.Name = "naTabForm";
             this.naTabForm.SelectedIndex = 0;
-            this.naTabForm.Size = new System.Drawing.Size(607, 25);
+            this.naTabForm.Size = new System.Drawing.Size(910, 38);
             this.naTabForm.TabIndex = 3;
             this.naTabForm.SelectedIndexChanged += new System.EventHandler(this.naTabForm_SelectedIndexChanged);
             // 
@@ -148,9 +160,10 @@
             // 
             this.panel1.Controls.Add(this.tvmenu);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panel1.Location = new System.Drawing.Point(0, 24);
+            this.panel1.Location = new System.Drawing.Point(0, 36);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 335);
+            this.panel1.Size = new System.Drawing.Size(300, 517);
             this.panel1.TabIndex = 6;
             // 
             // tvmenu
@@ -158,37 +171,31 @@
             this.tvmenu.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tvmenu.Location = new System.Drawing.Point(3, 3);
+            this.tvmenu.Location = new System.Drawing.Point(4, 5);
+            this.tvmenu.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.tvmenu.Name = "tvmenu";
-            this.tvmenu.Size = new System.Drawing.Size(194, 329);
+            this.tvmenu.Size = new System.Drawing.Size(289, 506);
             this.tvmenu.TabIndex = 0;
             this.tvmenu.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvmenu_NodeMouseDoubleClick);
-            this.tvmenu.DoubleClick += new System.EventHandler(this.tvmenu_DoubleClick);
             // 
             // panlesep
             // 
             this.panlesep.Cursor = System.Windows.Forms.Cursors.SizeWE;
             this.panlesep.Dock = System.Windows.Forms.DockStyle.Left;
-            this.panlesep.Location = new System.Drawing.Point(200, 24);
+            this.panlesep.Location = new System.Drawing.Point(300, 36);
+            this.panlesep.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.panlesep.Name = "panlesep";
-            this.panlesep.Size = new System.Drawing.Size(5, 335);
+            this.panlesep.Size = new System.Drawing.Size(8, 517);
             this.panlesep.TabIndex = 7;
             this.panlesep.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseDown);
             this.panlesep.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseMove);
             this.panlesep.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseUp);
             // 
-            // businessGroupToolStripMenuItem
-            // 
-            this.businessGroupToolStripMenuItem.Name = "businessGroupToolStripMenuItem";
-            this.businessGroupToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
-            this.businessGroupToolStripMenuItem.Text = "Business Group";
-            this.businessGroupToolStripMenuItem.Click += new System.EventHandler(this.businessGroupToolStripMenuItem_Click);
-            // 
             // FRM_MAIN
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(813, 383);
+            this.ClientSize = new System.Drawing.Size(1220, 589);
             this.Controls.Add(this.panlesep);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.naTabForm);
@@ -197,6 +204,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FRM_MAIN";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Warehouse Management System";
