@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
@@ -42,14 +36,20 @@ namespace SMTCSHARP
                 {
                     foreach (DataRow dr in dtmenu.Rows)
                     {
-                        if (tnodku.Tag.ToString() == dr["MENU_PRNT"].ToString())
+                        string[] aNodeTag = tnodku.Tag.ToString().Split('#');
+                        string[] aMenuParent = dr["MENU_PRNT"].ToString().Split('#');
+
+                        if (aNodeTag[0] == aMenuParent[0])
                         {
                             if (tnodku.Nodes.Count > 0)
                             {
                                 bool isaddd = false;
                                 foreach (TreeNode tnodku1 in tnodku.Nodes)
                                 {
-                                    if (tnodku1.Tag.ToString() == dr["MENU_ID"].ToString())
+                                    string[] _aNodeTag = tnodku1.Tag.ToString().Split('#');
+                                    string[] _aMenu = dr["MENU_ID"].ToString().Split('#');
+
+                                    if (_aNodeTag[0] == _aMenu[0])
                                     {
                                         isaddd = true;
                                     }
@@ -76,7 +76,10 @@ namespace SMTCSHARP
             {
                 foreach (DataRow dr in dtmenu.Rows)
                 {
-                    if (pnode.Tag.ToString() == dr["MENU_PRNT"].ToString())
+                    string[] _aNodeTag2 = pnode.Tag.ToString().Split('#');
+                    string[] _aMenu2 = dr["MENU_PRNT"].ToString().Split('#');
+
+                    if (_aNodeTag2[0] == _aMenu2[0])
                     {
                         mtnode = pnode.Nodes.Add(dr["MENU_NAME"].ToString());
                         mtnode.Tag = dr["MENU_ID"].ToString();
@@ -98,7 +101,7 @@ namespace SMTCSHARP
                 try
                 {
                     conn.Open();
-                    using (var da = new SqlDataAdapter(String.Format("SELECT a.MENU_ID,MENU_DSCRPTN,MENU_NAME,MENU_PRNT,MENU_URL,MENU_ICON,MENU_STT from MENU_TBL a inner join EMPACCESS_TBL b on a.MENU_ID = b.EMPACCESS_MENUID  where EMPACCESS_GRPID = '{0}' and MENU_DESKTOP='1' order by a.MENU_ID asc ", ASettings.getmygroup()), conn))
+                    using (var da = new SqlDataAdapter(String.Format("SELECT concat(a.MENU_ID, '#', MENU_DESKTOP) as MENU_ID,MENU_DSCRPTN,MENU_NAME,concat(MENU_PRNT, '#', MENU_DESKTOP) as MENU_PRNT,MENU_URL,MENU_ICON,MENU_STT from MENU_TBL a inner join EMPACCESS_TBL b on a.MENU_ID = b.EMPACCESS_MENUID  where EMPACCESS_GRPID = '{0}' and MENU_DESKTOP IS NOT NULL order by a.MENU_ID asc ", ASettings.getmygroup()), conn))
                     {
                         dsmenu = new DataSet();
                         da.Fill(dsmenu);
@@ -109,8 +112,9 @@ namespace SMTCSHARP
                             {
                                 foreach (DataRow dr in dtmenu.Rows)
                                 {
-                                    //Console.WriteLine(dr["MENU_ID"].ToString());
-                                    if (dr["MENU_PRNT"].ToString() == "0")
+                                    string[] aParentMenu = dr["MENU_PRNT"].ToString().Split('#');
+
+                                    if (aParentMenu[0] == "0")
                                     {
                                         tnod = tvmenu.Nodes.Add(dr["MENU_NAME"].ToString());
                                         tnod.Tag = dr["MENU_ID"].ToString();
@@ -138,13 +142,13 @@ namespace SMTCSHARP
             if (this.ActiveMdiChild == null)
             {
                 naTabForm.Visible = false;
-                //MessageBox.Show("ke sini");
             }
             else
             {
                 naTabForm.Visible = true;
-                //MessageBox.Show("sanaa");
+
                 this.ActiveMdiChild.WindowState = FormWindowState.Maximized;
+
                 if (this.ActiveMdiChild.Tag == null)
                 {
                     TabPage tp = new TabPage(this.ActiveMdiChild.Text);
@@ -154,6 +158,18 @@ namespace SMTCSHARP
 
                     this.ActiveMdiChild.Tag = tp;
                     this.ActiveMdiChild.FormClosed += new FormClosedEventHandler(ActiveMdiChild_FormClosed);
+                }
+                else
+                {
+                    // fokus ke tab-form
+                    foreach (TabPage tp in naTabForm.TabPages)
+                    {
+                        if (tp.Tag.Equals(this.ActiveMdiChild))
+                        {
+                            naTabForm.SelectedTab = tp;
+                            break;
+                        }
+                    }
                 }
             }
         }
@@ -173,22 +189,9 @@ namespace SMTCSHARP
             }
         }
 
-        private void itemCardToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void customerToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void panlesep_MouseDown(object sender, MouseEventArgs e)
         {
             ismosdown = true;
-            //Console.WriteLine("mouse down start");
-            //Console.WriteLine("x: " + e.X + " y:" + e.Y);
-            //Console.WriteLine("mouse down end");
         }
 
         private void panlesep_MouseMove(object sender, MouseEventArgs e)
@@ -198,9 +201,6 @@ namespace SMTCSHARP
                 this.panel1.Width += e.X;
                 naTabForm.Width += this.Width - (panel1.Width + panlesep.Width);
                 naTabForm.Left += e.X;
-                //Console.WriteLine("mouse move start");
-                //Console.WriteLine("x: " + e.X + " y:" + e.Y);
-                //Console.WriteLine("mouse move end");
             }
         }
 
@@ -209,119 +209,29 @@ namespace SMTCSHARP
             ismosdown = false;
         }
 
-        private void tvmenu_DoubleClick(object sender, EventArgs e)
-        {
-
-        }
-
         private void tvmenu_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             bool isoopen = false;
-            switch (e.Node.Tag.ToString())
-            {
-                case "BB":
-                    isoopen = false;
-                    foreach (Form frm in this.MdiChildren)
-                    {
-                        //iterate through
-                        if (frm.Name == "FKitting")
-                        {
-                            isoopen = true;
-                        }
-                    }
-                    if (!isoopen)
-                    {
-                        FKitting fmitem = new FKitting();
-                        fmitem.MdiParent = this;
-                        fmitem.Show();
-                    }
-                    break;
-                case "BCA":
-                    isoopen = false;
-                    foreach (Form frm in this.MdiChildren)
-                    {
-                        //iterate through
-                        if (frm.Name == "FKittingReturn")
-                        {
-                            isoopen = true;
-                        }
-                    }
-                    if (!isoopen)
-                    {
-                        FKittingReturn fmitem = new FKittingReturn();
-                        fmitem.MdiParent = this;
-                        fmitem.Show();
-                    }
-                    break;
-                case "BCB":
-                    isoopen = false;
-                    foreach (Form frm in this.MdiChildren)
-                    {
-                        //iterate through
-                        if (frm.Name == "FReturnAnalyze")
-                        {
-                            isoopen = true;
-                        }
-                    }
-                    if (!isoopen)
-                    {
-                        FReturnAnalyze fmitem = new FReturnAnalyze();
-                        fmitem.MdiParent = this;
-                        fmitem.Show();
-                    }
-                    break;
-                case "BCD":
-                    isoopen = false;
-                    foreach (Form frm in this.MdiChildren)
-                    {
-                        //iterate through
-                        if (frm.Name == "FKittingResume")
-                        {
-                            isoopen = true;
-                        }
-                    }
-                    if (!isoopen)
-                    {
-                        FReturnResume fmitem = new FReturnResume();
-                        fmitem.MdiParent = this;
-                        fmitem.Show();
-                    }
-                    break;
-                case "BIM":
-                    isoopen = false;
-                    foreach (Form frm in this.MdiChildren)
-                    {
-                        //iterate through
-                        if (frm.Name == "FCombineRMLabel")
-                        {
-                            isoopen = true;
-                        }
-                    }
-                    if (!isoopen)
-                    {
-                        FCombineRMLabel fmitem = new FCombineRMLabel();
-                        fmitem.MdiParent = this;
-                        fmitem.Show();
-                    }
-                    break;
-                case "BCE":
-                    isoopen = false;
-                    foreach (Form frm in this.MdiChildren)
-                    {
-                        //iterate through
-                        if (frm.Name == "FReturnWithoutPSN")
-                        {
-                            isoopen = true;
-                        }
-                    }
-                    if (!isoopen)
-                    {
-                        FReturnWithoutPSN fmitem = new FReturnWithoutPSN();
-                        fmitem.MdiParent = this;
-                        fmitem.Show();
-                    }
-                    break;
+            string[] _nodeSelected = e.Node.Tag.ToString().Split('#');
 
+            // untuk menghindari fail on createInstance, dengan memeriksa form name yang didaftarkan di tabel MENU_TBL kolom MENU_DESKTOP
+            if (_nodeSelected[0].Length >= 2 && _nodeSelected[1].Length > 1)
+            {
+                foreach (Form frm in this.MdiChildren)
+                {
+                    //iterate through
+                    if (frm.Name == _nodeSelected[1])
+                    {
+                        frm.Activate();
+                        isoopen = true;
+                    }
+                }
+                if (!isoopen)
+                {
+                    var form = Activator.CreateInstance(Type.GetType("SMTCSHARP." + _nodeSelected[1])) as Form;
+                    form.MdiParent = this;
+                    form.Show();
+                }
             }
         }
 
@@ -333,7 +243,7 @@ namespace SMTCSHARP
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("WMS");
-        }      
+        }
 
         private void businessGroupToolStripMenuItem_Click(object sender, EventArgs e)
         {

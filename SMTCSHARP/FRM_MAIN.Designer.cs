@@ -163,7 +163,6 @@
             this.tvmenu.Size = new System.Drawing.Size(194, 329);
             this.tvmenu.TabIndex = 0;
             this.tvmenu.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvmenu_NodeMouseDoubleClick);
-            this.tvmenu.DoubleClick += new System.EventHandler(this.tvmenu_DoubleClick);
             // 
             // panlesep
             // 
