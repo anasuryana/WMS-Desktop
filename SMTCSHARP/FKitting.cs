@@ -122,11 +122,6 @@ namespace SMTCSHARP
 
         private void btnsave_config_Click(object sender, EventArgs e)
         {
-            var parser = new FileIniDataParser();
-            IniData data = parser.ReadFile("config.ini");
-            data["SERVER"]["ADDRESS"] = txtserver.Text;
-            data["FILES"]["ADDRESS"] = txtpath.Text;
-            parser.WriteFile("config.ini", data);
             panel2.Hide();
         }
 
