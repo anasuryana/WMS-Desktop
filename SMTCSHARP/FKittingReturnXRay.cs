@@ -22,8 +22,9 @@ namespace SMTCSHARP
         string mretqty = "";
         string mretlot = "";
         string mretitemnm = "";
-        string mretrohs = "";
+
         string mUniqueCode = "";
+        string mServerApi = "";
         struct MyStruct
         {
             public string id { get; set; }
@@ -37,43 +38,9 @@ namespace SMTCSHARP
 
         void ShowConfig()
         {
-            RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-            if (ckrk == null)
-            {
-                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
-                rk.SetValue("PRINTER_DARK", trackbdark.Value);
-                rk.SetValue("PRINTER_TICK", trackbthick.Value);
-                rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
-                rk.SetValue("PRINTER_TYPE", "");
-                rk.SetValue("PRINTER_ADDRESS", "");
-                rk.SetValue("PRINTER_SPEED", "17");
-            }
-            else
-            {
-                var kchild = ckrk.GetValue("PRINTER_DARK");
-                if (kchild == null)
-                {
-                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
-                    rk.SetValue("PRINTER_DARK", trackbdark.Value);
-                    rk.SetValue("PRINTER_TICK", trackbthick.Value);
-                    rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
-                    rk.SetValue("PRINTER_TYPE", "");
-                    rk.SetValue("PRINTER_ADDRESS", "");
-                    rk.SetValue("PRINTER_SPEED", "17");
-                }
-                else
-                {
-                    trackbdark.Value = UInt16.Parse(ckrk.GetValue("PRINTER_DARK").ToString());
-                    trackbthick.Value = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
-                    trackbnarrow.Value = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
-                    trackbarspeed.Value = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
-                    ifCmbBox.SelectedValue = ckrk.GetValue("PRINTER_TYPE");
-                }
-            }
-
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
-            txtserver.Text = data["SERVER"]["ADDRESS"];
+            this.mServerApi = data["SERVER"]["ADDRESS"];
         }
 
         void initColumn()
@@ -170,7 +137,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = String.Format(txtserver.Text + "/return/counted?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text).ToString();
+                    string url = String.Format(this.mServerApi + "/return/counted?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text).ToString();
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -240,16 +207,6 @@ namespace SMTCSHARP
             initColumn();
         }
 
-        private void btnclose_Click(object sender, EventArgs e)
-        {
-            panel2.Visible = false;
-        }
-
-        private void btnsetting_Click(object sender, EventArgs e)
-        {
-            panel2.Show();
-        }
-
         private void txtpsn_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -258,7 +215,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(txtserver.Text + "/supply/validate-document?doc=" + txtpsn.Text);
+                        var res = wc.DownloadString(this.mServerApi + "/supply/validate-document?doc=" + txtpsn.Text);
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (!sts.Equals("0"))
@@ -287,7 +244,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}", txtpsn.Text, txtcat.Text));
+                        var res = wc.DownloadString(String.Format(this.mServerApi + "/supply/validate-document?doc={0}&category={1}", txtpsn.Text, txtcat.Text));
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (!sts.Equals("0"))
@@ -316,7 +273,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text));
+                        var res = wc.DownloadString(String.Format(this.mServerApi + "/supply/validate-document?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text));
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (sts.Equals("1"))
@@ -414,7 +371,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        string url = String.Format(txtserver.Text + "/supply/validate-item?doc={0}&category={1}&line={2}&item={3}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text);
+                        string url = String.Format(this.mServerApi + "/supply/validate-item?doc={0}&category={1}&line={2}&item={3}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text);
                         var res = wc.DownloadString(url);
 
                         JObject res_jes = JObject.Parse(res);
@@ -480,7 +437,7 @@ namespace SMTCSHARP
 
                     using (WebClient wc = new WebClient())
                     {
-                        string url = String.Format(txtserver.Text + "/supply/validate-supplied-item");
+                        string url = String.Format(this.mServerApi + "/supply/validate-supplied-item");
                         string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&lotNumber={4}&qty={5}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, txtlot.Text, txtbefqty.Text);
                         myparam = myparam.Replace("+", "%2B");
                         try
@@ -567,7 +524,7 @@ namespace SMTCSHARP
                                     if (lio[i].itemCode.Equals(row.Cells[0].Value) &&
                                         lio[i].usageRow.Equals("0") &&
                                         lio[i].itemLot.Equals(row.Cells[1].Value)
-                                        
+
                                         )
                                     {
                                         row.Cells[3].Value = lio[i].qtyAfter;
@@ -594,7 +551,7 @@ namespace SMTCSHARP
                     int _i = 1;
                     foreach (DataGridViewRow row in DGVTemp.Rows)
                     {
-                        if(row.Cells[3].Value == null)
+                        if (row.Cells[3].Value == null)
                         {
                             MessageBox.Show(String.Format("Qty still null found line {0}", _i));
                             btnXRayGetter.Enabled = true;
@@ -615,7 +572,7 @@ namespace SMTCSHARP
                         try
                         {
                             wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                            string url = txtserver.Text + "/return/by-xray";
+                            string url = this.mServerApi + "/return/by-xray";
                             string myparam = String.Format("doc={0}&category={1}&line={2}&{3}{4}{5}{6}{7}userId={8}&machineName={9}",
                                 txtpsn.Text,
                                 txtcat.Text,
@@ -666,7 +623,7 @@ namespace SMTCSHARP
                                 "created_at," +
                                 "user_id," +
                                 "'BACKUP'" +
-                                " FROM countings WHERE document_number='"+ txtpsn.Text + "'" , conn))
+                                " FROM countings WHERE document_number='" + txtpsn.Text + "'", conn))
                             {
                                 cmd.ExecuteNonQuery();
                             }
@@ -719,26 +676,6 @@ namespace SMTCSHARP
             }
         }
 
-        private void trackbdark_ValueChanged(object sender, EventArgs e)
-        {
-            txtdarkness.Text = trackbdark.Value.ToString();
-        }
-
-        private void trackbthick_ValueChanged(object sender, EventArgs e)
-        {
-            txthick.Text = trackbthick.Value.ToString();
-        }
-
-        private void trackbnarrow_ValueChanged(object sender, EventArgs e)
-        {
-            textnarrow.Text = trackbnarrow.Value.ToString();
-        }
-
-        private void trackbarspeed_ValueChanged(object sender, EventArgs e)
-        {
-            textspeed.Text = trackbarspeed.Value.ToString();
-        }
-
         private void DGVTemp_CellPainting(object sender, DataGridViewCellPaintingEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)        /*If a header cell*/
@@ -786,14 +723,13 @@ namespace SMTCSHARP
         {
             foreach (DataGridViewRow row in dGV.Rows)
             {
-
                 if (Convert.ToBoolean(row.Cells[13].Value))
                 {
                     mretitemcd = row.Cells[6].Value.ToString().Trim();
                     mretqty = row.Cells[10].Value.ToString().Trim();
                     mretlot = row.Cells[8].Value.ToString().Trim();
                     mretitemnm = row.Cells[7].Value.ToString().Trim();
-                    mretrohs = row.Cells[11].Value.ToString().Trim();
+
                     mrackcd = row.Cells[16].Value.ToString().Trim();
                     mUniqueCode = row.Cells[17].Value.ToString().Trim();
                     printsmtlabel();
@@ -803,66 +739,19 @@ namespace SMTCSHARP
 
         void printsmtlabel()
         {
-            LabelPrinter printer = new LabelPrinter();
-            printer.SetMeasurementUnit(LabelConst.CLS_UNIT_MILLI);
-            printer.SetFormatAttribute(1);
-
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-            string myaddr = ckrk.GetValue("PRINTER_ADDRESS").ToString();
-            int mytype = UInt16.Parse(ckrk.GetValue("PRINTER_TYPE").ToString());
-            string myDARk = ckrk.GetValue("PRINTER_DARK").ToString();
-            UInt16 myTHICKNESS = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
-            UInt16 myNARROW = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
-            UInt16 mySPEED = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
 
-            int ret = printer.Connect(mytype, myaddr);
-            if (ret != LabelConst.CLS_SUCCESS)
-            {
-                MessageBox.Show("Connect error: " + ret.ToString(), "Error");
-                //return;
-            }
-            else
-            {
-                //MessageBox.Show("terhubung");
-            }
-            LabelDesign lbldsg = new LabelDesign();
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = culture.DateTimeFormat;
-            dtfi.DateSeparator = "/";
-            int startx = 35;
-            int mhratio = 105; //105, 75
-            int mvratio = 110; //150,75
-
-            lbldsg.DrawTextPCFont(String.Format("RACK : {0}    {1}", mrackcd, Environment.MachineName.ToString()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 410 + 20);
-            lbldsg.DrawTextPCFont(String.Format("QTY : {0}    LOT NO : {1}", mretqty, mretlot), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 385 + 10);
-            lbldsg.DrawTextPCFont(String.Format("(3N1) {0}", mretitemcd), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 360);
-            lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(3N2) {0} {1}", mretqty, mretlot.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 255);
-            lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", mretqty.Replace(",", string.Empty), mretlot.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(UC) {0}", mUniqueCode), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
-            lbldsg.DrawBarCode(String.Format(mUniqueCode), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
-            lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", mretitemcd, mretqty.Replace(",", string.Empty), mretlot.Trim(), mUniqueCode), LabelConst.CLS_ENC_CDPG_WINDOWS_1252, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 29);
-
-            if (mretrohs.Equals("1"))
-            {
-                lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
-            }
-            lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
-            lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
-            lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
-
-            if (ret == LabelConst.CLS_SUCCESS)
-            {
-                printer.SetPrintDarkness(UInt16.Parse(myDARk));
-                printer.SetPrintSpeed(mySPEED);
-                printer.Print(lbldsg, 1);
-                printer.Disconnect();
-            }
-            else
-            {
-                printer.Preview(lbldsg, LabelConst.CLS_PRT_RES_203, LabelConst.CLS_UNIT_MILLI, 700, 500);
-            }
+            PSIPrinter PSIprinter = new PSIPrinter();
+            Dictionary<string, string> datanya = new Dictionary<string, string>();
+            datanya.Add("rackCode", mrackcd);
+            datanya.Add("itemQty", mretqty);
+            datanya.Add("itemCode", mretitemcd.Trim());
+            datanya.Add("itemLot", mretlot.Trim());
+            datanya.Add("itemKey", mUniqueCode);
+            datanya.Add("itemName", mretitemnm.Trim());
+            datanya.Add("mretrohs", "1");
+            PSIprinter.setData(datanya);
+            PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
 
     }

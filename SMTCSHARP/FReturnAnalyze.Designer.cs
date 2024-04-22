@@ -194,9 +194,9 @@
             this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.btnsave_config);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(11, 145);
+            this.panel2.Location = new System.Drawing.Point(11, 24);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(848, 304);
+            this.panel2.Size = new System.Drawing.Size(848, 425);
             this.panel2.TabIndex = 61;
             this.panel2.Visible = false;
             // 

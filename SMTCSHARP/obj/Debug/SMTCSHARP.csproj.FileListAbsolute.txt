@@ -220,3 +220,4 @@ C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\D
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Security.Cryptography.Xml.xml
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Security.Principal.Windows.xml
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Text.Encoding.CodePages.xml
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\tsclibnet.dll

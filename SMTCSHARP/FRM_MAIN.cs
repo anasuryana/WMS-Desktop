@@ -249,5 +249,11 @@ namespace SMTCSHARP
                 fmitem.Show();
             }
         }
+
+        private void defaultPrinterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FSettings frm = new FSettings();
+            frm.ShowDialog();
+        }
     }
 }
