@@ -148,7 +148,6 @@ C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\D
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.CoreCompileInputs.cache
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.exe.manifest
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.application
-C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.CopyComplete
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.exe
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.pdb
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FKittingReturnXRay.resources
@@ -221,3 +220,4 @@ C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\D
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Security.Principal.Windows.xml
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Text.Encoding.CodePages.xml
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\tsclibnet.dll
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.Up2Date

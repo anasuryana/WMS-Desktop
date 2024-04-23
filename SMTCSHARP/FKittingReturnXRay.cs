@@ -16,7 +16,6 @@ namespace SMTCSHARP
     public partial class FKittingReturnXRay : Form
     {
         string msupqty = "";
-
         string mretitemcd = "";
         string mrackcd = "";
         string mretqty = "";
@@ -25,6 +24,7 @@ namespace SMTCSHARP
 
         string mUniqueCode = "";
         string mServerApi = "";
+        bool isScanQR = false;
         struct MyStruct
         {
             public string id { get; set; }
@@ -345,26 +345,85 @@ namespace SMTCSHARP
                     return;
                 }
 
-                if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                if (txtitemcd.Text.Contains("|"))
                 {
-                    MessageBox.Show("Unknown Format C3 Label");
-                    txtitemcd.Text = "";
-                    txtitmname.Text = "";
-                    return;
-                }
+                    isScanQR = true;
 
-                if (txtitemcd.Text.Contains(" "))
-                {
-                    string[] an1 = txtitemcd.Text.Split(' ');
-                    msupqty = an1[1];
-                    int strleng = an1[0].Length - 3;
-                    txtitemcd.Text = an1[0].Substring(3, strleng);
+                    // parse qr code
+                    string[] QRArray = txtitemcd.Text.ToUpper().Split('|');
+                    int strLength3N1 = 0;
+                    switch (QRArray[0].Substring(0, 2).ToString())
+                    {
+                        case "Z3":
+                            strLength3N1 = QRArray[0].Length - 4;
+                            txtitemcd.Text = QRArray[0].Substring(4, strLength3N1);
+                            break;
+                        case "3N":
+                            strLength3N1 = QRArray[0].Length - 3;
+                            txtitemcd.Text = QRArray[0].Substring(3, strLength3N1);
+                            break;
+                        default:
+                            txtitemcd.Text = QRArray[0];
+                            break;
+                    }
+
+                    string[] Array3N2;
+
+                    if (QRArray.Length == 4)
+                    {
+                        txtbefqty.Text = QRArray[1];
+                        txtlot.Text = QRArray[2];
+                        txtbefqty.ReadOnly = true;
+                    }
+                    else
+                    {
+                        Array3N2 = QRArray[1].Split(' ');
+                        switch (QRArray[1].Substring(0, 3).ToString())
+                        {
+                            case "3N2":
+                                if (Array3N2[1].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[1];
+                                    txtlot.Text = Array3N2[2];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+
+                            default:
+                                if (Array3N2[0].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[0];
+                                    txtlot.Text = Array3N2[1];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+                        }
+                    }
+
                 }
                 else
                 {
-                    int strleng = txtitemcd.Text.Length - 3;
-                    txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
-                    msupqty = "";
+                    if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                    {
+                        MessageBox.Show("Unknown Format C3 Label");
+                        txtitemcd.Text = "";
+                        txtitmname.Text = "";
+                        return;
+                    }
+
+                    if (txtitemcd.Text.Contains(" "))
+                    {
+                        string[] an1 = txtitemcd.Text.Split(' ');
+                        msupqty = an1[1];
+                        int strleng = an1[0].Length - 3;
+                        txtitemcd.Text = an1[0].Substring(3, strleng);
+                    }
+                    else
+                    {
+                        int strleng = txtitemcd.Text.Length - 3;
+                        txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
+                        msupqty = "";
+                    }
                 }
 
                 using (WebClient wc = new WebClient())
@@ -388,12 +447,15 @@ namespace SMTCSHARP
                             txtbefqty.ReadOnly = false;
                             txtitmname.Text = (string)res_jes["data"][0]["ref"];
                         }
+                        if (isScanQR)
+                        {
+                            validateSuppliedItemByAPI();
+                        }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message);
                     }
-
                 }
             }
         }
@@ -435,53 +497,66 @@ namespace SMTCSHARP
                         }
                     }
 
-                    using (WebClient wc = new WebClient())
-                    {
-                        string url = String.Format(this.mServerApi + "/supply/validate-supplied-item");
-                        string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&lotNumber={4}&qty={5}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, txtlot.Text, txtbefqty.Text);
-                        myparam = myparam.Replace("+", "%2B");
-                        try
-                        {
-                            wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                            var res = wc.UploadString(url, myparam);
-                            JObject res_jes = JObject.Parse(res);
-                            string sts = (string)res_jes["status"][0]["cd"];
-                            if (!sts.Equals("0"))
-                            {
-                                // Tambah baris ke datagrid temp
-                                // sebagai data penampung sementara sampai counting result dari x ray didapatkan
-                                if (DGVTemp.Rows.Count < 4)
-                                {
-                                    DGVTemp.Rows.Add(txtitemcd.Text, txtlot.Text, txtbefqty.Text, null, null, "Not Saved", "Cancel");
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Maximum rows is 4");
-                                }
-                                txtbefqty.Text = "";
-                                txtlot.Text = "";
-                                txtitemcd.Text = "";
-                                txtitmname.Text = "";
-                                txtbefqty.ReadOnly = false;
-                                txtitemcd.Focus();
-                            }
-                            else
-                            {
-                                txtbefqty.Text = "";
-                                txtlot.Text = "";
-                                MessageBox.Show("Item and PSN were not match");
-                                txtbefqty.ReadOnly = false;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message + "[" + url + "]");
-                            txtbefqty.ReadOnly = false;
-                        }
-                    }
+                    validateSuppliedItemByAPI();
                 }
             }
         }
+
+        private void validateSuppliedItemByAPI()
+        {
+            using (WebClient wc = new WebClient())
+            {
+                string url = String.Format(this.mServerApi + "/supply/validate-supplied-item");
+                string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&lotNumber={4}&qty={5}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, txtlot.Text, txtbefqty.Text);
+                myparam = myparam.Replace("+", "%2B");
+                try
+                {
+                    wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    var res = wc.UploadString(url, myparam);
+                    JObject res_jes = JObject.Parse(res);
+                    string sts = (string)res_jes["status"][0]["cd"];
+                    if (!sts.Equals("0"))
+                    {
+                        // Tambah baris ke datagrid temp
+                        // sebagai data penampung sementara sampai counting result dari x ray didapatkan
+                        if (DGVTemp.Rows.Count < 4)
+                        {
+                            DGVTemp.Rows.Add(txtitemcd.Text, txtlot.Text, txtbefqty.Text, null, null, "Not Saved", "Cancel");
+                        }
+                        else
+                        {
+                            MessageBox.Show("Maximum rows is 4");
+                        }
+                        txtbefqty.Text = "";
+                        txtlot.Text = "";
+                        txtitemcd.Text = "";
+                        txtitmname.Text = "";
+                        txtbefqty.ReadOnly = false;
+                        txtitemcd.Focus();
+                    }
+                    else
+                    {
+                        txtbefqty.Text = "";
+                        txtlot.Text = "";
+                        MessageBox.Show("Item and PSN were not match");
+                        txtbefqty.ReadOnly = false;
+
+                        if (isScanQR)
+                        {
+                            txtitemcd.Text = "";
+                            txtitmname.Text = "";
+                            txtitemcd.Focus();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message + "[" + url + "]");
+                    txtbefqty.ReadOnly = false;
+                }
+            }
+        }
+
 
         private void btnXRayGetter_Click(object sender, EventArgs e)
         {

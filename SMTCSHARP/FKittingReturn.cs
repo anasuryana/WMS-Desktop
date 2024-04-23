@@ -393,27 +393,40 @@ namespace SMTCSHARP
                     return;
                 }
 
-                if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                if (txtitemcd.Text.Contains("|"))
                 {
-                    MessageBox.Show("Unknown Format C3 Label");
-                    txtitemcd.Text = "";
-                    txtitmname.Text = "";
-                    return;
-                }
+                    // parse qr code
+                    string[] QRArray = txtitemcd.Text.Split('|');
+                    if (QRArray[0].Substring(0,2).Equals("Z3"))
+                    {
 
-                if (txtitemcd.Text.Contains(" "))
-                {
-                    string[] an1 = txtitemcd.Text.Split(' ');
-                    msupqty = an1[1];
-                    int strleng = an1[0].Length - 3;
-                    txtitemcd.Text = an1[0].Substring(3, strleng);
+                    }
                 }
                 else
                 {
-                    int strleng = txtitemcd.Text.Length - 3;
-                    txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
-                    msupqty = "";
+                    if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                    {
+                        MessageBox.Show("Unknown Format C3 Label");
+                        txtitemcd.Text = "";
+                        txtitmname.Text = "";
+                        return;
+                    }
+
+                    if (txtitemcd.Text.Contains(" "))
+                    {
+                        string[] an1 = txtitemcd.Text.Split(' ');
+                        msupqty = an1[1];
+                        int strleng = an1[0].Length - 3;
+                        txtitemcd.Text = an1[0].Substring(3, strleng);
+                    }
+                    else
+                    {
+                        int strleng = txtitemcd.Text.Length - 3;
+                        txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
+                        msupqty = "";
+                    }
                 }
+
 
                 using (WebClient wc = new WebClient())
                 {
