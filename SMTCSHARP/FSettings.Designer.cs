@@ -34,13 +34,11 @@
             this.txtserver = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.btnSaveconfig = new System.Windows.Forms.Button();
+            this.btnPrintTestpage = new System.Windows.Forms.Button();
+            this.cmbDefaultPrinter = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.tabControl2 = new System.Windows.Forms.TabControl();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.ifCmbBox = new System.Windows.Forms.ComboBox();
-            this.btnsearchprinter = new System.Windows.Forms.Button();
             this.textspeed = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.trackbarspeed = new System.Windows.Forms.TrackBar();
@@ -53,30 +51,34 @@
             this.txtdarkness = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             this.trackbdark = new System.Windows.Forms.TrackBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.cmbDefaultPrinter = new System.Windows.Forms.ComboBox();
-            this.btnPrintTestpage = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
-            this.cmbPrinterTSC = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.nudSpeed = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtPrinterTSCSize = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.ifCmbBox = new System.Windows.Forms.ComboBox();
+            this.btnsearchprinter = new System.Windows.Forms.Button();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tbDensity = new System.Windows.Forms.TrackBar();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtPrinterTSCSize = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.nudSpeed = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.cmbPrinterTSC = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnSaveconfig = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.label7 = new System.Windows.Forms.Label();
+            this.cmbRibbonSize = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabControl2.SuspendLayout();
             this.tabPage3.SuspendLayout();
-            this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarspeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbnarrow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbthick)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbdark)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).BeginInit();
+            this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDensity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -125,6 +127,8 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.cmbRibbonSize);
+            this.tabPage2.Controls.Add(this.label7);
             this.tabPage2.Controls.Add(this.btnPrintTestpage);
             this.tabPage2.Controls.Add(this.cmbDefaultPrinter);
             this.tabPage2.Controls.Add(this.label1);
@@ -137,16 +141,38 @@
             this.tabPage2.Text = "Printer";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // btnSaveconfig
+            // btnPrintTestpage
             // 
-            this.btnSaveconfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSaveconfig.Location = new System.Drawing.Point(12, 543);
-            this.btnSaveconfig.Name = "btnSaveconfig";
-            this.btnSaveconfig.Size = new System.Drawing.Size(124, 31);
-            this.btnSaveconfig.TabIndex = 8;
-            this.btnSaveconfig.Text = "Save && Close";
-            this.btnSaveconfig.UseVisualStyleBackColor = true;
-            this.btnSaveconfig.Click += new System.EventHandler(this.btnSaveconfig_Click);
+            this.btnPrintTestpage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPrintTestpage.Location = new System.Drawing.Point(627, 19);
+            this.btnPrintTestpage.Name = "btnPrintTestpage";
+            this.btnPrintTestpage.Size = new System.Drawing.Size(130, 29);
+            this.btnPrintTestpage.TabIndex = 23;
+            this.btnPrintTestpage.Text = "Print test page";
+            this.btnPrintTestpage.UseVisualStyleBackColor = true;
+            this.btnPrintTestpage.Click += new System.EventHandler(this.btnPrintTestpage_Click);
+            // 
+            // cmbDefaultPrinter
+            // 
+            this.cmbDefaultPrinter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbDefaultPrinter.FormattingEnabled = true;
+            this.cmbDefaultPrinter.Items.AddRange(new object[] {
+            "CITIZEN",
+            "TSC"});
+            this.cmbDefaultPrinter.Location = new System.Drawing.Point(146, 19);
+            this.cmbDefaultPrinter.Name = "cmbDefaultPrinter";
+            this.cmbDefaultPrinter.Size = new System.Drawing.Size(208, 28);
+            this.cmbDefaultPrinter.TabIndex = 22;
+            this.cmbDefaultPrinter.SelectedIndexChanged += new System.EventHandler(this.cmbDefaultPrinter_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(16, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(105, 20);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "Default Printer";
             // 
             // tabControl2
             // 
@@ -186,23 +212,140 @@
             this.tabPage3.Text = "Citizen";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // tabPage4
+            // textspeed
             // 
-            this.tabPage4.Controls.Add(this.tbDensity);
-            this.tabPage4.Controls.Add(this.label6);
-            this.tabPage4.Controls.Add(this.txtPrinterTSCSize);
-            this.tabPage4.Controls.Add(this.label5);
-            this.tabPage4.Controls.Add(this.nudSpeed);
-            this.tabPage4.Controls.Add(this.label3);
-            this.tabPage4.Controls.Add(this.cmbPrinterTSC);
-            this.tabPage4.Controls.Add(this.label2);
-            this.tabPage4.Location = new System.Drawing.Point(4, 29);
-            this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(751, 386);
-            this.tabPage4.TabIndex = 1;
-            this.tabPage4.Text = "TSC";
-            this.tabPage4.UseVisualStyleBackColor = true;
+            this.textspeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.textspeed.Location = new System.Drawing.Point(694, 328);
+            this.textspeed.Multiline = true;
+            this.textspeed.Name = "textspeed";
+            this.textspeed.ReadOnly = true;
+            this.textspeed.Size = new System.Drawing.Size(51, 44);
+            this.textspeed.TabIndex = 31;
+            this.textspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label16
+            // 
+            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(10, 327);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(51, 20);
+            this.label16.TabIndex = 30;
+            this.label16.Text = "Speed";
+            // 
+            // trackbarspeed
+            // 
+            this.trackbarspeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackbarspeed.Location = new System.Drawing.Point(105, 327);
+            this.trackbarspeed.Maximum = 33;
+            this.trackbarspeed.Minimum = 1;
+            this.trackbarspeed.Name = "trackbarspeed";
+            this.trackbarspeed.Size = new System.Drawing.Size(583, 45);
+            this.trackbarspeed.TabIndex = 29;
+            this.trackbarspeed.Value = 17;
+            this.trackbarspeed.ValueChanged += new System.EventHandler(this.trackbarspeed_ValueChanged);
+            // 
+            // textnarrow
+            // 
+            this.textnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.textnarrow.Location = new System.Drawing.Point(694, 275);
+            this.textnarrow.Multiline = true;
+            this.textnarrow.Name = "textnarrow";
+            this.textnarrow.ReadOnly = true;
+            this.textnarrow.Size = new System.Drawing.Size(51, 44);
+            this.textnarrow.TabIndex = 28;
+            this.textnarrow.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label15
+            // 
+            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(10, 274);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(58, 20);
+            this.label15.TabIndex = 27;
+            this.label15.Text = "Narrow";
+            // 
+            // trackbnarrow
+            // 
+            this.trackbnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackbnarrow.Location = new System.Drawing.Point(105, 274);
+            this.trackbnarrow.Maximum = 24;
+            this.trackbnarrow.Minimum = 1;
+            this.trackbnarrow.Name = "trackbnarrow";
+            this.trackbnarrow.Size = new System.Drawing.Size(583, 45);
+            this.trackbnarrow.TabIndex = 26;
+            this.trackbnarrow.Value = 1;
+            this.trackbnarrow.ValueChanged += new System.EventHandler(this.trackbnarrow_ValueChanged);
+            // 
+            // txthick
+            // 
+            this.txthick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txthick.Location = new System.Drawing.Point(694, 222);
+            this.txthick.Multiline = true;
+            this.txthick.Name = "txthick";
+            this.txthick.ReadOnly = true;
+            this.txthick.Size = new System.Drawing.Size(51, 44);
+            this.txthick.TabIndex = 25;
+            this.txthick.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label14
+            // 
+            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(10, 221);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(43, 20);
+            this.label14.TabIndex = 24;
+            this.label14.Text = "Thick";
+            // 
+            // trackbthick
+            // 
+            this.trackbthick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackbthick.Location = new System.Drawing.Point(105, 221);
+            this.trackbthick.Maximum = 24;
+            this.trackbthick.Minimum = 1;
+            this.trackbthick.Name = "trackbthick";
+            this.trackbthick.Size = new System.Drawing.Size(583, 45);
+            this.trackbthick.TabIndex = 23;
+            this.trackbthick.Value = 1;
+            this.trackbthick.ValueChanged += new System.EventHandler(this.trackbthick_ValueChanged);
+            // 
+            // txtdarkness
+            // 
+            this.txtdarkness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtdarkness.Location = new System.Drawing.Point(694, 170);
+            this.txtdarkness.Multiline = true;
+            this.txtdarkness.Name = "txtdarkness";
+            this.txtdarkness.ReadOnly = true;
+            this.txtdarkness.Size = new System.Drawing.Size(51, 44);
+            this.txtdarkness.TabIndex = 22;
+            this.txtdarkness.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label13
+            // 
+            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(10, 170);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(68, 20);
+            this.label13.TabIndex = 21;
+            this.label13.Text = "Darkness";
+            // 
+            // trackbdark
+            // 
+            this.trackbdark.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.trackbdark.Location = new System.Drawing.Point(105, 170);
+            this.trackbdark.Maximum = 30;
+            this.trackbdark.Name = "trackbdark";
+            this.trackbdark.Size = new System.Drawing.Size(583, 45);
+            this.trackbdark.TabIndex = 20;
+            this.trackbdark.Value = 10;
+            this.trackbdark.ValueChanged += new System.EventHandler(this.trackbdark_ValueChanged);
             // 
             // listView1
             // 
@@ -213,7 +356,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(6, 38);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(739, 113);
+            this.listView1.Size = new System.Drawing.Size(739, 120);
             this.listView1.TabIndex = 8;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -236,202 +379,57 @@
             this.btnsearchprinter.UseVisualStyleBackColor = true;
             this.btnsearchprinter.Click += new System.EventHandler(this.btnsearchprinter_Click);
             // 
-            // textspeed
+            // tabPage4
             // 
-            this.textspeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textspeed.Location = new System.Drawing.Point(694, 321);
-            this.textspeed.Multiline = true;
-            this.textspeed.Name = "textspeed";
-            this.textspeed.ReadOnly = true;
-            this.textspeed.Size = new System.Drawing.Size(51, 44);
-            this.textspeed.TabIndex = 31;
-            this.textspeed.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.tabPage4.Controls.Add(this.tbDensity);
+            this.tabPage4.Controls.Add(this.label6);
+            this.tabPage4.Controls.Add(this.txtPrinterTSCSize);
+            this.tabPage4.Controls.Add(this.label5);
+            this.tabPage4.Controls.Add(this.nudSpeed);
+            this.tabPage4.Controls.Add(this.label3);
+            this.tabPage4.Controls.Add(this.cmbPrinterTSC);
+            this.tabPage4.Controls.Add(this.label2);
+            this.tabPage4.Location = new System.Drawing.Point(4, 29);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage4.Size = new System.Drawing.Size(751, 386);
+            this.tabPage4.TabIndex = 1;
+            this.tabPage4.Text = "TSC";
+            this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // label16
+            // tbDensity
             // 
-            this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 320);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(51, 20);
-            this.label16.TabIndex = 30;
-            this.label16.Text = "Speed";
+            this.tbDensity.Location = new System.Drawing.Point(136, 120);
+            this.tbDensity.Maximum = 15;
+            this.tbDensity.Name = "tbDensity";
+            this.tbDensity.Size = new System.Drawing.Size(328, 45);
+            this.tbDensity.TabIndex = 8;
+            this.tbDensity.Scroll += new System.EventHandler(this.tbDensity_Scroll);
             // 
-            // trackbarspeed
+            // label6
             // 
-            this.trackbarspeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbarspeed.Location = new System.Drawing.Point(105, 320);
-            this.trackbarspeed.Maximum = 33;
-            this.trackbarspeed.Minimum = 1;
-            this.trackbarspeed.Name = "trackbarspeed";
-            this.trackbarspeed.Size = new System.Drawing.Size(583, 45);
-            this.trackbarspeed.TabIndex = 29;
-            this.trackbarspeed.Value = 17;
-            this.trackbarspeed.ValueChanged += new System.EventHandler(this.trackbarspeed_ValueChanged);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 120);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(58, 20);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Density";
             // 
-            // textnarrow
+            // txtPrinterTSCSize
             // 
-            this.textnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textnarrow.Location = new System.Drawing.Point(694, 268);
-            this.textnarrow.Multiline = true;
-            this.textnarrow.Name = "textnarrow";
-            this.textnarrow.ReadOnly = true;
-            this.textnarrow.Size = new System.Drawing.Size(51, 44);
-            this.textnarrow.TabIndex = 28;
-            this.textnarrow.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrinterTSCSize.Location = new System.Drawing.Point(136, 52);
+            this.txtPrinterTSCSize.Name = "txtPrinterTSCSize";
+            this.txtPrinterTSCSize.Size = new System.Drawing.Size(163, 27);
+            this.txtPrinterTSCSize.TabIndex = 6;
             // 
-            // label15
+            // label5
             // 
-            this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(10, 267);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(58, 20);
-            this.label15.TabIndex = 27;
-            this.label15.Text = "Narrow";
-            // 
-            // trackbnarrow
-            // 
-            this.trackbnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbnarrow.Location = new System.Drawing.Point(105, 267);
-            this.trackbnarrow.Maximum = 24;
-            this.trackbnarrow.Minimum = 1;
-            this.trackbnarrow.Name = "trackbnarrow";
-            this.trackbnarrow.Size = new System.Drawing.Size(583, 45);
-            this.trackbnarrow.TabIndex = 26;
-            this.trackbnarrow.Value = 1;
-            this.trackbnarrow.ValueChanged += new System.EventHandler(this.trackbnarrow_ValueChanged);
-            // 
-            // txthick
-            // 
-            this.txthick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txthick.Location = new System.Drawing.Point(694, 215);
-            this.txthick.Multiline = true;
-            this.txthick.Name = "txthick";
-            this.txthick.ReadOnly = true;
-            this.txthick.Size = new System.Drawing.Size(51, 44);
-            this.txthick.TabIndex = 25;
-            this.txthick.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label14
-            // 
-            this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(10, 214);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(43, 20);
-            this.label14.TabIndex = 24;
-            this.label14.Text = "Thick";
-            // 
-            // trackbthick
-            // 
-            this.trackbthick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbthick.Location = new System.Drawing.Point(105, 214);
-            this.trackbthick.Maximum = 24;
-            this.trackbthick.Minimum = 1;
-            this.trackbthick.Name = "trackbthick";
-            this.trackbthick.Size = new System.Drawing.Size(583, 45);
-            this.trackbthick.TabIndex = 23;
-            this.trackbthick.Value = 1;
-            this.trackbthick.ValueChanged += new System.EventHandler(this.trackbthick_ValueChanged);
-            // 
-            // txtdarkness
-            // 
-            this.txtdarkness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtdarkness.Location = new System.Drawing.Point(694, 163);
-            this.txtdarkness.Multiline = true;
-            this.txtdarkness.Name = "txtdarkness";
-            this.txtdarkness.ReadOnly = true;
-            this.txtdarkness.Size = new System.Drawing.Size(51, 44);
-            this.txtdarkness.TabIndex = 22;
-            this.txtdarkness.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label13
-            // 
-            this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(10, 163);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(68, 20);
-            this.label13.TabIndex = 21;
-            this.label13.Text = "Darkness";
-            // 
-            // trackbdark
-            // 
-            this.trackbdark.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbdark.Location = new System.Drawing.Point(105, 163);
-            this.trackbdark.Maximum = 30;
-            this.trackbdark.Name = "trackbdark";
-            this.trackbdark.Size = new System.Drawing.Size(583, 45);
-            this.trackbdark.TabIndex = 20;
-            this.trackbdark.Value = 10;
-            this.trackbdark.ValueChanged += new System.EventHandler(this.trackbdark_ValueChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(16, 19);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 20);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "Default Printer";
-            // 
-            // cmbDefaultPrinter
-            // 
-            this.cmbDefaultPrinter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbDefaultPrinter.FormattingEnabled = true;
-            this.cmbDefaultPrinter.Items.AddRange(new object[] {
-            "CITIZEN",
-            "TSC"});
-            this.cmbDefaultPrinter.Location = new System.Drawing.Point(146, 19);
-            this.cmbDefaultPrinter.Name = "cmbDefaultPrinter";
-            this.cmbDefaultPrinter.Size = new System.Drawing.Size(208, 28);
-            this.cmbDefaultPrinter.TabIndex = 22;
-            this.cmbDefaultPrinter.SelectedIndexChanged += new System.EventHandler(this.cmbDefaultPrinter_SelectedIndexChanged);
-            // 
-            // btnPrintTestpage
-            // 
-            this.btnPrintTestpage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPrintTestpage.Location = new System.Drawing.Point(627, 19);
-            this.btnPrintTestpage.Name = "btnPrintTestpage";
-            this.btnPrintTestpage.Size = new System.Drawing.Size(130, 29);
-            this.btnPrintTestpage.TabIndex = 23;
-            this.btnPrintTestpage.Text = "Print test page";
-            this.btnPrintTestpage.UseVisualStyleBackColor = true;
-            this.btnPrintTestpage.Click += new System.EventHandler(this.btnPrintTestpage_Click);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 18);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 20);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "TSC Printer";
-            // 
-            // cmbPrinterTSC
-            // 
-            this.cmbPrinterTSC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbPrinterTSC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbPrinterTSC.FormattingEnabled = true;
-            this.cmbPrinterTSC.Location = new System.Drawing.Point(136, 18);
-            this.cmbPrinterTSC.Name = "cmbPrinterTSC";
-            this.cmbPrinterTSC.Size = new System.Drawing.Size(328, 28);
-            this.cmbPrinterTSC.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 87);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 20);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "Speed";
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(6, 52);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(36, 20);
+            this.label5.TabIndex = 5;
+            this.label5.Text = "Size";
             // 
             // nudSpeed
             // 
@@ -451,39 +449,66 @@
             this.nudSpeed.Size = new System.Drawing.Size(88, 27);
             this.nudSpeed.TabIndex = 4;
             // 
-            // label5
+            // label3
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 52);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(36, 20);
-            this.label5.TabIndex = 5;
-            this.label5.Text = "Size";
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 87);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 20);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "Speed";
             // 
-            // txtPrinterTSCSize
+            // cmbPrinterTSC
             // 
-            this.txtPrinterTSCSize.Location = new System.Drawing.Point(136, 52);
-            this.txtPrinterTSCSize.Name = "txtPrinterTSCSize";
-            this.txtPrinterTSCSize.Size = new System.Drawing.Size(163, 27);
-            this.txtPrinterTSCSize.TabIndex = 6;
+            this.cmbPrinterTSC.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbPrinterTSC.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbPrinterTSC.FormattingEnabled = true;
+            this.cmbPrinterTSC.Location = new System.Drawing.Point(136, 18);
+            this.cmbPrinterTSC.Name = "cmbPrinterTSC";
+            this.cmbPrinterTSC.Size = new System.Drawing.Size(328, 28);
+            this.cmbPrinterTSC.TabIndex = 1;
             // 
-            // label6
+            // label2
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 120);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(58, 20);
-            this.label6.TabIndex = 7;
-            this.label6.Text = "Density";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 18);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(81, 20);
+            this.label2.TabIndex = 0;
+            this.label2.Text = "TSC Printer";
             // 
-            // tbDensity
+            // btnSaveconfig
             // 
-            this.tbDensity.Location = new System.Drawing.Point(136, 120);
-            this.tbDensity.Maximum = 15;
-            this.tbDensity.Name = "tbDensity";
-            this.tbDensity.Size = new System.Drawing.Size(328, 45);
-            this.tbDensity.TabIndex = 8;
-            this.tbDensity.Scroll += new System.EventHandler(this.tbDensity_Scroll);
+            this.btnSaveconfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSaveconfig.Location = new System.Drawing.Point(12, 543);
+            this.btnSaveconfig.Name = "btnSaveconfig";
+            this.btnSaveconfig.Size = new System.Drawing.Size(124, 31);
+            this.btnSaveconfig.TabIndex = 8;
+            this.btnSaveconfig.Text = "Save && Close";
+            this.btnSaveconfig.UseVisualStyleBackColor = true;
+            this.btnSaveconfig.Click += new System.EventHandler(this.btnSaveconfig_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(383, 23);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(88, 20);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Ribbon Size";
+            // 
+            // cmbRibbonSize
+            // 
+            this.cmbRibbonSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRibbonSize.FormattingEnabled = true;
+            this.cmbRibbonSize.Items.AddRange(new object[] {
+            "115x210mm",
+            "56x300mm"});
+            this.cmbRibbonSize.Location = new System.Drawing.Point(486, 19);
+            this.cmbRibbonSize.Name = "cmbRibbonSize";
+            this.cmbRibbonSize.Size = new System.Drawing.Size(113, 28);
+            this.cmbRibbonSize.TabIndex = 25;
             // 
             // FSettings
             // 
@@ -507,14 +532,14 @@
             this.tabControl2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            this.tabPage4.ResumeLayout(false);
-            this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackbarspeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbnarrow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbthick)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackbdark)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).EndInit();
+            this.tabPage4.ResumeLayout(false);
+            this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDensity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -557,5 +582,7 @@
         private System.Windows.Forms.TrackBar tbDensity;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ComboBox cmbRibbonSize;
+        private System.Windows.Forms.Label label7;
     }
 }

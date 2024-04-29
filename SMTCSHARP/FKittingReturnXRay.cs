@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
-using com.citizen.sdk.LabelPrint;
 using IniParser;
 using IniParser.Model;
 using Microsoft.Win32;
@@ -345,6 +343,20 @@ namespace SMTCSHARP
                     return;
                 }
 
+                // ingatkan user untuk menekan tombol_next ketika sudah get saved data
+                foreach (DataGridViewRow row in DGVTemp.Rows)
+                {
+                    if (row.Cells[3].Value != null)
+                    {
+                        if (row.Cells[5].Value.ToString().ToUpper().Equals("SAVED"))
+                        {
+                            MessageBox.Show("Please click 'Next button' first");
+                            return;
+                        }
+                    }
+                }
+
+
                 if (txtitemcd.Text.Contains("|"))
                 {
                     isScanQR = true;
@@ -403,6 +415,7 @@ namespace SMTCSHARP
                 }
                 else
                 {
+                    isScanQR = false;
                     if (txtitemcd.Text.Substring(0, 3) != "3N1")
                     {
                         MessageBox.Show("Unknown Format C3 Label");
@@ -446,10 +459,11 @@ namespace SMTCSHARP
                             txtbefqty.Focus();
                             txtbefqty.ReadOnly = false;
                             txtitmname.Text = (string)res_jes["data"][0]["ref"];
-                        }
-                        if (isScanQR)
-                        {
-                            validateSuppliedItemByAPI();
+
+                            if (isScanQR)
+                            {
+                                validateSuppliedItemByAPI();
+                            }
                         }
                     }
                     catch (Exception ex)

@@ -2,7 +2,6 @@
 using IniParser;
 using IniParser.Model;
 using Microsoft.Win32;
-using NPOI.HSSF.Record;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -43,6 +42,10 @@ namespace SMTCSHARP
                 rk.SetValue("PRINTER_SPEED", "17");
                 rk.SetValue("PRINTER_DEFAULT_BRAND", "citizen");
                 rk.SetValue("PRINTER_BRAND_TSC_NAME", "");
+                rk.SetValue("PRINTER_BRAND_TSC_SIZE", "2.87,1.97");
+                rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
+                rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
+                rk.SetValue("PRINTER_RIBBON_SIZE", "");
             }
             else
             {
@@ -58,6 +61,10 @@ namespace SMTCSHARP
                     rk.SetValue("PRINTER_SPEED", "17");
                     rk.SetValue("PRINTER_DEFAULT_BRAND", "citizen");
                     rk.SetValue("PRINTER_BRAND_TSC_NAME", "");
+                    rk.SetValue("PRINTER_BRAND_TSC_SIZE", "2.87,1.97");
+                    rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
+                    rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
+                    rk.SetValue("PRINTER_RIBBON_SIZE", "");
                 }
                 else
                 {
@@ -88,6 +95,7 @@ namespace SMTCSHARP
                     rk.SetValue("PRINTER_BRAND_TSC_SIZE", "2.87,1.97");
                     rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
                     rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
+                    rk.SetValue("PRINTER_RIBBON_SIZE", "");
                 }
                 else
                 {
@@ -95,6 +103,7 @@ namespace SMTCSHARP
                     cmbPrinterTSC.Text = ckrk.GetValue("PRINTER_BRAND_TSC_NAME").ToString();
                     txtPrinterTSCSize.Text = ckrk.GetValue("PRINTER_BRAND_TSC_SIZE").ToString();
                     nudSpeed.Text = ckrk.GetValue("PRINTER_BRAND_TSC_SPEED").ToString();
+                    cmbRibbonSize.Text = ckrk.GetValue("PRINTER_RIBBON_SIZE").ToString();
                     tbDensity.Value = UInt16.Parse(ckrk.GetValue("PRINTER_BRAND_TSC_DENSITY").ToString().Length == 0 ? "0" : ckrk.GetValue("PRINTER_BRAND_TSC_DENSITY").ToString());
                     toolTip1.SetToolTip(tbDensity, tbDensity.Value.ToString());
                 }
@@ -103,6 +112,10 @@ namespace SMTCSHARP
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
             txtserver.Text = data["SERVER"]["ADDRESS"];
+
+            listView1.Items.Clear();
+            listView1.Columns.Add("Port", 120, HorizontalAlignment.Left);
+            listView1.Columns.Add("", 210, HorizontalAlignment.Left);
         }
 
         private void FSettings_Load(object sender, EventArgs e)
@@ -136,6 +149,7 @@ namespace SMTCSHARP
             rk.SetValue("PRINTER_BRAND_TSC_SIZE", txtPrinterTSCSize.Text);
             rk.SetValue("PRINTER_BRAND_TSC_SPEED", nudSpeed.Text);
             rk.SetValue("PRINTER_BRAND_TSC_DENSITY", tbDensity.Value.ToString());
+            rk.SetValue("PRINTER_RIBBON_SIZE", cmbRibbonSize.Text);
 
             MessageBox.Show("Saved");
             this.Close();
