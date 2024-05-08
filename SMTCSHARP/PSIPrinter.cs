@@ -166,20 +166,20 @@ namespace SMTCSHARP
                 aDriver.windowsfont(startx, 45, 25, 0, 0, 0, "Times New Roman", String.Format("QTY : {0}  LOT NO: {1}", this.data["itemQty"], this.data["itemLot"]));
 
                 aDriver.windowsfont(startx, 70, 25, 0, 0, 0, "Times New Roman", String.Format("(3N1) {0}", this.data["itemCode"]));
-                aDriver.barcode(startx.ToString(), "95", "128", "40", "0", "0", "2", "2", String.Format("3N1{0}", this.data["itemCode"]));
+                aDriver.barcode(startx.ToString(), "95", "128", "40", "0", "0", "1", "1", String.Format("3N1{0}", this.data["itemCode"]));
 
                 aDriver.windowsfont(startx, 135, 25, 0, 0, 0, "Times New Roman", String.Format("(3N2) {0} {1}", this.data["itemQty"], this.data["itemLot"]));
-                aDriver.barcode(startx.ToString(), "160", "128", "40", "0", "0", "2", "2", String.Format("3N2 {0} {1}", this.data["itemQty"].Replace(",", ""), this.data["itemLot"]));
+                aDriver.barcode(startx.ToString(), "160", "128", "40", "0", "0", "1", "1", String.Format("3N2 {0} {1}", this.data["itemQty"].Replace(",", ""), this.data["itemLot"]));
 
                 aDriver.windowsfont(startx, 200, 25, 0, 0, 0, "Times New Roman", String.Format("(UC) {0}", this.data["itemKey"]));
-                aDriver.barcode(startx.ToString(), "225", "128", "40", "0", "0", "2", "2", String.Format("{0}", this.data["itemKey"]));
+                aDriver.barcode(startx.ToString(), "225", "128", "40", "0", "0", "1", "1", String.Format("{0}", this.data["itemKey"]));
 
-                aDriver.windowsfont(startx, 265, 20, 0, 0, 0, "Times New Roman", String.Format("PART NO : {0}", this.data["itemName"]));
-                aDriver.windowsfont(startx, 290, 20, 0, 0, 0, "Times New Roman", String.Format("RoHS Compliant        C/O Made in SMT"));
-                aDriver.windowsfont(startx, 315, 20, 0, 0, 0, "Times New Roman", String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()));
-                aDriver.windowsfont(210, 315, 20, 0, 0, 0, "Times New Roman", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi));
+                aDriver.windowsfont(startx, 320, 20, 0, 0, 0, "Times New Roman", String.Format("PART NO : {0}", this.data["itemName"]));
+                aDriver.windowsfont(startx, 290+50, 20, 0, 0, 0, "Times New Roman", String.Format("RoHS Compliant        C/O Made in SMT"));
+                aDriver.windowsfont(startx, 315+50, 20, 0, 0, 0, "Times New Roman", String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()));
+                aDriver.windowsfont(210, 315+50, 20, 0, 0, 0, "Times New Roman", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi));
 
-                aDriver.sendcommand(String.Format("QRCODE 410,250,H,2,A,0,M2, \"Z3N1{0}|3N2 {1} {2}|{3}\"", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]));
+                aDriver.sendcommand(String.Format("QRCODE 320,205,H,2,A,0,M2, \"Z3N1{0}|3N2 {1} {2}|{3}\"", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]));
             }
 
             aDriver.printlabel("1", "1");
