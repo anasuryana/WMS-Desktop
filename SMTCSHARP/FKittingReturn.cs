@@ -4,20 +4,21 @@ using IniParser.Model;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
 {
+
     public partial class FKittingReturn : Form
     {
         string msupqty = "";
@@ -45,6 +46,29 @@ namespace SMTCSHARP
             ifCmbBox.SelectedIndex = 0;
 
             txtRackcd.ReadOnly = true;
+        }
+
+        private async Task<string[]> validateUniqueKeyVsPSN(string key)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+            using (HttpClient hc = new HttpClient())
+            {
+                var response = await hc.GetAsync(String.Format(txtserver.Text + "/supply/validate-label?uniquekey={0}", key));
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    message = "the response is not success yet";
+                }
+
+            }
+            return new string[] { returnCode, message, data };
         }
 
         void get_countrylist()
@@ -331,66 +355,17 @@ namespace SMTCSHARP
 
         void printsmtlabel()
         {
-            LabelPrinter printer = new LabelPrinter();
-            printer.SetMeasurementUnit(LabelConst.CLS_UNIT_MILLI);
-            printer.SetFormatAttribute(1);
-
-            RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-            string myaddr = ckrk.GetValue("PRINTER_ADDRESS").ToString();
-            int mytype = UInt16.Parse(ckrk.GetValue("PRINTER_TYPE").ToString());
-            string myDARk = ckrk.GetValue("PRINTER_DARK").ToString();
-            UInt16 myTHICKNESS = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
-            UInt16 myNARROW = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
-            UInt16 mySPEED = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
-
-            int ret = printer.Connect(mytype, myaddr);
-            if (ret != LabelConst.CLS_SUCCESS)
-            {
-                MessageBox.Show("Connect error: " + ret.ToString(), "Error");
-                //return;
-            }
-            else
-            {
-                //MessageBox.Show("terhubung");
-            }
-            LabelDesign lbldsg = new LabelDesign();
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = culture.DateTimeFormat;
-            dtfi.DateSeparator = "/";
-            int startx = 35;
-            int mhratio = 105; //105, 75
-            int mvratio = 110; //150,75
-
-            lbldsg.DrawTextPCFont(String.Format("RACK : {0}    {1}", mrackcd, Environment.MachineName.ToString()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 410 + 20);
-            lbldsg.DrawTextPCFont(String.Format("QTY : {0}    LOT NO : {1}", mretqty, mretlot), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 385 + 10);
-            lbldsg.DrawTextPCFont(String.Format("(3N1) {0}", mretitemcd), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 360);
-            lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(3N2) {0} {1}", mretqty, mretlot.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 255);
-            lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", mretqty.Replace(",", string.Empty), mretlot.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(UC) {0}", mUniqueCode), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
-            lbldsg.DrawBarCode(String.Format(mUniqueCode), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
-            lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", mretitemcd, mretqty.Replace(",", string.Empty), mretlot.Trim(), mUniqueCode), LabelConst.CLS_ENC_CDPG_IBM850, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 29);
-
-            if (mretrohs.Equals("1"))
-            {
-                lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
-            }
-            lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
-            lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
-            lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
-
-            if (ret == LabelConst.CLS_SUCCESS)
-            {
-                printer.SetPrintDarkness(UInt16.Parse(myDARk));
-                printer.SetPrintSpeed(mySPEED);
-                printer.Print(lbldsg, 1);
-                printer.Disconnect();
-            }
-            else
-            {
-                printer.Preview(lbldsg, LabelConst.CLS_PRT_RES_203, LabelConst.CLS_UNIT_MILLI, 700, 500);
-            }
+            PSIPrinter PSIprinter = new PSIPrinter();
+            Dictionary<string, string> datanya = new Dictionary<string, string>();
+            datanya.Add("rackCode", mrackcd);
+            datanya.Add("itemQty", mretqty);
+            datanya.Add("itemCode", mretitemcd.Trim());
+            datanya.Add("itemLot", mretlot.Trim());
+            datanya.Add("itemKey", mUniqueCode);
+            datanya.Add("itemName", mretitemnm.Trim());
+            datanya.Add("mretrohs", "1");
+            PSIprinter.setData(datanya);
+            PSIprinter.print("citizen");
         }
 
         private void btnreturnprint_Click(object sender, EventArgs e)
@@ -453,6 +428,7 @@ namespace SMTCSHARP
                     {
                         var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text));
                         JObject res_jes = JObject.Parse(res);
+
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (sts.Equals("1"))
                         {
@@ -585,6 +561,8 @@ namespace SMTCSHARP
             listView1.Items[0].Selected = true;
         }
 
+
+
         private void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -620,6 +598,64 @@ namespace SMTCSHARP
                     MessageBox.Show("Unknown Format C3 Label");
                     txtitemcd.Text = "";
                     return;
+                }
+
+
+                if (txtitemcd.Text.Contains("|"))
+                {
+                    string[] QRArray = txtitemcd.Text.ToUpper().Split('|');
+                    int strLength3N1 = 0;
+                    switch (QRArray[0].Substring(0, 2).ToString())
+                    {
+                        case "Z3":
+                            strLength3N1 = QRArray[0].Length - 4;
+                            txtitemcd.Text = QRArray[0].Substring(4, strLength3N1);
+                            break;
+                        case "3N":
+                            strLength3N1 = QRArray[0].Length - 3;
+                            txtitemcd.Text = QRArray[0].Substring(3, strLength3N1);
+                            break;
+                        default:
+                            txtitemcd.Text = QRArray[0];
+                            break;
+                    }
+
+                    string[] Array3N2;
+
+                    if (QRArray.Length == 4)
+                    {
+                        txtbefqty.Text = QRArray[1];
+                        txtlot.Text = QRArray[2];
+                        txtbefqty.ReadOnly = true;
+                    }
+                    else
+                    {
+                        Array3N2 = QRArray[1].Split(' ');
+                        switch (QRArray[1].Substring(0, 3).ToString())
+                        {
+                            case "3N2":
+                                if (Array3N2[1].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[1];
+                                    txtlot.Text = Array3N2[2];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+
+                            default:
+                                if (Array3N2[0].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[0];
+                                    txtlot.Text = Array3N2[1];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+
                 }
 
                 if (txtitemcd.Text.Substring(0, 3) != "3N1")
