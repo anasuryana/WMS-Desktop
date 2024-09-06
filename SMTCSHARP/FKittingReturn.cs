@@ -563,41 +563,78 @@ namespace SMTCSHARP
 
 
 
-        private void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
+        private async void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
-                if (txtpsn.Text == "")
+                bool isUniquekeyMode = false;
+                if (txtitemcd.Text.Contains("|"))
                 {
-                    MessageBox.Show("Please fill PSN No");
-                    txtpsn.Focus();
-                    return;
+                    string[] QRArray = txtitemcd.Text.ToUpper().Split('|');
+                    if (QRArray.Length == 3)
+                    {
+                        string[] strings = await validateUniqueKeyVsPSN(QRArray[2]);
+                        if (strings[0].Equals("1"))
+                        {
+                            JObject response = JObject.Parse(strings[2]);
+                            var rsdata = from p in response["data"] select p;
+                            foreach (var r in rsdata)
+                            {
+                                if (txtpsn.Text.Trim().Length == 0)
+                                {
+                                    txtpsn.Text = r["SPLSCN_DOC"].ToString();
+                                    txtcat.Text = r["SPLSCN_CAT"].ToString();
+                                    txtline.Text = r["SPLSCN_LINE"].ToString();
+                                    txtaftqty.Focus();
+                                    isUniquekeyMode = true;
+                                }
+                                else
+                                {
+                                    if (!txtpsn.Text.Trim().Equals(r["SPLSCN_DOC"]))
+                                    {
+                                        MessageBox.Show(String.Format("{0} belongs to {1}", QRArray[2], r["SPLSCN_DOC"]), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        txtitemcd.Text = "";
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-                if (txtcat.Text == "")
+                else
                 {
-                    MessageBox.Show("Please fill Category");
-                    txtcat.Focus();
-                    return;
-                }
+                    if (txtpsn.Text == "")
+                    {
+                        MessageBox.Show("Please fill PSN No");
+                        txtpsn.Focus();
+                        return;
+                    }
+                    if (txtcat.Text == "")
+                    {
+                        MessageBox.Show("Please fill Category");
+                        txtcat.Focus();
+                        return;
+                    }
 
-                if (txtline.Text == "")
-                {
-                    MessageBox.Show("Please fill Line");
-                    txtline.Focus();
-                    return;
-                }
+                    if (txtline.Text == "")
+                    {
+                        MessageBox.Show("Please fill Line");
+                        txtline.Focus();
+                        return;
+                    }
 
-                if (txtitemcd.Text == "")
-                {
-                    MessageBox.Show("Please fill Item Code");
-                    return;
-                }
+                    if (txtitemcd.Text == "")
+                    {
+                        MessageBox.Show("Please fill Item Code");
+                        return;
+                    }
 
-                if (txtitemcd.Text.Length <= 3)
-                {
-                    MessageBox.Show("Unknown Format C3 Label");
-                    txtitemcd.Text = "";
-                    return;
+                    if (txtitemcd.Text.Length <= 3)
+                    {
+                        MessageBox.Show("Unknown Format C3 Label");
+                        txtitemcd.Text = "";
+                        return;
+                    }
                 }
 
 
@@ -621,6 +658,7 @@ namespace SMTCSHARP
                     }
 
                     string[] Array3N2;
+
 
                     if (QRArray.Length == 4)
                     {
@@ -655,29 +693,27 @@ namespace SMTCSHARP
                 }
                 else
                 {
+                    if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                    {
+                        MessageBox.Show("Unknown Format C3 Label");
+                        txtitemcd.Text = "";
+                        txtitmname.Text = "";
+                        return;
+                    }
 
-                }
-
-                if (txtitemcd.Text.Substring(0, 3) != "3N1")
-                {
-                    MessageBox.Show("Unknown Format C3 Label");
-                    txtitemcd.Text = "";
-                    txtitmname.Text = "";
-                    return;
-                }
-
-                if (txtitemcd.Text.Contains(" "))
-                {
-                    string[] an1 = txtitemcd.Text.Split(' ');
-                    msupqty = an1[1];
-                    int strleng = an1[0].Length - 3;
-                    txtitemcd.Text = an1[0].Substring(3, strleng);
-                }
-                else
-                {
-                    int strleng = txtitemcd.Text.Length - 3;
-                    txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
-                    msupqty = "";
+                    if (txtitemcd.Text.Contains(" "))
+                    {
+                        string[] an1 = txtitemcd.Text.Split(' ');
+                        msupqty = an1[1];
+                        int strleng = an1[0].Length - 3;
+                        txtitemcd.Text = an1[0].Substring(3, strleng);
+                    }
+                    else
+                    {
+                        int strleng = txtitemcd.Text.Length - 3;
+                        txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
+                        msupqty = "";
+                    }
                 }
 
                 using (WebClient wc = new WebClient())
@@ -698,7 +734,10 @@ namespace SMTCSHARP
                         }
                         else
                         {
-                            txtbefqty.Focus();
+                            if (!isUniquekeyMode)
+                            {
+                                txtbefqty.Focus();
+                            }
                             txtbefqty.ReadOnly = false;
                             txtitmname.Text = (string)res_jes["data"][0]["ref"];
                             txtRackcd.Text = (string)res_jes["data"][0]["rackno"];
@@ -708,7 +747,6 @@ namespace SMTCSHARP
                     {
                         MessageBox.Show(ex.Message);
                     }
-
                 }
             }
         }
