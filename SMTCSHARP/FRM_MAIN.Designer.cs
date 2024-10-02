@@ -33,6 +33,8 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.businessGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultPrinterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -44,8 +46,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tvmenu = new System.Windows.Forms.TreeView();
             this.panlesep = new System.Windows.Forms.Panel();
-            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.defaultPrinterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -76,7 +76,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -86,6 +86,21 @@
             this.businessGroupToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
             this.businessGroupToolStripMenuItem.Text = "Business Group";
             this.businessGroupToolStripMenuItem.Click += new System.EventHandler(this.businessGroupToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultPrinterToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // defaultPrinterToolStripMenuItem
+            // 
+            this.defaultPrinterToolStripMenuItem.Name = "defaultPrinterToolStripMenuItem";
+            this.defaultPrinterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.defaultPrinterToolStripMenuItem.Text = "Settings";
+            this.defaultPrinterToolStripMenuItem.Click += new System.EventHandler(this.defaultPrinterToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -188,21 +203,6 @@
             this.panlesep.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseDown);
             this.panlesep.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseMove);
             this.panlesep.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseUp);
-            // 
-            // toolsToolStripMenuItem
-            // 
-            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.defaultPrinterToolStripMenuItem});
-            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
-            this.toolsToolStripMenuItem.Text = "Tools";
-            // 
-            // defaultPrinterToolStripMenuItem
-            // 
-            this.defaultPrinterToolStripMenuItem.Name = "defaultPrinterToolStripMenuItem";
-            this.defaultPrinterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.defaultPrinterToolStripMenuItem.Text = "Set Default Printer";
-            this.defaultPrinterToolStripMenuItem.Click += new System.EventHandler(this.defaultPrinterToolStripMenuItem_Click);
             // 
             // FRM_MAIN
             // 
