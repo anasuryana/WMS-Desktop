@@ -118,6 +118,7 @@ namespace SMTCSHARP
             txtQty.Maximum = 0;
             uniqueKey = string.Empty;
             txt3n1.Focus();
+            lblInfo.Text = "...";
         }
 
         private void txtQty_KeyPress(object sender, KeyPressEventArgs e)
