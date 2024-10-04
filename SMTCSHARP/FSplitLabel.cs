@@ -2,19 +2,10 @@
 using IniParser;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using NPOI.SS.Formula.Functions;
-using NPOI.XSSF.UserModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Net;
 using Microsoft.Win32;
 
@@ -31,7 +22,7 @@ namespace SMTCSHARP
         string mretqty = string.Empty;
         string mUniqueCode = string.Empty;
         string mretitemnm = string.Empty;
-
+        int timeOutClearing = 0;
         public FSplitLabel()
         {
             InitializeComponent();
@@ -106,6 +97,7 @@ namespace SMTCSHARP
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
             serverURLEnpoint = data["SERVER"]["ADDRESS"];
+            timeOutClearing = 300;
         }
 
         private void btnNew_Click(object sender, EventArgs e)
@@ -119,6 +111,9 @@ namespace SMTCSHARP
             uniqueKey = string.Empty;
             txt3n1.Focus();
             lblInfo.Text = "...";
+
+            radTwo.Checked = false;
+            radMulti.Checked = false;
         }
 
         private void txtQty_KeyPress(object sender, KeyPressEventArgs e)
@@ -186,6 +181,12 @@ namespace SMTCSHARP
                 return;
             }
 
+            if (!radTwo.Checked && !radMulti.Checked)
+            {
+                MessageBox.Show("Please select mode");
+                return;
+            }
+
             using (WebClient wc = new WebClient())
             {
                 try
@@ -197,13 +198,15 @@ namespace SMTCSHARP
                         msupqty,
                         radTwo.Checked ? '1' : '2',
                         txtQty.Value.ToString(),
-                        ASettings.getmyuserid(),
+                        txtNIK.Text,
                         uniqueKey,
                         lotNumber,
                         Environment.MachineName.ToString());
+
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
-                    Console.WriteLine(res);
+
+
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["cd"];
                     string msg = (string)res_jes["msg"];
@@ -212,6 +215,17 @@ namespace SMTCSHARP
 
                     if (sts.Equals("1"))
                     {
+                        txt3n1.ReadOnly = false;
+                        txt3n2.ReadOnly = false;
+                        txt3n1.Text = string.Empty;
+                        txt3n2.Text = string.Empty;
+                        txtQty.Text = string.Empty;
+                        txtQty.Maximum = 0;
+                        uniqueKey = string.Empty;
+                        txt3n1.Focus();
+                        lblInfo.Text = "...";
+                        radTwo.Checked = false;
+                        radMulti.Checked = false;
                         var rsdata = from p in res_jes["data"] select p;
 
                         foreach (var rw in rsdata)
@@ -296,6 +310,53 @@ namespace SMTCSHARP
         private void radMulti_CheckedChanged(object sender, EventArgs e)
         {
             setLabelInfo();
+        }
+
+        private void txt3n1_TextChanged(object sender, EventArgs e)
+        {
+            timeOutClearing = 300;
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(txtNIK, String.Format("{0} seconds remain", timeOutClearing));
+            if (timeOutClearing > 0)
+            {
+                timeOutClearing--;
+            }
+            else
+            {
+                txtNIK.Text = "";
+                txtNIK.ReadOnly = false;
+                txtNIK.Focus();
+                txtName.Text = "";
+            }
+        }
+
+        private void txtNIK_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                using (WebClient wc = new WebClient())
+                {
+                    try
+                    {
+                        var res = wc.DownloadString(serverURLEnpoint + "/users/" + txtNIK.Text);
+                        JObject res_jes = JObject.Parse(res);
+                        string sts = (string)res_jes["cd"];
+                        if (sts.Equals("1"))
+                        {
+                            txtNIK.ReadOnly = true;
+                            txtName.Text = (string)res_jes["data"]["user_nicename"];
+                            txt3n1.Focus();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
         }
     }
 }
