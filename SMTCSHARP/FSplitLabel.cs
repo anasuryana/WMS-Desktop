@@ -194,12 +194,6 @@ namespace SMTCSHARP
                 return;
             }
 
-            if (!radTwo.Checked && !radMulti.Checked)
-            {
-                MessageBox.Show("Please select mode");
-                return;
-            }
-
             if (!txtNIK.ReadOnly)
             {
                 txtNIK.Focus();
@@ -219,6 +213,23 @@ namespace SMTCSHARP
                 txt3n2.Focus();
                 MessageBox.Show("3N2 is required");
                 return;
+            }
+
+            if(txtQty.Value.ToString().Equals(msupqty))
+            {
+                lblInfo.Text = "Reprint";
+                DialogResult dialogResult = MessageBox.Show("It will reprint, are you sure ?", "Decide", MessageBoxButtons.YesNo);
+                if(dialogResult != DialogResult.Yes)
+                {
+                    return;
+                }
+            } else
+            {
+                if (!radTwo.Checked && !radMulti.Checked)
+                {
+                    MessageBox.Show("Please select mode");
+                    return;
+                }
             }
 
             using (WebClient wc = new WebClient())
@@ -305,12 +316,6 @@ namespace SMTCSHARP
 
         private void txtQty_Leave(object sender, EventArgs e)
         {
-            if (txtQty.Value.ToString().Equals(msupqty))
-            {
-                MessageBox.Show("Could not be splitted");
-                txtQty.Focus();
-                return;
-            }
             setLabelInfo();
         }
 
