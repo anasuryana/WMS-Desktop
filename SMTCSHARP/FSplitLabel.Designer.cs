@@ -47,8 +47,11 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.txtName = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.txtCopies = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtQty)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtCopies)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -184,6 +187,8 @@
             this.txtQty.Name = "txtQty";
             this.txtQty.Size = new System.Drawing.Size(143, 25);
             this.txtQty.TabIndex = 10;
+            this.txtQty.Click += new System.EventHandler(this.txtQty_Click);
+            this.txtQty.Enter += new System.EventHandler(this.txtQty_Enter);
             this.txtQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtQty_KeyPress);
             this.txtQty.Leave += new System.EventHandler(this.txtQty_Leave);
             // 
@@ -218,12 +223,12 @@
             // txtName
             // 
             this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtName.Location = new System.Drawing.Point(307, 23);
+            this.txtName.Location = new System.Drawing.Point(324, 23);
             this.txtName.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtName.MaxLength = 255;
             this.txtName.Name = "txtName";
             this.txtName.ReadOnly = true;
-            this.txtName.Size = new System.Drawing.Size(319, 25);
+            this.txtName.Size = new System.Drawing.Size(302, 25);
             this.txtName.TabIndex = 13;
             this.toolTip1.SetToolTip(this.txtName, "-");
             // 
@@ -237,11 +242,44 @@
             this.label5.TabIndex = 14;
             this.label5.Text = "Name";
             // 
+            // txtCopies
+            // 
+            this.txtCopies.Location = new System.Drawing.Point(324, 134);
+            this.txtCopies.Maximum = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.txtCopies.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.txtCopies.Name = "txtCopies";
+            this.txtCopies.Size = new System.Drawing.Size(69, 25);
+            this.txtCopies.TabIndex = 16;
+            this.txtCopies.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(254, 136);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(56, 18);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Copies";
+            // 
             // FSplitLabel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 405);
+            this.Controls.Add(this.txtCopies);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.label3);
@@ -264,6 +302,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtQty)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtCopies)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -289,5 +328,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.TextBox txtName;
+        private System.Windows.Forms.NumericUpDown txtCopies;
+        private System.Windows.Forms.Label label6;
     }
 }

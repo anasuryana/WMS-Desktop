@@ -114,11 +114,18 @@ namespace SMTCSHARP
             txtQty.Text = string.Empty;
             txtQty.Maximum = 0;
             uniqueKey = string.Empty;
-            txt3n1.Focus();
+            txtNIK.Focus();
             lblInfo.Text = "...";
 
             radTwo.Checked = false;
             radMulti.Checked = false;
+
+            timeOutClearing = 300;
+            txtNIK.Text = "";
+            txtName.Text = "";
+            txtNIK.ReadOnly = false;
+
+            txtCopies.Value = 1;
         }
 
         private void txtQty_KeyPress(object sender, KeyPressEventArgs e)
@@ -178,10 +185,11 @@ namespace SMTCSHARP
             }
         }
 
-        private async void btnSave_Click(object sender, EventArgs e)
+        private void btnSave_Click(object sender, EventArgs e)
         {
             if (txtQty.Equals(msupqty))
             {
+                txtQty.Focus();
                 MessageBox.Show("Could not be splitted");
                 return;
             }
@@ -194,7 +202,22 @@ namespace SMTCSHARP
 
             if (!txtNIK.ReadOnly)
             {
+                txtNIK.Focus();
                 MessageBox.Show("NIK is required");
+                return;
+            }
+
+            if(!txt3n1.ReadOnly)
+            {
+                txt3n1.Focus();
+                MessageBox.Show("3N1 is required");
+                return;
+            }
+
+            if (!txt3n2.ReadOnly)
+            {
+                txt3n2.Focus();
+                MessageBox.Show("3N2 is required");
                 return;
             }
 
@@ -249,6 +272,7 @@ namespace SMTCSHARP
                         }
 
                         txt3n1.Text = string.Empty;
+                        txtCopies.Value = 1;
                     }
 
                 }
@@ -274,6 +298,7 @@ namespace SMTCSHARP
             datanya.Add("nik", txtNIK.Text);
             datanya.Add("user_name", txtName.Text);
             datanya.Add("mretrohs", "1");
+            datanya.Add("copies", txtCopies.Value.ToString());
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
@@ -292,7 +317,7 @@ namespace SMTCSHARP
 
         private void setLabelInfo()
         {
-            if (txtQty.Value <= 1)
+            if (txtQty.Value <= 1 || !txt3n1.ReadOnly || !txt3n2.ReadOnly)
             {
                 return;
             }
@@ -302,7 +327,7 @@ namespace SMTCSHARP
             }
             else
             {
-                int supQty = int.Parse(msupqty);
+                int supQty = msupqty.Equals("") ? 0 : int.Parse(msupqty);
                 int restValue = supQty % int.Parse(txtQty.Value.ToString()) != 0 ? 1 : 0;
                 int labelQty = supQty / int.Parse(txtQty.Value.ToString());
                 if (restValue > 0)
@@ -365,6 +390,7 @@ namespace SMTCSHARP
                             txtNIK.ReadOnly = true;
                             txtName.Text = (string)res_jes["data"]["user_nicename"];
                             txt3n1.Focus();
+                            timeOutClearing = 300;
                         }
                         else
                         {
@@ -387,6 +413,16 @@ namespace SMTCSHARP
         private void radMulti_Click(object sender, EventArgs e)
         {
             btnSave.Focus();
+        }
+
+        private void txtQty_Enter(object sender, EventArgs e)
+        {
+            txtQty.Select(0, txtQty.Text.Length);
+        }
+
+        private void txtQty_Click(object sender, EventArgs e)
+        {
+            txtQty.Select(0, txtQty.Text.Length);
         }
     }
 }
