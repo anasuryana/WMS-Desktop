@@ -45,8 +45,8 @@
             this.txtNIK = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label5 = new System.Windows.Forms.Label();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtQty)).BeginInit();
             this.SuspendLayout();
@@ -76,6 +76,7 @@
             this.radMulti.Text = "Multiple labels";
             this.radMulti.UseVisualStyleBackColor = true;
             this.radMulti.CheckedChanged += new System.EventHandler(this.radMulti_CheckedChanged);
+            this.radMulti.Click += new System.EventHandler(this.radMulti_Click);
             // 
             // radTwo
             // 
@@ -87,6 +88,7 @@
             this.radTwo.Text = "Two labels";
             this.radTwo.UseVisualStyleBackColor = true;
             this.radTwo.CheckedChanged += new System.EventHandler(this.radTwo_CheckedChanged);
+            this.radTwo.Click += new System.EventHandler(this.radTwo_Click);
             // 
             // txt3n1
             // 
@@ -213,16 +215,6 @@
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label5
-            // 
-            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(254, 26);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(40, 18);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Name";
-            // 
             // txtName
             // 
             this.txtName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -234,6 +226,16 @@
             this.txtName.Size = new System.Drawing.Size(319, 25);
             this.txtName.TabIndex = 13;
             this.toolTip1.SetToolTip(this.txtName, "-");
+            // 
+            // label5
+            // 
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(254, 26);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(40, 18);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Name";
             // 
             // FSplitLabel
             // 

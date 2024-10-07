@@ -32,6 +32,11 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
+                if (!txtNIK.ReadOnly)
+                {
+                    txtNIK.Focus();
+                    return;
+                }
                 if (txt3n1.Text.Length <= 3)
                 {
                     MessageBox.Show("Unknown Format C3 Label");
@@ -187,6 +192,12 @@ namespace SMTCSHARP
                 return;
             }
 
+            if (!txtNIK.ReadOnly)
+            {
+                MessageBox.Show("NIK is required");
+                return;
+            }
+
             using (WebClient wc = new WebClient())
             {
                 try
@@ -217,7 +228,7 @@ namespace SMTCSHARP
                     {
                         txt3n1.ReadOnly = false;
                         txt3n2.ReadOnly = false;
-                        txt3n1.Text = string.Empty;
+
                         txt3n2.Text = string.Empty;
                         txtQty.Text = string.Empty;
                         txtQty.Maximum = 0;
@@ -236,6 +247,8 @@ namespace SMTCSHARP
                             mretitemnm = rw["SPTNO"].ToString();
                             printsmtlabel();
                         }
+
+                        txt3n1.Text = string.Empty;
                     }
 
                 }
@@ -258,6 +271,8 @@ namespace SMTCSHARP
             datanya.Add("itemLot", lotNumber);
             datanya.Add("itemKey", mUniqueCode);
             datanya.Add("itemName", mretitemnm);
+            datanya.Add("nik", txtNIK.Text);
+            datanya.Add("user_name", txtName.Text);
             datanya.Add("mretrohs", "1");
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
@@ -326,6 +341,7 @@ namespace SMTCSHARP
             }
             else
             {
+                timeOutClearing = 300;
                 txtNIK.Text = "";
                 txtNIK.ReadOnly = false;
                 txtNIK.Focus();
@@ -350,6 +366,10 @@ namespace SMTCSHARP
                             txtName.Text = (string)res_jes["data"]["user_nicename"];
                             txt3n1.Focus();
                         }
+                        else
+                        {
+                            MessageBox.Show("NIK is not registered");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -357,6 +377,16 @@ namespace SMTCSHARP
                     }
                 }
             }
+        }
+
+        private void radTwo_Click(object sender, EventArgs e)
+        {
+            btnSave.Focus();
+        }
+
+        private void radMulti_Click(object sender, EventArgs e)
+        {
+            btnSave.Focus();
         }
     }
 }
