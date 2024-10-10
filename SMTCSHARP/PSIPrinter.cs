@@ -104,7 +104,7 @@ namespace SMTCSHARP
 
             if (ret == LabelConst.CLS_SUCCESS)
             {
-                int copies = data["copies"] == null ? 1 : int.Parse(data["copies"]);
+                int copies = this.data.ContainsKey("copies") ? int.Parse(data["copies"]) : 1;
                 printer.SetPrintDarkness(UInt16.Parse(myDARk));
                 printer.SetPrintSpeed(mySPEED);
                 printer.Print(lbldsg, copies);
