@@ -75,7 +75,7 @@ namespace SMTCSHARP
                     lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
                 }
                 lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
-                lbldsg.DrawTextPCFont(String.Format("{0} : {1}", data["nik"] ?? ASettings.getmyuserid(), data["user_name"] ?? ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
+                lbldsg.DrawTextPCFont(String.Format("{0} : {1}", this.data.ContainsKey("nik") ? data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? data["user_name"] : ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
                 lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
             }
             else
@@ -97,7 +97,7 @@ namespace SMTCSHARP
                     lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
                 }
                 lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), 250, 45);
-                lbldsg.DrawTextPCFont(String.Format("{0} : {1}", data["nik"] ?? ASettings.getmyuserid(), data["user_name"] ?? ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
+                lbldsg.DrawTextPCFont(String.Format("{0} : {1}", this.data.ContainsKey("nik") ? this.data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? this.data["user_name"] : ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
                 lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), 250, 20);
             }
 
@@ -156,7 +156,7 @@ namespace SMTCSHARP
 
                 aDriver.windowsfont(startx, 265, 25, 0, 0, 0, "Times New Roman", String.Format("PART NO : {0}", this.data["itemName"]));
                 aDriver.windowsfont(startx, 290, 25, 0, 0, 0, "Times New Roman", String.Format("RoHS Compliant        C/O Made in SMT"));
-                aDriver.windowsfont(startx, 315, 25, 0, 0, 0, "Times New Roman", String.Format("{0} : {1}", data["nik"] ?? ASettings.getmyuserid(), data["user_name"] ?? ASettings.getmyuserfname()));
+                aDriver.windowsfont(startx, 315, 25, 0, 0, 0, "Times New Roman", String.Format("{0} : {1}", this.data.ContainsKey("nik") ? this.data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? data["user_name"] : ASettings.getmyuserfname()));
                 aDriver.windowsfont(210, 315, 25, 0, 0, 0, "Times New Roman", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi));
 
                 aDriver.sendcommand(String.Format("QRCODE 415,250,H,2,A,0,M2, \"Z3N1{0}|3N2 {1} {2}|{3}\"", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]));
@@ -177,7 +177,7 @@ namespace SMTCSHARP
 
                 aDriver.windowsfont(startx, 320, 20, 0, 0, 0, "Times New Roman", String.Format("PART NO : {0}", this.data["itemName"]));
                 aDriver.windowsfont(startx, 290 + 50, 20, 0, 0, 0, "Times New Roman", String.Format("RoHS Compliant        C/O Made in SMT"));
-                aDriver.windowsfont(startx, 315 + 50, 20, 0, 0, 0, "Times New Roman", String.Format("{0} : {1}", data["nik"] ?? ASettings.getmyuserid(), data["user_name"] ?? ASettings.getmyuserfname()));
+                aDriver.windowsfont(startx, 315 + 50, 20, 0, 0, 0, "Times New Roman", String.Format("{0} : {1}", this.data.ContainsKey("nik") ? data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? data["user_name"] : ASettings.getmyuserfname()));
                 aDriver.windowsfont(210, 315 + 50, 20, 0, 0, 0, "Times New Roman", DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi));
 
                 aDriver.sendcommand(String.Format("QRCODE 320,205,H,2,A,0,M2, \"Z3N1{0}|3N2 {1} {2}|{3}\"", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]));

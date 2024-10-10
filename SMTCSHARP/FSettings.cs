@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace SMTCSHARP
 {
@@ -183,6 +184,9 @@ namespace SMTCSHARP
             datanya.Add("itemKey", "24041");
             datanya.Add("itemName", "MCR");
             datanya.Add("mretrohs", "1");
+            //datanya.Add("nik", "1210034");
+            //datanya.Add("user_name", "ana");
+            //datanya.Add("copies", "1");
             PSIprinter.setData(datanya);
             PSIprinter.print(cmbDefaultPrinter.Text.ToLower());
         }
