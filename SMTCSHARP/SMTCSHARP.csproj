@@ -228,6 +228,12 @@
     <Compile Include="FKittingReturnXRay.Designer.cs">
       <DependentUpon>FKittingReturnXRay.cs</DependentUpon>
     </Compile>
+    <Compile Include="FLabelMasterHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FLabelMasterHistory.Designer.cs">
+      <DependentUpon>FLabelMasterHistory.cs</DependentUpon>
+    </Compile>
     <Compile Include="FLOGIN.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +302,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FKittingReturnXRay.resx">
       <DependentUpon>FKittingReturnXRay.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FLabelMasterHistory.resx">
+      <DependentUpon>FLabelMasterHistory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FLOGIN.resx">
       <DependentUpon>FLOGIN.cs</DependentUpon>

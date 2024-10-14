@@ -429,5 +429,11 @@ namespace SMTCSHARP
         {
             txtQty.Select(0, txtQty.Text.Length);
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            FLabelMasterHistory fLabelMasterHistory = new FLabelMasterHistory();
+            fLabelMasterHistory.ShowDialog();
+        }
     }
 }
