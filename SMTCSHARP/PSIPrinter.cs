@@ -53,7 +53,7 @@ namespace SMTCSHARP
             DateTimeFormatInfo dtfi = culture.DateTimeFormat;
             dtfi.DateSeparator = "/";
             int startx = 35;
-            int mhratio = 105; //105, 75
+            int mhratio = 110; //105, 75
             int mvratio = 110; //150,75
 
             if (ribbonSize.Equals("115x210mm"))
@@ -66,9 +66,8 @@ namespace SMTCSHARP
                 lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"]), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
                 lbldsg.DrawTextPCFont(String.Format("(UC) {0}", this.data["itemKey"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
                 lbldsg.DrawBarCode(String.Format(this.data["itemKey"]), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
-                lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", this.data["itemName"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
+                lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", this.data["itemName"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio), (mvratio), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
                 lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]), LabelConst.CLS_ENC_CDPG_WINDOWS_1252, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 95);
-
 
                 if (this.data["mretrohs"].Equals("1"))
                 {
@@ -88,7 +87,7 @@ namespace SMTCSHARP
                 lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"]), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
                 lbldsg.DrawTextPCFont(String.Format("(UC) {0}", this.data["itemKey"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
                 lbldsg.DrawBarCode(String.Format(this.data["itemKey"]), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
-                lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", this.data["itemName"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
+                lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", this.data["itemName"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio), (mvratio), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
                 lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]), LabelConst.CLS_ENC_CDPG_WINDOWS_1252, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 425, 95);
 
 
