@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
@@ -28,6 +29,7 @@ namespace SMTCSHARP
 
         string mUniqueCode = "";
         string mServerApi = "";
+        bool isScanQR = false;
         public FKittingReturn()
         {
             InitializeComponent();
@@ -356,10 +358,11 @@ namespace SMTCSHARP
             }
         }
 
-        private void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
+        private async void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
+                bool isUniquekeyMode = false;
                 if (txtpsn.Text == "")
                 {
                     MessageBox.Show("Please fill PSN No");
@@ -395,15 +398,94 @@ namespace SMTCSHARP
 
                 if (txtitemcd.Text.Contains("|"))
                 {
-                    // parse qr code
-                    string[] QRArray = txtitemcd.Text.Split('|');
-                    if (QRArray[0].Substring(0,2).Equals("Z3"))
-                    {
+                    isScanQR = true;
 
+                    // parse qr code
+                    string[] QRArray = txtitemcd.Text.ToUpper().Split('|');
+
+                    if (QRArray.Length == 3)
+                    {
+                        string[] strings = await validateUniqueKeyVsPSN(QRArray[2]);
+                        if (strings[0].Equals("1"))
+                        {
+                            JObject response = JObject.Parse(strings[2]);
+                            var rsdata = from p in response["data"] select p;
+                            foreach (var r in rsdata)
+                            {
+                                if (txtpsn.Text.Trim().Length == 0)
+                                {
+                                    txtpsn.Text = r["SPLSCN_DOC"].ToString();
+                                    txtcat.Text = r["SPLSCN_CAT"].ToString();
+                                    txtline.Text = r["SPLSCN_LINE"].ToString();
+                                    txtaftqty.Focus();
+                                    isUniquekeyMode = true;
+                                }
+                                else
+                                {
+                                    if (!txtpsn.Text.Trim().ToUpper().Equals(r["SPLSCN_DOC"].ToString().ToUpper()))
+                                    {
+                                        MessageBox.Show(String.Format("{0} belongs to {1}", QRArray[2], r["SPLSCN_DOC"]), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        txtitemcd.Text = "";
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    int strLength3N1 = 0;
+                    switch (QRArray[0].Substring(0, 2).ToString())
+                    {
+                        case "Z3":
+                            strLength3N1 = QRArray[0].Length - 4;
+                            txtitemcd.Text = QRArray[0].Substring(4, strLength3N1);
+                            break;
+                        case "3N":
+                            strLength3N1 = QRArray[0].Length - 3;
+                            txtitemcd.Text = QRArray[0].Substring(3, strLength3N1);
+                            break;
+                        default:
+                            txtitemcd.Text = QRArray[0];
+                            break;
+                    }
+
+                    string[] Array3N2;
+
+                    if (QRArray.Length == 4)
+                    {
+                        // mungkin ini logic jadul terkait label jadul
+                        txtbefqty.Text = QRArray[1];
+                        txtlot.Text = QRArray[2];
+                        txtbefqty.ReadOnly = true;
+                    }
+                    else
+                    {
+                        Array3N2 = QRArray[1].Split(' ');
+                        switch (QRArray[1].Substring(0, 3).ToString())
+                        {
+                            case "3N2":
+                                if (Array3N2[1].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[1];
+                                    txtlot.Text = Array3N2[2];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+
+                            default:
+                                if (Array3N2[0].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[0];
+                                    txtlot.Text = Array3N2[1];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+                        }
                     }
                 }
                 else
                 {
+                    isScanQR = false;
                     if (txtitemcd.Text.Substring(0, 3) != "3N1")
                     {
                         MessageBox.Show("Unknown Format C3 Label");
@@ -446,7 +528,14 @@ namespace SMTCSHARP
                         }
                         else
                         {
-                            txtbefqty.Focus();
+                            if (isScanQR)
+                            {
+                                txtaftqty.Focus();
+                            }
+                            else
+                            {
+                                txtbefqty.Focus();
+                            }
                             txtbefqty.ReadOnly = false;
                             txtitmname.Text = (string)res_jes["data"][0]["ref"];
                             txtRackcd.Text = (string)res_jes["data"][0]["rackno"];
@@ -1070,6 +1159,29 @@ namespace SMTCSHARP
                     txtbefqty.ReadOnly = false;
                 }
             }
+        }
+
+        private async Task<string[]> validateUniqueKeyVsPSN(string key)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+            using (HttpClient hc = new HttpClient())
+            {
+                var response = await hc.GetAsync(String.Format(this.mServerApi + "/supply/validate-label?uniquekey={0}", key));
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    message = "the response is not success yet";
+                }
+
+            }
+            return new string[] { returnCode, message, data };
         }
     }
 }

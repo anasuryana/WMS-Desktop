@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using IniParser;
 using IniParser.Model;
@@ -841,6 +843,29 @@ namespace SMTCSHARP
             datanya.Add("mretrohs", "1");
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
+        }
+
+        private async Task<string[]> validateUniqueKeyVsPSN(string key)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+            using (HttpClient hc = new HttpClient())
+            {
+                var response = await hc.GetAsync(String.Format(this.mServerApi + "/supply/validate-label?uniquekey={0}", key));
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    message = "the response is not success yet";
+                }
+
+            }
+            return new string[] { returnCode, message, data };
         }
 
     }
