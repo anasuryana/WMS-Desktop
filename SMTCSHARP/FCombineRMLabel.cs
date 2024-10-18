@@ -441,5 +441,24 @@ namespace SMTCSHARP
                 }
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            panelExport.Visible = true;
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            panelExport.Visible = false;
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(String.Format("{0}/report/join-reels?dateFrom={1}&dateTo={2}",
+                mServerApi,
+                DTPFrom.Value.ToString("yyyy-MM-dd"),
+                DTPTo.Value.ToString("yyyy-MM-dd"))
+                );
+        }
     }
 }

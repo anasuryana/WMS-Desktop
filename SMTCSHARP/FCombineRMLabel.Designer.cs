@@ -40,7 +40,16 @@
             this.btnNew = new System.Windows.Forms.Button();
             this.btnCancelScan = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.button1 = new System.Windows.Forms.Button();
+            this.panelExport = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.DTPFrom = new System.Windows.Forms.DateTimePicker();
+            this.label4 = new System.Windows.Forms.Label();
+            this.DTPTo = new System.Windows.Forms.DateTimePicker();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.btnClose = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_lbljoin)).BeginInit();
+            this.panelExport.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -133,12 +142,97 @@
             this.btnCancelScan.UseVisualStyleBackColor = true;
             this.btnCancelScan.Click += new System.EventHandler(this.btnCancelScan_Click);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(294, 137);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(98, 26);
+            this.button1.TabIndex = 68;
+            this.button1.Text = "Report";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // panelExport
+            // 
+            this.panelExport.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelExport.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            this.panelExport.Controls.Add(this.btnClose);
+            this.panelExport.Controls.Add(this.btnExport);
+            this.panelExport.Controls.Add(this.DTPTo);
+            this.panelExport.Controls.Add(this.label4);
+            this.panelExport.Controls.Add(this.DTPFrom);
+            this.panelExport.Controls.Add(this.label3);
+            this.panelExport.Location = new System.Drawing.Point(12, 75);
+            this.panelExport.Name = "panelExport";
+            this.panelExport.Size = new System.Drawing.Size(792, 416);
+            this.panelExport.TabIndex = 69;
+            this.panelExport.Visible = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(45, 33);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 18);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "From";
+            // 
+            // DTPFrom
+            // 
+            this.DTPFrom.CustomFormat = "yyy-MM-dd";
+            this.DTPFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.DTPFrom.Location = new System.Drawing.Point(91, 33);
+            this.DTPFrom.Name = "DTPFrom";
+            this.DTPFrom.Size = new System.Drawing.Size(144, 25);
+            this.DTPFrom.TabIndex = 1;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(279, 33);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(24, 18);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "To";
+            // 
+            // DTPTo
+            // 
+            this.DTPTo.CustomFormat = "yyy-MM-dd";
+            this.DTPTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.DTPTo.Location = new System.Drawing.Point(309, 33);
+            this.DTPTo.Name = "DTPTo";
+            this.DTPTo.Size = new System.Drawing.Size(144, 25);
+            this.DTPTo.TabIndex = 3;
+            // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(91, 118);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(93, 27);
+            this.btnExport.TabIndex = 4;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // btnClose
+            // 
+            this.btnClose.Location = new System.Drawing.Point(190, 118);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(93, 27);
+            this.btnClose.TabIndex = 5;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
             // FCombineRMLabel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SkyBlue;
             this.ClientSize = new System.Drawing.Size(819, 503);
+            this.Controls.Add(this.panelExport);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.btnreturnprint);
             this.Controls.Add(this.btnSaveCombine);
@@ -148,12 +242,15 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnCancelScan);
+            this.Controls.Add(this.button1);
             this.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FCombineRMLabel";
             this.Text = "Combine RM Label";
             this.Load += new System.EventHandler(this.FCombineRMLabel_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dGV_lbljoin)).EndInit();
+            this.panelExport.ResumeLayout(false);
+            this.panelExport.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -170,5 +267,13 @@
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.Button btnCancelScan;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel panelExport;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.DateTimePicker DTPTo;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.DateTimePicker DTPFrom;
     }
 }
