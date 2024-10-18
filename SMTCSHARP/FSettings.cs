@@ -5,6 +5,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO.Ports;
 using System.Windows.Forms;
 using System.Xml.Linq;
 
@@ -117,6 +118,9 @@ namespace SMTCSHARP
             listView1.Items.Clear();
             listView1.Columns.Add("Port", 120, HorizontalAlignment.Left);
             listView1.Columns.Add("", 210, HorizontalAlignment.Left);
+
+            string[] ports = SerialPort.GetPortNames();
+
         }
 
         private void FSettings_Load(object sender, EventArgs e)

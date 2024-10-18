@@ -223,3 +223,4 @@ C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\D
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.csproj.Up2Date
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FSplitLabel.resources
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FLabelMasterHistory.resources
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FCombineRMLabelPSN.resources

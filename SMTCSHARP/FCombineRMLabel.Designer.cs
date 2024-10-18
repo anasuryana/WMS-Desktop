@@ -42,12 +42,12 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.button1 = new System.Windows.Forms.Button();
             this.panelExport = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.DTPFrom = new System.Windows.Forms.DateTimePicker();
-            this.label4 = new System.Windows.Forms.Label();
-            this.DTPTo = new System.Windows.Forms.DateTimePicker();
-            this.btnExport = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.DTPTo = new System.Windows.Forms.DateTimePicker();
+            this.label4 = new System.Windows.Forms.Label();
+            this.DTPFrom = new System.Windows.Forms.DateTimePicker();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_lbljoin)).BeginInit();
             this.panelExport.SuspendLayout();
             this.SuspendLayout();
@@ -170,41 +170,15 @@
             this.panelExport.TabIndex = 69;
             this.panelExport.Visible = false;
             // 
-            // label3
+            // btnClose
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(45, 33);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(40, 18);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "From";
-            // 
-            // DTPFrom
-            // 
-            this.DTPFrom.CustomFormat = "yyy-MM-dd";
-            this.DTPFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.DTPFrom.Location = new System.Drawing.Point(91, 33);
-            this.DTPFrom.Name = "DTPFrom";
-            this.DTPFrom.Size = new System.Drawing.Size(144, 25);
-            this.DTPFrom.TabIndex = 1;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(279, 33);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(24, 18);
-            this.label4.TabIndex = 2;
-            this.label4.Text = "To";
-            // 
-            // DTPTo
-            // 
-            this.DTPTo.CustomFormat = "yyy-MM-dd";
-            this.DTPTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
-            this.DTPTo.Location = new System.Drawing.Point(309, 33);
-            this.DTPTo.Name = "DTPTo";
-            this.DTPTo.Size = new System.Drawing.Size(144, 25);
-            this.DTPTo.TabIndex = 3;
+            this.btnClose.Location = new System.Drawing.Point(190, 118);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(93, 27);
+            this.btnClose.TabIndex = 5;
+            this.btnClose.Text = "Close";
+            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnExport
             // 
@@ -216,15 +190,41 @@
             this.btnExport.UseVisualStyleBackColor = true;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
-            // btnClose
+            // DTPTo
             // 
-            this.btnClose.Location = new System.Drawing.Point(190, 118);
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(93, 27);
-            this.btnClose.TabIndex = 5;
-            this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            this.DTPTo.CustomFormat = "yyy-MM-dd";
+            this.DTPTo.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.DTPTo.Location = new System.Drawing.Point(309, 33);
+            this.DTPTo.Name = "DTPTo";
+            this.DTPTo.Size = new System.Drawing.Size(144, 25);
+            this.DTPTo.TabIndex = 3;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(279, 33);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(24, 18);
+            this.label4.TabIndex = 2;
+            this.label4.Text = "To";
+            // 
+            // DTPFrom
+            // 
+            this.DTPFrom.CustomFormat = "yyy-MM-dd";
+            this.DTPFrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom;
+            this.DTPFrom.Location = new System.Drawing.Point(91, 33);
+            this.DTPFrom.Name = "DTPFrom";
+            this.DTPFrom.Size = new System.Drawing.Size(144, 25);
+            this.DTPFrom.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(45, 33);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(40, 18);
+            this.label3.TabIndex = 0;
+            this.label3.Text = "From";
             // 
             // FCombineRMLabel
             // 

@@ -216,6 +216,12 @@
     <Compile Include="FCombineRMLabel.Designer.cs">
       <DependentUpon>FCombineRMLabel.cs</DependentUpon>
     </Compile>
+    <Compile Include="FCombineRMLabelPSN.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FCombineRMLabelPSN.Designer.cs">
+      <DependentUpon>FCombineRMLabelPSN.cs</DependentUpon>
+    </Compile>
     <Compile Include="FKittingReturn.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -296,6 +302,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FCombineRMLabel.resx">
       <DependentUpon>FCombineRMLabel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FCombineRMLabelPSN.resx">
+      <DependentUpon>FCombineRMLabelPSN.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FKittingReturn.resx">
       <DependentUpon>FKittingReturn.cs</DependentUpon>

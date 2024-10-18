@@ -34,6 +34,8 @@
             this.txtserver = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.cmbRibbonSize = new System.Windows.Forms.ComboBox();
+            this.label7 = new System.Windows.Forms.Label();
             this.btnPrintTestpage = new System.Windows.Forms.Button();
             this.cmbDefaultPrinter = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -65,8 +67,11 @@
             this.label2 = new System.Windows.Forms.Label();
             this.btnSaveconfig = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.label7 = new System.Windows.Forms.Label();
-            this.cmbRibbonSize = new System.Windows.Forms.ComboBox();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -79,6 +84,7 @@
             this.tabPage4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDensity)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).BeginInit();
+            this.tabPage5.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -88,6 +94,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Location = new System.Drawing.Point(12, 12);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -140,6 +147,27 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Printer";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // cmbRibbonSize
+            // 
+            this.cmbRibbonSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRibbonSize.FormattingEnabled = true;
+            this.cmbRibbonSize.Items.AddRange(new object[] {
+            "115x210mm",
+            "56x300mm"});
+            this.cmbRibbonSize.Location = new System.Drawing.Point(486, 19);
+            this.cmbRibbonSize.Name = "cmbRibbonSize";
+            this.cmbRibbonSize.Size = new System.Drawing.Size(113, 28);
+            this.cmbRibbonSize.TabIndex = 25;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(383, 23);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(88, 20);
+            this.label7.TabIndex = 24;
+            this.label7.Text = "Ribbon Size";
             // 
             // btnPrintTestpage
             // 
@@ -215,7 +243,7 @@
             // textspeed
             // 
             this.textspeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textspeed.Location = new System.Drawing.Point(694, 328);
+            this.textspeed.Location = new System.Drawing.Point(694, 335);
             this.textspeed.Multiline = true;
             this.textspeed.Name = "textspeed";
             this.textspeed.ReadOnly = true;
@@ -227,7 +255,7 @@
             // 
             this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 327);
+            this.label16.Location = new System.Drawing.Point(10, 334);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(51, 20);
             this.label16.TabIndex = 30;
@@ -237,7 +265,7 @@
             // 
             this.trackbarspeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbarspeed.Location = new System.Drawing.Point(105, 327);
+            this.trackbarspeed.Location = new System.Drawing.Point(105, 334);
             this.trackbarspeed.Maximum = 33;
             this.trackbarspeed.Minimum = 1;
             this.trackbarspeed.Name = "trackbarspeed";
@@ -249,7 +277,7 @@
             // textnarrow
             // 
             this.textnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textnarrow.Location = new System.Drawing.Point(694, 275);
+            this.textnarrow.Location = new System.Drawing.Point(694, 282);
             this.textnarrow.Multiline = true;
             this.textnarrow.Name = "textnarrow";
             this.textnarrow.ReadOnly = true;
@@ -261,7 +289,7 @@
             // 
             this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(10, 274);
+            this.label15.Location = new System.Drawing.Point(10, 281);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(58, 20);
             this.label15.TabIndex = 27;
@@ -271,7 +299,7 @@
             // 
             this.trackbnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbnarrow.Location = new System.Drawing.Point(105, 274);
+            this.trackbnarrow.Location = new System.Drawing.Point(105, 281);
             this.trackbnarrow.Maximum = 24;
             this.trackbnarrow.Minimum = 1;
             this.trackbnarrow.Name = "trackbnarrow";
@@ -283,7 +311,7 @@
             // txthick
             // 
             this.txthick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txthick.Location = new System.Drawing.Point(694, 222);
+            this.txthick.Location = new System.Drawing.Point(694, 229);
             this.txthick.Multiline = true;
             this.txthick.Name = "txthick";
             this.txthick.ReadOnly = true;
@@ -295,7 +323,7 @@
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(10, 221);
+            this.label14.Location = new System.Drawing.Point(10, 228);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(43, 20);
             this.label14.TabIndex = 24;
@@ -305,7 +333,7 @@
             // 
             this.trackbthick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbthick.Location = new System.Drawing.Point(105, 221);
+            this.trackbthick.Location = new System.Drawing.Point(105, 228);
             this.trackbthick.Maximum = 24;
             this.trackbthick.Minimum = 1;
             this.trackbthick.Name = "trackbthick";
@@ -317,7 +345,7 @@
             // txtdarkness
             // 
             this.txtdarkness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtdarkness.Location = new System.Drawing.Point(694, 170);
+            this.txtdarkness.Location = new System.Drawing.Point(694, 177);
             this.txtdarkness.Multiline = true;
             this.txtdarkness.Name = "txtdarkness";
             this.txtdarkness.ReadOnly = true;
@@ -329,7 +357,7 @@
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(10, 170);
+            this.label13.Location = new System.Drawing.Point(10, 177);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(68, 20);
             this.label13.TabIndex = 21;
@@ -339,7 +367,7 @@
             // 
             this.trackbdark.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbdark.Location = new System.Drawing.Point(105, 170);
+            this.trackbdark.Location = new System.Drawing.Point(105, 177);
             this.trackbdark.Maximum = 30;
             this.trackbdark.Name = "trackbdark";
             this.trackbdark.Size = new System.Drawing.Size(583, 45);
@@ -356,7 +384,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(6, 38);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(739, 120);
+            this.listView1.Size = new System.Drawing.Size(739, 127);
             this.listView1.TabIndex = 8;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -489,26 +517,55 @@
             this.btnSaveconfig.UseVisualStyleBackColor = true;
             this.btnSaveconfig.Click += new System.EventHandler(this.btnSaveconfig_Click);
             // 
-            // label7
+            // tabPage5
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(383, 23);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(88, 20);
-            this.label7.TabIndex = 24;
-            this.label7.Text = "Ribbon Size";
+            this.tabPage5.Controls.Add(this.comboBox2);
+            this.tabPage5.Controls.Add(this.label9);
+            this.tabPage5.Controls.Add(this.comboBox1);
+            this.tabPage5.Controls.Add(this.label8);
+            this.tabPage5.Location = new System.Drawing.Point(4, 29);
+            this.tabPage5.Name = "tabPage5";
+            this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage5.Size = new System.Drawing.Size(771, 492);
+            this.tabPage5.TabIndex = 2;
+            this.tabPage5.Text = "LCR Meter";
+            this.tabPage5.UseVisualStyleBackColor = true;
             // 
-            // cmbRibbonSize
+            // label8
             // 
-            this.cmbRibbonSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbRibbonSize.FormattingEnabled = true;
-            this.cmbRibbonSize.Items.AddRange(new object[] {
-            "115x210mm",
-            "56x300mm"});
-            this.cmbRibbonSize.Location = new System.Drawing.Point(486, 19);
-            this.cmbRibbonSize.Name = "cmbRibbonSize";
-            this.cmbRibbonSize.Size = new System.Drawing.Size(113, 28);
-            this.cmbRibbonSize.TabIndex = 25;
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(21, 27);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(35, 20);
+            this.label8.TabIndex = 0;
+            this.label8.Text = "Port";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(62, 24);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(156, 28);
+            this.comboBox1.TabIndex = 1;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(284, 27);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(43, 20);
+            this.label9.TabIndex = 2;
+            this.label9.Text = "Baud";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(333, 24);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(201, 28);
+            this.comboBox2.TabIndex = 3;
             // 
             // FSettings
             // 
@@ -540,6 +597,8 @@
             this.tabPage4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbDensity)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSpeed)).EndInit();
+            this.tabPage5.ResumeLayout(false);
+            this.tabPage5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -584,5 +643,10 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ComboBox cmbRibbonSize;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TabPage tabPage5;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }
