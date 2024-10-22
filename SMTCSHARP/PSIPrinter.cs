@@ -33,7 +33,7 @@ namespace SMTCSHARP
             LabelPrinter printer = new LabelPrinter();
             printer.SetMeasurementUnit(LabelConst.CLS_UNIT_MILLI);
             printer.SetFormatAttribute(1);
-            
+
 
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
             string ribbonSize = ckrk.GetValue("PRINTER_RIBBON_SIZE").ToString();
@@ -54,8 +54,8 @@ namespace SMTCSHARP
             DateTimeFormatInfo dtfi = culture.DateTimeFormat;
             dtfi.DateSeparator = "/";
             int startx = 35;
-            int mhratio = 130; //105, 75
-            int mvratio = 130; //150,75
+            int mhratio = 115; //105, 75
+            int mvratio = 115; //150,75
 
             if (ribbonSize.Equals("115x210mm"))
             {
@@ -67,17 +67,17 @@ namespace SMTCSHARP
                 lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"]), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
                 lbldsg.DrawTextPCFont(String.Format("(UC) {0}", this.data["itemKey"]), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
                 lbldsg.DrawBarCode(String.Format(this.data["itemKey"]), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
-                
-                lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]), LabelConst.CLS_ENC_CDPG_WINDOWS_1252, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 95);
+
+                lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]), LabelConst.CLS_ENC_CDPG_WINDOWS_1252, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 100);
 
                 if (this.data["mretrohs"].Equals("1"))
                 {
                     lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
                 }
 
-                lbldsg.DrawTextPCFont(String.Format("PART NO"), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio), (mvratio), 7, (LabelConst.CLS_ENC_CDPG_DEFAULT), startx, 70);
-                lbldsg.DrawTextPCFont(String.Format(":"), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio), (mvratio), 7, (LabelConst.CLS_ENC_CDPG_DEFAULT), startx+145, 70);
-                lbldsg.DrawTextPCFont(String.Format("{0}", this.data["itemName"].Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio), (mvratio), 7, (LabelConst.CLS_ENC_CDPG_DEFAULT), startx + 155, 70);
+                lbldsg.DrawTextPCFont(String.Format("PART NO"), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 10), (mvratio - 10), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
+                lbldsg.DrawTextPCFont(String.Format(":"), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 10), (mvratio - 10), 7, (LabelConst.CLS_FNT_DEFAULT), startx + 140, 70);
+                lbldsg.DrawTextPCFont(String.Format("{0}", this.data["itemName"].Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 10), (mvratio - 10), 7, (LabelConst.CLS_FNT_DEFAULT), startx + 150, 70);
                 lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
                 lbldsg.DrawTextPCFont(String.Format("{0} : {1}", this.data.ContainsKey("nik") ? data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? data["user_name"] : ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
                 lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
