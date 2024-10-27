@@ -297,6 +297,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSIPrinter.cs" />
+    <Compile Include="RS_232C_USB.cs" />
     <EmbeddedResource Include="FBusinessGroup.resx">
       <DependentUpon>FBusinessGroup.cs</DependentUpon>
     </EmbeddedResource>
