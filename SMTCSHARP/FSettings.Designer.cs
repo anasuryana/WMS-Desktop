@@ -65,13 +65,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cmbPrinterTSC = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.tabPage5 = new System.Windows.Forms.TabPage();
+            this.btnRefreshPort = new System.Windows.Forms.Button();
+            this.cmbLcrMeterPort = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
             this.btnSaveconfig = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.tabPage5 = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -243,7 +242,7 @@
             // textspeed
             // 
             this.textspeed.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textspeed.Location = new System.Drawing.Point(694, 335);
+            this.textspeed.Location = new System.Drawing.Point(694, 349);
             this.textspeed.Multiline = true;
             this.textspeed.Name = "textspeed";
             this.textspeed.ReadOnly = true;
@@ -255,7 +254,7 @@
             // 
             this.label16.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(10, 334);
+            this.label16.Location = new System.Drawing.Point(10, 348);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(51, 20);
             this.label16.TabIndex = 30;
@@ -265,7 +264,7 @@
             // 
             this.trackbarspeed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbarspeed.Location = new System.Drawing.Point(105, 334);
+            this.trackbarspeed.Location = new System.Drawing.Point(105, 348);
             this.trackbarspeed.Maximum = 33;
             this.trackbarspeed.Minimum = 1;
             this.trackbarspeed.Name = "trackbarspeed";
@@ -277,7 +276,7 @@
             // textnarrow
             // 
             this.textnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textnarrow.Location = new System.Drawing.Point(694, 282);
+            this.textnarrow.Location = new System.Drawing.Point(694, 296);
             this.textnarrow.Multiline = true;
             this.textnarrow.Name = "textnarrow";
             this.textnarrow.ReadOnly = true;
@@ -289,7 +288,7 @@
             // 
             this.label15.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(10, 281);
+            this.label15.Location = new System.Drawing.Point(10, 295);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(58, 20);
             this.label15.TabIndex = 27;
@@ -299,7 +298,7 @@
             // 
             this.trackbnarrow.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbnarrow.Location = new System.Drawing.Point(105, 281);
+            this.trackbnarrow.Location = new System.Drawing.Point(105, 295);
             this.trackbnarrow.Maximum = 24;
             this.trackbnarrow.Minimum = 1;
             this.trackbnarrow.Name = "trackbnarrow";
@@ -311,7 +310,7 @@
             // txthick
             // 
             this.txthick.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txthick.Location = new System.Drawing.Point(694, 229);
+            this.txthick.Location = new System.Drawing.Point(694, 243);
             this.txthick.Multiline = true;
             this.txthick.Name = "txthick";
             this.txthick.ReadOnly = true;
@@ -323,7 +322,7 @@
             // 
             this.label14.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(10, 228);
+            this.label14.Location = new System.Drawing.Point(10, 242);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(43, 20);
             this.label14.TabIndex = 24;
@@ -333,7 +332,7 @@
             // 
             this.trackbthick.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbthick.Location = new System.Drawing.Point(105, 228);
+            this.trackbthick.Location = new System.Drawing.Point(105, 242);
             this.trackbthick.Maximum = 24;
             this.trackbthick.Minimum = 1;
             this.trackbthick.Name = "trackbthick";
@@ -345,7 +344,7 @@
             // txtdarkness
             // 
             this.txtdarkness.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtdarkness.Location = new System.Drawing.Point(694, 177);
+            this.txtdarkness.Location = new System.Drawing.Point(694, 191);
             this.txtdarkness.Multiline = true;
             this.txtdarkness.Name = "txtdarkness";
             this.txtdarkness.ReadOnly = true;
@@ -357,7 +356,7 @@
             // 
             this.label13.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(10, 177);
+            this.label13.Location = new System.Drawing.Point(10, 191);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(68, 20);
             this.label13.TabIndex = 21;
@@ -367,7 +366,7 @@
             // 
             this.trackbdark.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackbdark.Location = new System.Drawing.Point(105, 177);
+            this.trackbdark.Location = new System.Drawing.Point(105, 191);
             this.trackbdark.Maximum = 30;
             this.trackbdark.Name = "trackbdark";
             this.trackbdark.Size = new System.Drawing.Size(583, 45);
@@ -384,7 +383,7 @@
             this.listView1.HideSelection = false;
             this.listView1.Location = new System.Drawing.Point(6, 38);
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(739, 127);
+            this.listView1.Size = new System.Drawing.Size(739, 141);
             this.listView1.TabIndex = 8;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
@@ -506,22 +505,10 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "TSC Printer";
             // 
-            // btnSaveconfig
-            // 
-            this.btnSaveconfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnSaveconfig.Location = new System.Drawing.Point(12, 543);
-            this.btnSaveconfig.Name = "btnSaveconfig";
-            this.btnSaveconfig.Size = new System.Drawing.Size(124, 31);
-            this.btnSaveconfig.TabIndex = 8;
-            this.btnSaveconfig.Text = "Save && Close";
-            this.btnSaveconfig.UseVisualStyleBackColor = true;
-            this.btnSaveconfig.Click += new System.EventHandler(this.btnSaveconfig_Click);
-            // 
             // tabPage5
             // 
-            this.tabPage5.Controls.Add(this.comboBox2);
-            this.tabPage5.Controls.Add(this.label9);
-            this.tabPage5.Controls.Add(this.comboBox1);
+            this.tabPage5.Controls.Add(this.btnRefreshPort);
+            this.tabPage5.Controls.Add(this.cmbLcrMeterPort);
             this.tabPage5.Controls.Add(this.label8);
             this.tabPage5.Location = new System.Drawing.Point(4, 29);
             this.tabPage5.Name = "tabPage5";
@@ -530,6 +517,25 @@
             this.tabPage5.TabIndex = 2;
             this.tabPage5.Text = "LCR Meter";
             this.tabPage5.UseVisualStyleBackColor = true;
+            // 
+            // btnRefreshPort
+            // 
+            this.btnRefreshPort.Location = new System.Drawing.Point(237, 24);
+            this.btnRefreshPort.Name = "btnRefreshPort";
+            this.btnRefreshPort.Size = new System.Drawing.Size(81, 28);
+            this.btnRefreshPort.TabIndex = 4;
+            this.btnRefreshPort.Text = "Refresh";
+            this.btnRefreshPort.UseVisualStyleBackColor = true;
+            this.btnRefreshPort.Click += new System.EventHandler(this.btnRefreshPort_Click);
+            // 
+            // cmbLcrMeterPort
+            // 
+            this.cmbLcrMeterPort.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbLcrMeterPort.FormattingEnabled = true;
+            this.cmbLcrMeterPort.Location = new System.Drawing.Point(62, 24);
+            this.cmbLcrMeterPort.Name = "cmbLcrMeterPort";
+            this.cmbLcrMeterPort.Size = new System.Drawing.Size(156, 28);
+            this.cmbLcrMeterPort.TabIndex = 1;
             // 
             // label8
             // 
@@ -540,32 +546,16 @@
             this.label8.TabIndex = 0;
             this.label8.Text = "Port";
             // 
-            // comboBox1
+            // btnSaveconfig
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(62, 24);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(156, 28);
-            this.comboBox1.TabIndex = 1;
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(284, 27);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(43, 20);
-            this.label9.TabIndex = 2;
-            this.label9.Text = "Baud";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Location = new System.Drawing.Point(333, 24);
-            this.comboBox2.Name = "comboBox2";
-            this.comboBox2.Size = new System.Drawing.Size(201, 28);
-            this.comboBox2.TabIndex = 3;
+            this.btnSaveconfig.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnSaveconfig.Location = new System.Drawing.Point(12, 543);
+            this.btnSaveconfig.Name = "btnSaveconfig";
+            this.btnSaveconfig.Size = new System.Drawing.Size(124, 31);
+            this.btnSaveconfig.TabIndex = 8;
+            this.btnSaveconfig.Text = "Save && Close";
+            this.btnSaveconfig.UseVisualStyleBackColor = true;
+            this.btnSaveconfig.Click += new System.EventHandler(this.btnSaveconfig_Click);
             // 
             // FSettings
             // 
@@ -645,8 +635,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabPage5;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.ComboBox comboBox2;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cmbLcrMeterPort;
+        private System.Windows.Forms.Button btnRefreshPort;
     }
 }

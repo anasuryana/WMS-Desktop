@@ -48,6 +48,8 @@ namespace SMTCSHARP
                 rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
                 rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
                 rk.SetValue("PRINTER_RIBBON_SIZE", "");
+                rk.SetValue("LCR_PORT", cmbLcrMeterPort.SelectedValue.ToString());
+                rk.SetValue("LCR_BAUD_RATE", "9600");
             }
             else
             {
@@ -109,6 +111,20 @@ namespace SMTCSHARP
                     tbDensity.Value = UInt16.Parse(ckrk.GetValue("PRINTER_BRAND_TSC_DENSITY").ToString().Length == 0 ? "0" : ckrk.GetValue("PRINTER_BRAND_TSC_DENSITY").ToString());
                     toolTip1.SetToolTip(tbDensity, tbDensity.Value.ToString());
                 }
+
+                getPorts();
+
+                kchild2 = ckrk.GetValue("LCR_PORT");
+                if (kchild2 == null)
+                {
+                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
+                    rk.SetValue("LCR_PORT", "");
+                    rk.SetValue("LCR_BAUD_RATE", "9600");
+                }
+                else
+                {
+                    cmbLcrMeterPort.Text = ckrk.GetValue("LCR_PORT").ToString();
+                }
             }
             ckrk.Close();
             var parser = new FileIniDataParser();
@@ -118,8 +134,6 @@ namespace SMTCSHARP
             listView1.Items.Clear();
             listView1.Columns.Add("Port", 120, HorizontalAlignment.Left);
             listView1.Columns.Add("", 210, HorizontalAlignment.Left);
-
-            string[] ports = SerialPort.GetPortNames();
 
         }
 
@@ -156,6 +170,8 @@ namespace SMTCSHARP
             rk.SetValue("PRINTER_BRAND_TSC_DENSITY", tbDensity.Value.ToString());
             rk.SetValue("PRINTER_RIBBON_SIZE", cmbRibbonSize.Text);
 
+            rk.SetValue("LCR_PORT", cmbLcrMeterPort.Text ?? "");
+
             MessageBox.Show("Saved");
             this.Close();
         }
@@ -188,9 +204,7 @@ namespace SMTCSHARP
             datanya.Add("itemKey", "24041");
             datanya.Add("itemName", "MCR");
             datanya.Add("mretrohs", "1");
-            //datanya.Add("nik", "1210034");
-            //datanya.Add("user_name", "ana");
-            //datanya.Add("copies", "1");
+
             PSIprinter.setData(datanya);
             PSIprinter.print(cmbDefaultPrinter.Text.ToLower());
         }
@@ -322,6 +336,21 @@ namespace SMTCSHARP
 
             listView1.Focus();
             listView1.Items[0].Selected = true;
+        }
+
+        private void btnRefreshPort_Click(object sender, EventArgs e)
+        {
+            getPorts();
+        }
+
+        void getPorts()
+        {
+            cmbLcrMeterPort.Items.Clear();
+            string[] ports = SerialPort.GetPortNames();
+            foreach (string port in ports)
+            {
+                cmbLcrMeterPort.Items.Add(port);
+            }
         }
     }
 }
