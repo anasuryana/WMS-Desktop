@@ -204,6 +204,7 @@ namespace SMTCSHARP
             datanya.Add("itemKey", "24041");
             datanya.Add("itemName", "MCR");
             datanya.Add("mretrohs", "1");
+            datanya.Add("itemValue", "10");
 
             PSIprinter.setData(datanya);
             PSIprinter.print(cmbDefaultPrinter.Text.ToLower());

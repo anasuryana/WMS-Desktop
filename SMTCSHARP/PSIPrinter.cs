@@ -81,6 +81,12 @@ namespace SMTCSHARP
                 lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
                 lbldsg.DrawTextPCFont(String.Format("{0} : {1}", this.data.ContainsKey("nik") ? data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? data["user_name"] : ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
                 lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
+
+                if (this.data.ContainsKey("itemValue"))
+                {
+                    lbldsg.DrawRect(620, 270, 60, 170, myTHICKNESS);
+                    lbldsg.DrawTextPtrFont(this.data["itemValue"], LabelConst.CLS_LOCALE_JP, LabelConst.CLS_PRT_FNT_1, LabelConst.CLS_RT_LEFT90, 2, 2, LabelConst.CLS_PRT_FNT_SIZE_12, 670, 280);
+                }
             }
             else
             {
@@ -103,6 +109,12 @@ namespace SMTCSHARP
                 lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), 250, 45);
                 lbldsg.DrawTextPCFont(String.Format("{0} : {1}", this.data.ContainsKey("nik") ? this.data["nik"] : ASettings.getmyuserid(), this.data.ContainsKey("user_name") ? this.data["user_name"] : ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
                 lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 6, (LabelConst.CLS_FNT_DEFAULT), 250, 20);
+
+                if (this.data.ContainsKey("itemValue"))
+                {
+                    lbldsg.DrawRect(620, 270, 60, 170, myTHICKNESS);
+                    lbldsg.DrawTextPtrFont(this.data["itemValue"], LabelConst.CLS_LOCALE_JP, LabelConst.CLS_PRT_FNT_1, LabelConst.CLS_RT_LEFT90, 2, 2, LabelConst.CLS_PRT_FNT_SIZE_12, 670, 280);
+                }
             }
 
 
@@ -187,7 +199,8 @@ namespace SMTCSHARP
                 aDriver.sendcommand(String.Format("QRCODE 320,205,H,2,A,0,M2, \"Z3N1{0}|3N2 {1} {2}|{3}\"", this.data["itemCode"], this.data["itemQty"].Replace(",", string.Empty), this.data["itemLot"], this.data["itemKey"]));
             }
 
-            aDriver.printlabel("1", data["copies"] ?? "1");
+            string copies = this.data.ContainsKey("copies") ? data["copies"] : "1";
+            aDriver.printlabel("1", copies);
             aDriver.closeport();
         }
     }

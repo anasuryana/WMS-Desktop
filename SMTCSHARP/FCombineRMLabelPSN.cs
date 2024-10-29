@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Microsoft.Win32;
-using System.Runtime.Remoting.Contexts;
 
 namespace SMTCSHARP
 {
@@ -22,6 +21,7 @@ namespace SMTCSHARP
         string mrackcd = "";
 
         string mretitemcd = "";
+        string mitemValue = string.Empty;
         string mretqty = "";
         string mretlot = "";
         string mretitemnm = "";
@@ -59,10 +59,10 @@ namespace SMTCSHARP
             dGV_lbljoin.Columns[3].Name = "Value";
             dGV_lbljoin.Columns[3].Width = 300;
 
-            dGV_lbljoin.ColumnCount = 2;
-            dGV_lbljoin.Columns[0].Name = "Time";
-            dGV_lbljoin.Columns[0].Width = 550;
-            dGV_lbljoin.Columns[1].Name = "Value";
+            dgvLogs.ColumnCount = 2;
+            dgvLogs.Columns[0].Name = "Time";
+            dgvLogs.Columns[0].Width = 550;
+            dgvLogs.Columns[1].Name = "Value";
         }
 
         private void FCombineRMLabelPSN_Load(object sender, EventArgs e)
@@ -73,6 +73,11 @@ namespace SMTCSHARP
             IniData data = parser.ReadFile("config.ini");
             mServerApi = data["SERVER"]["ADDRESS"];
 
+            loadLCRConfig();
+        }
+
+        void loadLCRConfig()
+        {
             try
             {
                 RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
@@ -111,6 +116,9 @@ namespace SMTCSHARP
 
             txt3n1.ReadOnly = false;
             dGV_lbljoin.Rows.Clear();
+
+            txtMin.Text = string.Empty;
+            txtMax.Text = string.Empty;
         }
 
 
@@ -172,27 +180,33 @@ namespace SMTCSHARP
             }
         }
 
+        bool validateBefore3N2(JObject response)
+        {
+            Console.WriteLine(response.ToString());
+            JArray data = (JArray)response["status"][0]["data"];
+            return isAbleToAdded(data);
+        }
+
         void validateAfter3N2(JObject response)
         {
             JArray data = (JArray)response["status"][0]["data"];
-            if (isAbleToAdded(data))
-            {
-                txtProcess.Text = (response["status"][0]["data"][0]["SPLSCN_PROCD"] ?? "").ToString();
-                txtMC.Text = (response["status"][0]["data"][0]["SPLSCN_MC"] ?? "").ToString();
-                txtMCZ.Text = (response["status"][0]["data"][0]["SPLSCN_ORDERNO"] ?? "").ToString();
-                mValue = txtValue.Text;
 
-                addToList(data);
+            txtProcess.Text = (response["status"][0]["data"][0]["SPLSCN_PROCD"] ?? "").ToString();
+            txtMC.Text = (response["status"][0]["data"][0]["SPLSCN_MC"] ?? "").ToString();
+            txtMCZ.Text = (response["status"][0]["data"][0]["SPLSCN_ORDERNO"] ?? "").ToString();
+            mValue = txtValue.Text;
 
-                txt3n1.Text = "";
-                txt3n2.Text = "";
-                txtValue.Text = string.Empty;
+            addToList(data);
 
-                txt3n1.ReadOnly = false;
-                txt3n2.ReadOnly = false;
+            txt3n1.Text = "";
+            txt3n2.Text = "";
+            txtValue.Text = string.Empty;
 
-                txt3n1.Focus();
-            }
+            txt3n1.ReadOnly = false;
+            txt3n2.ReadOnly = false;
+
+            txt3n1.Focus();
+
         }
 
         void addToList(JArray data)
@@ -271,6 +285,7 @@ namespace SMTCSHARP
                         mretitemnm = (string)jobject["data"][0]["itemName"];
                         mUniqueCode = (string)jobject["data"][0]["SER_ID"];
                         mrackcd = (string)jobject["data"][0]["rackCode"];
+                        mitemValue = (string)jobject["data"][0]["NEWVALUE"];
 
                         printsmtlabel();
                         dGV_lbljoin.Rows.Clear();
@@ -299,28 +314,15 @@ namespace SMTCSHARP
             datanya.Add("itemKey", mUniqueCode);
             datanya.Add("itemName", mretitemnm.Trim());
             datanya.Add("mretrohs", "1");
+            datanya.Add("itemValue", mitemValue);
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
 
-        private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
-        {
-            int check = serialPort1.ReadByte();
-            switch ((char)check)
-            {
-                case '\n':
-                    break;
-                case '\r':
-                    break;
-                default:
-                    LCRMessage += (char)check;
-                    break;
-            }
-            Console.WriteLine(LCRMessage);
-        }
-
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            loadLCRConfig();
+
             try
             {
                 if (!isLCRConnected)
@@ -332,6 +334,7 @@ namespace SMTCSHARP
                     }
                     btnConnect.Text = "Disconnect";
                     lblPortStatus.Text = string.Format("Connected to {0}", LCRPortName);
+                    txtValue.Focus();
                 }
                 else
                 {
@@ -341,6 +344,7 @@ namespace SMTCSHARP
                 }
 
                 isLCRConnected = !isLCRConnected;
+
             }
             catch (Exception ex)
             {
@@ -350,22 +354,70 @@ namespace SMTCSHARP
 
         private void FCombineRMLabelPSN_FormClosed(object sender, FormClosedEventArgs e)
         {
-            comm.CloseInterface();
+            if (isLCRConnected)
+            {
+                comm.CloseInterface();
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (isLCRConnected && txtValue.Focused)
             {
-                comm.SendQueryMsg("*TRG;:MEASure?", 1000);
+                //comm.SendQueryMsg("*TRG;:MEASure?", 1000);
+                comm.SendQueryMsg(":MEASure?", 1000);
                 string receivedMessage = comm.MsgBuf;
                 if (receivedMessage.Length > 0)
                 {
                     if (!receivedMessage.Substring(0, 1).Equals("-"))
-                    {                        
-                        dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), comm.MsgBuf);
+                    {
+                        string[] LCRDataArr = receivedMessage.Split(',');
+
+                        double LCRval;
+                        if (meas.Equals("PF") || meas.Equals("UF"))
+                        {
+                            // FOR CAPACITOR
+                            LCRval = Convert.ToDouble(LCRDataArr[1]);
+                            double measValC = meas.Equals("PF") ? 1E-12 : 1E-06; // initial value                           
+                            if (LCRval > 1E-12)
+                            {
+                                LCRval /= measValC;
+                            }
+                        }
+                        else
+                        {
+                            // FOR RESISTOR
+                            double MeasVal = 0;
+                            LCRval = Convert.ToDouble(LCRDataArr[0]);
+                            switch (meas)
+                            {
+                                case "MOHM":
+                                    MeasVal = 1E+06;
+                                    break;
+                                case "KOHM":
+                                    MeasVal = 1E+03;
+                                    break;
+                                case "OHM":
+                                    MeasVal = 1;
+                                    break;
+                            }
+                            if (LCRval < 50E+6)
+                            {
+                                LCRval /= MeasVal;
+                            }
+                        }
+
+                        dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
                     }
                 }
+            }
+
+            if (dgvLogs.Rows.Count > 5)
+            {
+                txtValue.Text = dgvLogs.Rows[2].Cells[1].Value.ToString();
+                txtValue.Focus();
+                SendKeys.Send("{ENTER}");
+                dgvLogs.Rows.Clear();
             }
         }
 
@@ -489,9 +541,14 @@ namespace SMTCSHARP
                             }
 
                             _content = jobject;
-
-                            txtValue.Focus();
-                            //validateAfter3N2(_content);
+                            if (validateBefore3N2(_content))
+                            {
+                                txtValue.Focus();
+                            }
+                            else
+                            {
+                                txt3n1.ReadOnly = false;
+                            }
                         }
                         else
                         {
@@ -581,19 +638,6 @@ namespace SMTCSHARP
                             }
                             else
                             {
-                                if (jobject["status"][0]["dataMeasurement"]["PRTCD"] != null)
-                                {
-                                    txtMin.Text = jobject["status"][0]["dataMeasurement"]["STDMIN"].ToString();
-                                    txtMax.Text = jobject["status"][0]["dataMeasurement"]["STDMAX"].ToString();
-                                    meas = jobject["status"][0]["dataMeasurement"]["MEAS"].ToString();
-                                }
-                                else
-                                {
-                                    txtMin.Text = string.Empty;
-                                    txtMax.Text = string.Empty;
-                                    meas = string.Empty;
-                                }
-
                                 txt3n2.Focus();
                             }
                         }
@@ -665,10 +709,31 @@ namespace SMTCSHARP
                             MessageBox.Show(jobject["status"][0]["msg"].ToString());
                             return;
                         }
+                        else
+                        {
+                            if (jobject["status"][0]["dataMeasurement"]["PRTCD"] != null)
+                            {
+                                txtMin.Text = jobject["status"][0]["dataMeasurement"]["STDMIN"].ToString();
+                                txtMax.Text = jobject["status"][0]["dataMeasurement"]["STDMAX"].ToString();
+                                meas = jobject["status"][0]["dataMeasurement"]["MEAS"].ToString();
+                            }
+                            else
+                            {
+                                txtMin.Text = string.Empty;
+                                txtMax.Text = string.Empty;
+                                meas = string.Empty;
+                            }
+                        }
 
                         _content = jobject;
-                        txtValue.Focus();
-                        //validateAfter3N2(_content);
+                        if (validateBefore3N2(_content))
+                        {
+                            txtValue.Focus();
+                        }
+                        else
+                        {
+                            txt3n1.ReadOnly = false;
+                        }
                     }
                     else
                     {

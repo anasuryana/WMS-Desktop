@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using Microsoft.Win32;
+using System.Net.Http;
 
 namespace SMTCSHARP
 {
@@ -28,7 +29,7 @@ namespace SMTCSHARP
             InitializeComponent();
         }
 
-        private void txt3n1_KeyPress(object sender, KeyPressEventArgs e)
+        private async void txt3n1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
@@ -70,28 +71,54 @@ namespace SMTCSHARP
                 }
                 else
                 {
-                    if (txt3n1.Text.Substring(0, 3) != "3N1")
+                    int[] intsArray = { 16, 17 };
+                    if (intsArray.Contains(txt3n1.Text.Trim().Length))
                     {
-                        MessageBox.Show("Unknown Format C3 Label");
-                        txt3n1.Text = "";
-                        return;
-                    }
-
-                    if (txt3n1.Text.Contains(" "))
-                    {
-                        string[] an1 = txt3n1.Text.Split(' ');
-                        msupqty = an1[1];
-                        int strleng = an1[0].Length - 3;
-                        txt3n1.Text = an1[0].Substring(3, strleng);
+                        using (HttpClient hc = new HttpClient())
+                        {
+                            var response = await hc.GetAsync(String.Format(this.serverURLEnpoint + "/label/c3?id={0}", txt3n1.Text.Trim()));
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var content = await response.Content.ReadAsStringAsync();
+                                JObject jobject = JObject.Parse(content);
+                                if (jobject["data"].Any(x => x.Type != JTokenType.Null))
+                                {
+                                    txt3n1.Text = string.Format("Z3N1{0}|3N2 {1} {2}|{3}",
+                                        jobject["data"]["item_code"].ToString(),
+                                        Convert.ToDouble(jobject["data"]["quantity"].ToString()).ToString(),
+                                        jobject["data"]["lot_code"].ToString(),
+                                        jobject["data"]["code"].ToString()
+                                        );
+                                    SendKeys.Send("{ENTER}");
+                                }
+                            }
+                        }
                     }
                     else
                     {
-                        int strleng = txt3n1.Text.Length - 3;
-                        txt3n1.Text = txt3n1.Text.Substring(3, strleng);
-                        msupqty = "";
+                        if (txt3n1.Text.Substring(0, 3) != "3N1")
+                        {
+                            MessageBox.Show("Unknown Format C3 Label");
+                            txt3n1.Text = "";
+                            return;
+                        }
+
+                        if (txt3n1.Text.Contains(" "))
+                        {
+                            string[] an1 = txt3n1.Text.Split(' ');
+                            msupqty = an1[1];
+                            int strleng = an1[0].Length - 3;
+                            txt3n1.Text = an1[0].Substring(3, strleng);
+                        }
+                        else
+                        {
+                            int strleng = txt3n1.Text.Length - 3;
+                            txt3n1.Text = txt3n1.Text.Substring(3, strleng);
+                            msupqty = "";
+                        }
+                        txt3n1.ReadOnly = true;
+                        txt3n2.Focus();
                     }
-                    txt3n1.ReadOnly = true;
-                    txt3n2.Focus();
                 }
 
             }
@@ -201,7 +228,7 @@ namespace SMTCSHARP
                 return;
             }
 
-            if(!txt3n1.ReadOnly)
+            if (!txt3n1.ReadOnly)
             {
                 txt3n1.Focus();
                 MessageBox.Show("3N1 is required");
@@ -215,15 +242,16 @@ namespace SMTCSHARP
                 return;
             }
 
-            if(txtQty.Value.ToString().Equals(msupqty))
+            if (txtQty.Value.ToString().Equals(msupqty))
             {
                 lblInfo.Text = "Reprint";
                 DialogResult dialogResult = MessageBox.Show("It will reprint, are you sure ?", "Decide", MessageBoxButtons.YesNo);
-                if(dialogResult != DialogResult.Yes)
+                if (dialogResult != DialogResult.Yes)
                 {
                     return;
                 }
-            } else
+            }
+            else
             {
                 if (!radTwo.Checked && !radMulti.Checked)
                 {

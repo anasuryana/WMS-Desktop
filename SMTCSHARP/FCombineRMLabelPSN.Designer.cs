@@ -33,7 +33,6 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnTriggerExportModal = new System.Windows.Forms.Button();
             this.dGV_lbljoin = new System.Windows.Forms.DataGridView();
-            this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lblPortStatus = new System.Windows.Forms.Label();
@@ -59,9 +58,9 @@
             this.label1 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.panel1 = new System.Windows.Forms.Panel();
+            this.dgvLogs = new System.Windows.Forms.DataGridView();
             this.btnClearLogs = new System.Windows.Forms.Button();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.dgvLogs = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.dGV_lbljoin)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -110,10 +109,6 @@
             this.dGV_lbljoin.ReadOnly = true;
             this.dGV_lbljoin.Size = new System.Drawing.Size(801, 242);
             this.dGV_lbljoin.TabIndex = 63;
-            // 
-            // serialPort1
-            // 
-            this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
             // groupBox1
             // 
@@ -374,6 +369,19 @@
             this.panel1.TabIndex = 72;
             this.panel1.Visible = false;
             // 
+            // dgvLogs
+            // 
+            this.dgvLogs.AllowUserToDeleteRows = false;
+            this.dgvLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvLogs.Location = new System.Drawing.Point(5, 47);
+            this.dgvLogs.Name = "dgvLogs";
+            this.dgvLogs.ReadOnly = true;
+            this.dgvLogs.Size = new System.Drawing.Size(795, 188);
+            this.dgvLogs.TabIndex = 3;
+            // 
             // btnClearLogs
             // 
             this.btnClearLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -396,16 +404,6 @@
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Close logs";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // dgvLogs
-            // 
-            this.dgvLogs.AllowUserToDeleteRows = false;
-            this.dgvLogs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLogs.Location = new System.Drawing.Point(5, 47);
-            this.dgvLogs.Name = "dgvLogs";
-            this.dgvLogs.ReadOnly = true;
-            this.dgvLogs.Size = new System.Drawing.Size(795, 188);
-            this.dgvLogs.TabIndex = 3;
             // 
             // FCombineRMLabelPSN
             // 
@@ -444,7 +442,6 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnTriggerExportModal;
         private System.Windows.Forms.DataGridView dGV_lbljoin;
-        private System.IO.Ports.SerialPort serialPort1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtMax;
         private System.Windows.Forms.Label label9;
