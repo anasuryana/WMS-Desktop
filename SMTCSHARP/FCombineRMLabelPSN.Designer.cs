@@ -61,6 +61,8 @@
             this.dgvLogs = new System.Windows.Forms.DataGridView();
             this.btnClearLogs = new System.Windows.Forms.Button();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
+            this.txtValueStatus = new System.Windows.Forms.TextBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dGV_lbljoin)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -107,13 +109,14 @@
             this.dGV_lbljoin.Location = new System.Drawing.Point(17, 276);
             this.dGV_lbljoin.Name = "dGV_lbljoin";
             this.dGV_lbljoin.ReadOnly = true;
-            this.dGV_lbljoin.Size = new System.Drawing.Size(801, 242);
+            this.dGV_lbljoin.Size = new System.Drawing.Size(895, 242);
             this.dGV_lbljoin.TabIndex = 63;
             // 
             // groupBox1
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.txtValueStatus);
             this.groupBox1.Controls.Add(this.linkLabel1);
             this.groupBox1.Controls.Add(this.lblPortStatus);
             this.groupBox1.Controls.Add(this.btnConnect);
@@ -125,7 +128,7 @@
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Location = new System.Drawing.Point(17, 189);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(801, 81);
+            this.groupBox1.Size = new System.Drawing.Size(895, 81);
             this.groupBox1.TabIndex = 70;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Value Checking";
@@ -145,7 +148,7 @@
             // lblPortStatus
             // 
             this.lblPortStatus.AutoSize = true;
-            this.lblPortStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.lblPortStatus.ForeColor = System.Drawing.Color.DarkTurquoise;
             this.lblPortStatus.Location = new System.Drawing.Point(141, 32);
             this.lblPortStatus.Name = "lblPortStatus";
             this.lblPortStatus.Size = new System.Drawing.Size(32, 18);
@@ -239,7 +242,7 @@
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Location = new System.Drawing.Point(17, 79);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(801, 93);
+            this.groupBox2.Size = new System.Drawing.Size(895, 93);
             this.groupBox2.TabIndex = 71;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Document Validation";
@@ -365,7 +368,7 @@
             this.panel1.Controls.Add(this.linkLabel2);
             this.panel1.Location = new System.Drawing.Point(12, 276);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(806, 238);
+            this.panel1.Size = new System.Drawing.Size(900, 238);
             this.panel1.TabIndex = 72;
             this.panel1.Visible = false;
             // 
@@ -379,14 +382,14 @@
             this.dgvLogs.Location = new System.Drawing.Point(5, 47);
             this.dgvLogs.Name = "dgvLogs";
             this.dgvLogs.ReadOnly = true;
-            this.dgvLogs.Size = new System.Drawing.Size(795, 188);
+            this.dgvLogs.Size = new System.Drawing.Size(889, 188);
             this.dgvLogs.TabIndex = 3;
             // 
             // btnClearLogs
             // 
             this.btnClearLogs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnClearLogs.BackColor = System.Drawing.Color.DarkOrange;
-            this.btnClearLogs.Location = new System.Drawing.Point(674, 8);
+            this.btnClearLogs.Location = new System.Drawing.Point(768, 8);
             this.btnClearLogs.Name = "btnClearLogs";
             this.btnClearLogs.Size = new System.Drawing.Size(126, 33);
             this.btnClearLogs.TabIndex = 2;
@@ -405,12 +408,31 @@
             this.linkLabel2.Text = "Close logs";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
             // 
+            // txtValueStatus
+            // 
+            this.txtValueStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtValueStatus.BackColor = System.Drawing.Color.White;
+            this.txtValueStatus.Font = new System.Drawing.Font("Consolas", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtValueStatus.Location = new System.Drawing.Point(834, 24);
+            this.txtValueStatus.Multiline = true;
+            this.txtValueStatus.Name = "txtValueStatus";
+            this.txtValueStatus.ReadOnly = true;
+            this.txtValueStatus.Size = new System.Drawing.Size(55, 45);
+            this.txtValueStatus.TabIndex = 79;
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.AutoPopDelay = 3000;
+            this.toolTip1.InitialDelay = 500;
+            this.toolTip1.IsBalloon = true;
+            this.toolTip1.ReshowDelay = 100;
+            // 
             // FCombineRMLabelPSN
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.SeaShell;
-            this.ClientSize = new System.Drawing.Size(830, 530);
+            this.ClientSize = new System.Drawing.Size(924, 530);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -470,5 +492,7 @@
         private System.Windows.Forms.LinkLabel linkLabel2;
         private System.Windows.Forms.Button btnClearLogs;
         private System.Windows.Forms.DataGridView dgvLogs;
+        private System.Windows.Forms.TextBox txtValueStatus;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Microsoft.Win32;
+using System.Drawing;
 
 namespace SMTCSHARP
 {
@@ -364,50 +365,52 @@ namespace SMTCSHARP
         {
             if (isLCRConnected && txtValue.Focused)
             {
-                //comm.SendQueryMsg("*TRG;:MEASure?", 1000);
-                comm.SendQueryMsg(":MEASure?", 1000);
-                string receivedMessage = comm.MsgBuf;
-                if (receivedMessage.Length > 0)
+                if (dgvLogs.Rows.Count <= 5)
                 {
-                    if (!receivedMessage.Substring(0, 1).Equals("-"))
+                    comm.SendQueryMsg("*TRG;:MEASure?", 1000);
+                    string receivedMessage = comm.MsgBuf;
+                    if (receivedMessage.Length > 0)
                     {
-                        string[] LCRDataArr = receivedMessage.Split(',');
-
-                        double LCRval;
-                        if (meas.Equals("PF") || meas.Equals("UF"))
+                        if (!receivedMessage.Substring(0, 1).Equals("-"))
                         {
-                            // FOR CAPACITOR
-                            LCRval = Convert.ToDouble(LCRDataArr[1]);
-                            double measValC = meas.Equals("PF") ? 1E-12 : 1E-06; // initial value                           
-                            if (LCRval > 1E-12)
-                            {
-                                LCRval /= measValC;
-                            }
-                        }
-                        else
-                        {
-                            // FOR RESISTOR
-                            double MeasVal = 0;
-                            LCRval = Convert.ToDouble(LCRDataArr[0]);
-                            switch (meas)
-                            {
-                                case "MOHM":
-                                    MeasVal = 1E+06;
-                                    break;
-                                case "KOHM":
-                                    MeasVal = 1E+03;
-                                    break;
-                                case "OHM":
-                                    MeasVal = 1;
-                                    break;
-                            }
-                            if (LCRval < 50E+6)
-                            {
-                                LCRval /= MeasVal;
-                            }
-                        }
+                            string[] LCRDataArr = receivedMessage.Split(',');
 
-                        dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+                            double LCRval;
+                            if (meas.Equals("PF") || meas.Equals("UF"))
+                            {
+                                // FOR CAPACITOR
+                                LCRval = Convert.ToDouble(LCRDataArr[1]);
+                                double measValC = meas.Equals("PF") ? 1E-12 : 1E-06; // initial value                           
+                                if (LCRval > 1E-12)
+                                {
+                                    LCRval /= measValC;
+                                }
+                            }
+                            else
+                            {
+                                // FOR RESISTOR
+                                double MeasVal = 0;
+                                LCRval = Convert.ToDouble(LCRDataArr[0]);
+                                switch (meas)
+                                {
+                                    case "MOHM":
+                                        MeasVal = 1E+06;
+                                        break;
+                                    case "KOHM":
+                                        MeasVal = 1E+03;
+                                        break;
+                                    case "OHM":
+                                        MeasVal = 1;
+                                        break;
+                                }
+                                if (LCRval < 50E+6)
+                                {
+                                    LCRval /= MeasVal;
+                                }
+                            }
+
+                            dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+                        }
                     }
                 }
             }
@@ -417,18 +420,20 @@ namespace SMTCSHARP
                 txtValue.Text = dgvLogs.Rows[2].Cells[1].Value.ToString();
                 txtValue.Focus();
                 SendKeys.Send("{ENTER}");
-                dgvLogs.Rows.Clear();
+
             }
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             panel1.Visible = true;
+            linkLabel1.Visible = false;
         }
 
         private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             panel1.Visible = false;
+            linkLabel1.Visible = true;
         }
 
         private void btnClearLogs_Click(object sender, EventArgs e)
@@ -527,7 +532,7 @@ namespace SMTCSHARP
                                 return;
                             }
 
-                            if (jobject["status"][0]["dataMeasurement"]["PRTCD"] != null)
+                            if (jobject["status"][0]["dataMeasurement"].Any(x => x.Type != JTokenType.Null))
                             {
                                 txtMin.Text = jobject["status"][0]["dataMeasurement"]["STDMIN"].ToString();
                                 txtMax.Text = jobject["status"][0]["dataMeasurement"]["STDMAX"].ToString();
@@ -535,6 +540,7 @@ namespace SMTCSHARP
                             }
                             else
                             {
+                                MessageBox.Show("Standard value is not found");
                                 txtMin.Text = string.Empty;
                                 txtMax.Text = string.Empty;
                                 meas = string.Empty;
@@ -747,11 +753,46 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
-                if (_content != null && txt3n1.ReadOnly)
+                if (_content != null && txt3n1.ReadOnly && dgvLogs.Rows.Count > 3)
                 {
-                    validateAfter3N2(_content);
+                    Double StdMin = Convert.ToDouble(txtMin.Text);
+                    Double StdMax = Convert.ToDouble(txtMax.Text);
+                    Double ValCal = Convert.ToDouble(txtValue.Text);
+                    toolTip1.SetToolTip(txtValueStatus, string.Format("last value {0}", txtValue.Text));
+                    if (ValCal >= StdMin && ValCal <= StdMax)
+                    {
+                        validateAfter3N2(_content);
+                        dgvLogs.Rows.Clear();
+                        txtValueStatus.ForeColor = Color.Green;
+                        txtValueStatus.Text = "OK";
+                    }
+                    else
+                    {
+                        txtValueStatus.ForeColor = Color.Red;
+                        txtValueStatus.Text = "NG";
+                        toolTip1.ToolTipTitle = "Information";
+                        dgvLogs.Rows.Clear();
+                        txtValue.Text = "";
+
+                        startFromScanLabel();
+                    }
                 }
             }
+        }
+
+        void startFromScanLabel()
+        {
+            txt3n1.ReadOnly = false;
+            txt3n1.Text = "";
+            txt3n1.Focus();
+
+            txt3n2.ReadOnly = false;
+            txt3n2.Text = "";
+
+            txtMin.Text = "";
+            txtMax.Text = "";
+
+            txt3n1.Focus();
         }
 
         private void txtValue_Leave(object sender, EventArgs e)
