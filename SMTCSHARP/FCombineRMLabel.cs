@@ -7,9 +7,11 @@ using NPOI.XSSF.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Net;
+using System.Runtime.Remoting.Contexts;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
@@ -17,6 +19,7 @@ namespace SMTCSHARP
     public partial class FCombineRMLabel : Form
     {
         string itemcode = "";
+        string itemValue = "";
         string itemname = "";
         string itemqty = "";
         string itemlotno = "";
@@ -33,6 +36,14 @@ namespace SMTCSHARP
         bool isScanQR = false;
 
         string mServerApi = "";
+
+        string LCRPortName = string.Empty;
+        string LCRBaudRate = string.Empty;
+        bool isLCRConnected = false;
+
+        private RS_232C_USB comm;
+        string meas = string.Empty;
+
         public FCombineRMLabel()
         {
             InitializeComponent();
@@ -42,7 +53,7 @@ namespace SMTCSHARP
         {
             //DG Joined Label
             dGV_lbljoin.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dGV_lbljoin.ColumnCount = 5;
+            dGV_lbljoin.ColumnCount = 6;
             dGV_lbljoin.Columns[0].Name = "Item Code";
             dGV_lbljoin.Columns[0].Width = 200;
             dGV_lbljoin.Columns[1].Name = "Qty";
@@ -53,14 +64,21 @@ namespace SMTCSHARP
             dGV_lbljoin.Columns[3].Width = 250;
             dGV_lbljoin.Columns[3].Name = "Item Name";
             dGV_lbljoin.Columns[4].Name = "Old Uniquekey";
+            dGV_lbljoin.Columns[5].Name = "Value";
 
+
+            dgvLogs.ColumnCount = 2;
+            dgvLogs.Columns[0].Name = "Time";
+            dgvLogs.Columns[0].Width = 250;
+            dgvLogs.Columns[1].Name = "Value";
         }
 
         void printsmtlabel()
         {
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-
+                       
             PSIPrinter PSIprinter = new PSIPrinter();
+            Double doublItemValue = Convert.ToDouble(itemValue);
             Dictionary<string, string> datanya = new Dictionary<string, string>();
             datanya.Add("rackCode", mrackcd);
             datanya.Add("itemQty", mretqty);
@@ -69,6 +87,7 @@ namespace SMTCSHARP
             datanya.Add("itemKey", mUniqueCode);
             datanya.Add("itemName", mretitemnm.Trim());
             datanya.Add("mretrohs", "1");
+            datanya.Add("itemValue", doublItemValue.ToString("N3"));
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
@@ -77,6 +96,8 @@ namespace SMTCSHARP
         {
             initcolumn();
             ShowConfig();
+
+            loadLCRConfig();            
         }
 
         void ShowConfig()
@@ -214,10 +235,13 @@ namespace SMTCSHARP
                             textBox1.ReadOnly = true;
                             txtlotno.Focus();
                             itemname = (string)res_jes["data"][0]["SPTNO"];
+                            txtMin.Text = (string)res_jes["data"][0]["STDMIN"];
+                            txtMax.Text = (string)res_jes["data"][0]["STDMAX"];
+                            meas = (string)res_jes["data"][0]["MEAS"];
 
                             if (isScanQR)
                             {
-                                addToGrid();
+                                txtValue.Focus();
                             }
                         }
                     }
@@ -231,6 +255,7 @@ namespace SMTCSHARP
 
         private void btnNew_Click(object sender, EventArgs e)
         {
+
             textBox1.ReadOnly = false;
             textBox1.Text = "";
             textBox1.Focus();
@@ -247,6 +272,8 @@ namespace SMTCSHARP
             mretqty = "";
             mretlot = "";
             mretitemnm = "";
+
+            meas = string.Empty;
         }
 
         private void txtlotno_KeyPress(object sender, KeyPressEventArgs e)
@@ -287,8 +314,7 @@ namespace SMTCSHARP
                     }
                 }
 
-                addToGrid();
-
+                txtValue.Focus();
             }
         }
 
@@ -311,6 +337,8 @@ namespace SMTCSHARP
                             textBox1.Focus();
                             txtlotno.ReadOnly = false;
                             txtlotno.Text = "";
+                            txtValue.Text = "";
+                            txtValueStatus.Text = "";
 
                             itemcode = "";
                             itemqty = "";
@@ -326,7 +354,7 @@ namespace SMTCSHARP
                 }
                 if (currentItemcode.Equals(itemcode))
                 {
-                    dGV_lbljoin.Rows.Add(itemcode, itemqty, itemlotno, itemname, OldUniqueCode);
+                    dGV_lbljoin.Rows.Add(itemcode, itemqty, itemlotno, itemname, OldUniqueCode, itemValue);
                 }
                 else
                 {
@@ -335,19 +363,22 @@ namespace SMTCSHARP
             }
             else
             {
-                dGV_lbljoin.Rows.Add(itemcode, itemqty, itemlotno, itemname, OldUniqueCode);
+                dGV_lbljoin.Rows.Add(itemcode, itemqty, itemlotno, itemname, OldUniqueCode, itemValue);
             }
             textBox1.ReadOnly = false;
             textBox1.Text = "";
             textBox1.Focus();
             txtlotno.ReadOnly = false;
             txtlotno.Text = "";
+            txtValue.Text = "";
+            txtValueStatus.Text = "";
 
             itemcode = "";
             itemqty = "";
             itemlotno = "";
             itemname = "";
             OldUniqueCode = "";
+            itemValue = "";
         }
 
         private void btnSaveCombine_Click(object sender, EventArgs e)
@@ -362,6 +393,7 @@ namespace SMTCSHARP
                     string qtybefore = "";
                     string lotno = "";
                     string uniqueKeyBefore = "";
+                    string itmValue = "";
 
                     foreach (DataGridViewRow row in dGV_lbljoin.Rows)
                     {
@@ -370,6 +402,7 @@ namespace SMTCSHARP
                         qtybefore += "qty[]=" + row.Cells[1].Value.ToString() + "&";
                         lotno += "lotNumber[]=" + row.Cells[2].Value.ToString() + "&";
                         uniqueKeyBefore += "oldUniqueKey[]=" + row.Cells[4].Value.ToString() + "&";
+                        itmValue += "itemValue[]=" + row.Cells[5].Value.ToString() + "&";
                         itmname_print = row.Cells[3].Value.ToString();
                     }
                     using (WebClient wc = new WebClient())
@@ -378,11 +411,12 @@ namespace SMTCSHARP
                         {
                             wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                             string url = mServerApi + "/label/combine-raw-material";
-                            string myparam = String.Format("{0}{1}{2}{3}userId={4}&machineName={5}",
+                            string myparam = String.Format("{0}{1}{2}{3}{4}userId={5}&machineName={6}",
                                 itmcode,
                                 lotno,
                                 qtybefore,
                                 uniqueKeyBefore,
+                                itmValue,
                                 ASettings.getmyuserid(),
                                 Environment.MachineName.ToString()
                                 );
@@ -402,6 +436,7 @@ namespace SMTCSHARP
                                 mretitemnm = itmname_print;
                                 mUniqueCode = (string)res_jes["data"][0]["SER_ID"];
                                 mrackcd = (string)res_jes["data"][0]["rackCode"];
+                                itemValue = (string)res_jes["data"][0]["NEWVALUE"];
                                 printsmtlabel();
                                 dGV_lbljoin.Rows.Clear();
                             }
@@ -459,6 +494,193 @@ namespace SMTCSHARP
                 DTPFrom.Value.ToString("yyyy-MM-dd"),
                 DTPTo.Value.ToString("yyyy-MM-dd"))
                 );
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            panel1.Visible = true;
+            linkLabel1.Visible = false;
+        }
+
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            panel1.Visible = false;
+            linkLabel1.Visible = true;
+        }
+
+        private void btnClearLogs_Click(object sender, EventArgs e)
+        {
+            dgvLogs.Rows.Clear();
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            loadLCRConfig();
+
+            try
+            {
+                if (!isLCRConnected)
+                {
+                    comm = new RS_232C_USB();
+                    if (comm.OpenInterface(LCRPortName, LCRBaudRate) == false)
+                    {
+                        return;
+                    }
+                    btnConnect.Text = "Disconnect";
+                    lblPortStatus.Text = string.Format("Connected to {0}", LCRPortName);
+                    txtValue.Focus();
+                }
+                else
+                {
+                    btnConnect.Text = "Connect";
+                    lblPortStatus.Text = "....";
+                    comm.CloseInterface();
+                }
+
+                isLCRConnected = !isLCRConnected;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        void loadLCRConfig()
+        {
+            try
+            {
+                RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
+                LCRPortName = ckrk.GetValue("LCR_PORT").ToString();
+                LCRBaudRate = ckrk.GetValue("LCR_BAUD_RATE").ToString();
+            }
+            catch (Exception ex)
+            {
+                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
+                rk.SetValue("LCR_PORT", "");
+                rk.SetValue("LCR_BAUD_RATE", "9600");
+
+                LCRBaudRate = "9600";
+                MessageBox.Show("Go to Tools > Settings > [LCR Meter]");
+            }
+        }
+
+        private void txtValue_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (textBox1.ReadOnly && dgvLogs.Rows.Count > 3)
+                {
+                    Double StdMin = Convert.ToDouble(txtMin.Text);
+                    Double StdMax = Convert.ToDouble(txtMax.Text);
+                    Double ValCal = Convert.ToDouble(txtValue.Text);
+                    toolTip1.SetToolTip(txtValueStatus, string.Format("last value {0}", txtValue.Text));
+                    if (ValCal >= StdMin && ValCal <= StdMax)
+                    {
+                        itemValue = txtValue.Text;
+                        addToGrid();
+                        dgvLogs.Rows.Clear();
+                        txtValueStatus.ForeColor = Color.Green;
+                        txtValueStatus.Text = "OK";
+                    }
+                    else
+                    {
+                        txtValueStatus.ForeColor = Color.Red;
+                        txtValueStatus.Text = "NG";
+                        toolTip1.ToolTipTitle = "Information";
+                        dgvLogs.Rows.Clear();
+                        txtValue.Text = "";
+
+                        startFromScanLabel();
+                    }
+                }
+            }
+        }
+
+        void startFromScanLabel()
+        {
+            textBox1.ReadOnly = false;
+            textBox1.Text = "";
+            textBox1.Focus();
+
+            txtlotno.ReadOnly = false;
+            txtlotno.Text = "";
+
+            txtMin.Text = "";
+            txtMax.Text = "";
+
+            textBox1.Focus();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (isLCRConnected && txtValue.Focused)
+            {
+                if (dgvLogs.Rows.Count <= 5)
+                {
+                    comm.SendQueryMsg("*TRG;:MEASure?", 1000);
+                    string receivedMessage = comm.MsgBuf;
+                    if (receivedMessage.Length > 0)
+                    {
+                        if (!receivedMessage.Substring(0, 1).Equals("-"))
+                        {
+                            string[] LCRDataArr = receivedMessage.Split(',');
+
+                            double LCRval;
+                            if (meas.Equals("PF") || meas.Equals("UF"))
+                            {
+                                // FOR CAPACITOR
+                                LCRval = Convert.ToDouble(LCRDataArr[1]);
+                                double measValC = meas.Equals("PF") ? 1E-12 : 1E-06; // initial value                           
+                                if (LCRval > 1E-12)
+                                {
+                                    LCRval /= measValC;
+                                }
+                            }
+                            else
+                            {
+                                // FOR RESISTOR
+                                double MeasVal = 0;
+                                LCRval = Convert.ToDouble(LCRDataArr[0]);
+                                switch (meas)
+                                {
+                                    case "MOHM":
+                                        MeasVal = 1E+06;
+                                        break;
+                                    case "KOHM":
+                                        MeasVal = 1E+03;
+                                        break;
+                                    case "OHM":
+                                        MeasVal = 1;
+                                        break;
+                                }
+                                if (LCRval < 50E+6)
+                                {
+                                    LCRval /= MeasVal;
+                                }
+                            }
+
+                            dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+                        }
+                    }
+                }
+            }
+
+            if (dgvLogs.Rows.Count > 5)
+            {
+                txtValue.Text = dgvLogs.Rows[2].Cells[1].Value.ToString();
+                txtValue.Focus();
+                SendKeys.Send("{ENTER}");
+
+            }
+        }
+
+        private void FCombineRMLabel_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (isLCRConnected)
+            {
+                comm.CloseInterface();
+            }
         }
     }
 }

@@ -34,6 +34,7 @@
             this.btnTriggerExportModal = new System.Windows.Forms.Button();
             this.dGV_lbljoin = new System.Windows.Forms.DataGridView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtValueStatus = new System.Windows.Forms.TextBox();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lblPortStatus = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
@@ -61,7 +62,6 @@
             this.dgvLogs = new System.Windows.Forms.DataGridView();
             this.btnClearLogs = new System.Windows.Forms.Button();
             this.linkLabel2 = new System.Windows.Forms.LinkLabel();
-            this.txtValueStatus = new System.Windows.Forms.TextBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dGV_lbljoin)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -132,6 +132,18 @@
             this.groupBox1.TabIndex = 70;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Value Checking";
+            // 
+            // txtValueStatus
+            // 
+            this.txtValueStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtValueStatus.BackColor = System.Drawing.Color.White;
+            this.txtValueStatus.Font = new System.Drawing.Font("Consolas", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtValueStatus.Location = new System.Drawing.Point(834, 24);
+            this.txtValueStatus.Multiline = true;
+            this.txtValueStatus.Name = "txtValueStatus";
+            this.txtValueStatus.ReadOnly = true;
+            this.txtValueStatus.Size = new System.Drawing.Size(55, 45);
+            this.txtValueStatus.TabIndex = 79;
             // 
             // linkLabel1
             // 
@@ -407,18 +419,6 @@
             this.linkLabel2.TabStop = true;
             this.linkLabel2.Text = "Close logs";
             this.linkLabel2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
-            // 
-            // txtValueStatus
-            // 
-            this.txtValueStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtValueStatus.BackColor = System.Drawing.Color.White;
-            this.txtValueStatus.Font = new System.Drawing.Font("Consolas", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtValueStatus.Location = new System.Drawing.Point(834, 24);
-            this.txtValueStatus.Multiline = true;
-            this.txtValueStatus.Name = "txtValueStatus";
-            this.txtValueStatus.ReadOnly = true;
-            this.txtValueStatus.Size = new System.Drawing.Size(55, 45);
-            this.txtValueStatus.TabIndex = 79;
             // 
             // toolTip1
             // 

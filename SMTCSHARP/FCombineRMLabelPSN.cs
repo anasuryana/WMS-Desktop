@@ -120,6 +120,8 @@ namespace SMTCSHARP
 
             txtMin.Text = string.Empty;
             txtMax.Text = string.Empty;
+
+            meas = string.Empty;
         }
 
 
