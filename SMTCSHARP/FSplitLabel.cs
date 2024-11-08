@@ -90,7 +90,13 @@ namespace SMTCSHARP
                                         jobject["data"]["code"].ToString()
                                         );
                                     SendKeys.Send("{ENTER}");
+                                } else
+                                {
+                                    MessageBox.Show("Unique Code is not found");
                                 }
+                            } else
+                            {
+                                MessageBox.Show("failed to contact server API");
                             }
                         }
                     }
