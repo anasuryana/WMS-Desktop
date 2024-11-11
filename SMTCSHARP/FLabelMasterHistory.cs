@@ -11,6 +11,7 @@ using System.Linq;
 using NPOI.SS.Formula.Functions;
 using Microsoft.Win32;
 using System.Xml.Linq;
+using NPOI.POIFS.Crypt.Dsig;
 
 namespace SMTCSHARP
 {
@@ -25,7 +26,7 @@ namespace SMTCSHARP
         string mretitemnm = string.Empty;
         string mUniqueCode = string.Empty;
         string mNIK = string.Empty;
-        string mNIKName= string.Empty;
+        string mNIKName = string.Empty;
 
 
         public FLabelMasterHistory()
@@ -82,7 +83,7 @@ namespace SMTCSHARP
             btnSearch.Enabled = true;
 
             JObject jobject = JObject.Parse(strings[2]);
-
+            dGV.Rows.Clear();
             var RSData = from r in jobject["data"] select r;
             List<DataGridViewRow> rows = new List<DataGridViewRow>();
             foreach (var r in RSData)
@@ -160,7 +161,7 @@ namespace SMTCSHARP
             }
         }
 
-        private void btnPrint_Click(object sender, EventArgs e)
+        private async void btnPrint_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dGV.Rows)
             {
@@ -176,6 +177,18 @@ namespace SMTCSHARP
                     mrackcd = row.Cells[9].Value.ToString().Trim();
                     mUniqueCode = row.Cells[0].Value.ToString().Trim();
                     printsmtlabel();
+
+                    using (HttpClient hc = new HttpClient())
+                    {
+                        Dictionary<string, string> datanya = new Dictionary<string, string>();
+                        datanya.Add("code", mUniqueCode);
+                        datanya.Add("action", "Reprint");
+                        datanya.Add("machineName", Environment.MachineName.ToString());
+                        datanya.Add("user_id", ASettings.getmyuserid());
+
+                        var valuesRequest = new FormUrlEncodedContent(datanya);
+                        var response = await hc.PostAsync(String.Format(serverURLEnpoint + "/label/log"), valuesRequest);
+                    }
                 }
             }
         }
