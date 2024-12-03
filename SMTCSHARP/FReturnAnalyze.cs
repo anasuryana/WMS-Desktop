@@ -1,5 +1,6 @@
 ﻿using IniParser;
 using IniParser.Model;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
@@ -9,15 +10,33 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
+using System.IO.Ports;
 using System.Linq;
 using System.Net;
 using System.Windows.Forms;
+
 
 namespace SMTCSHARP
 {
     public partial class FReturnAnalyze : Form
     {
-        string mpsn = "";
+        string mpsn = string.Empty;
+        string LCRPortName = string.Empty;
+        string LCRBaudRate = string.Empty;
+        bool isLCRConnected = false;
+        private RS_232C_USB comm;
+        string meas = string.Empty;
+        bool isScanQR = false;
+        string OldUniqueCode = string.Empty;
+        string itemCode = string.Empty;
+        string itemQty = string.Empty;
+        string itemLotno = string.Empty;
+        string itemName = string.Empty;
+        string msupqty = string.Empty;
+        string MsgBuf = string.Empty;
+        string mServerApi = string.Empty;
+        string mLocalPath = string.Empty;
+
 
         public FReturnAnalyze()
         {
@@ -120,14 +139,20 @@ namespace SMTCSHARP
             hcb.ValueType = typeof(bool);
             hcb.Width = 50;
             dGV.Columns.Add(hcb);
+
+
+            dgvLogs.ColumnCount = 2;
+            dgvLogs.Columns[0].Name = "Time";
+            dgvLogs.Columns[0].Width = 200;
+            dgvLogs.Columns[1].Name = "Value";
         }
 
         void ShowConfig()
         {
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
-            txtserver.Text = data["SERVER"]["ADDRESS"];
-            txtpath.Text = data["FILES"]["ADDRESS_RTN"];
+            mServerApi = data["SERVER"]["ADDRESS"];
+            mLocalPath = data["FILES"]["ADDRESS_RTN"];
         }
 
         private void FReturnAnalyze_Load(object sender, EventArgs e)
@@ -137,27 +162,7 @@ namespace SMTCSHARP
             datepc.Value = DateTime.Now;
         }
 
-        private void btnbrowse_Click(object sender, EventArgs e)
-        {
-            folderBrowserDialog1.ShowDialog();
-            txtpath.Text = folderBrowserDialog1.SelectedPath;
-        }
 
-        private void btnsave_config_Click(object sender, EventArgs e)
-        {
-
-            var parser = new FileIniDataParser();
-            IniData data = parser.ReadFile("config.ini");
-            data["FILES"]["ADDRESS_RTN"] = txtpath.Text;
-            data["SERVER"]["ADDRESS"] = txtserver.Text;
-            parser.WriteFile("config.ini", data);
-            panel2.Hide();
-        }
-
-        private void btnshowhidesetting_Click(object sender, EventArgs e)
-        {
-            panel2.Show();
-        }
 
         private void btnnew_Click(object sender, EventArgs e)
         {
@@ -202,25 +207,6 @@ namespace SMTCSHARP
                     }
                 }
             }
-
-        }
-
-        private void txtpsn_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)13)
-            {
-                mpsn = txtpsn.Text;
-                SetTextinfo("Please wait...");
-                bgworksearch.RunWorkerAsync();
-            }
-        }
-
-        private void ckall_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach (DataGridViewRow row in dGV.Rows)
-            {
-                row.Cells[5].Value = ckall.Checked;
-            }
         }
 
         private void btnexport_Click(object sender, EventArgs e)
@@ -245,7 +231,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}", mpsn));
+                    var res = wc.DownloadString(String.Format(mServerApi + "/supply/validate-document?doc={0}", mpsn));
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)
@@ -275,7 +261,7 @@ namespace SMTCSHARP
                         SetTextinfopsn("");
 
                         //get detail
-                        res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?doc={0}&outstanding={1}", txtpsn.Text, ckOutstaningOnly.Checked ? '0' : '1'));
+                        res = wc.DownloadString(String.Format(mServerApi + "/return/resume?doc={0}&outstanding={1}", txtpsn.Text, ckOutstaningOnly.Checked ? '0' : '1'));
                         res_jes = JObject.Parse(res);
                         rsdata = from p in res_jes["data"] select p;
                         //end get detail
@@ -299,7 +285,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}", mpsn));
+                    var res = wc.DownloadString(String.Format(mServerApi + "/supply/validate-document?doc={0}", mpsn));
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     if (UInt16.Parse(sts) > 0)
@@ -315,11 +301,11 @@ namespace SMTCSHARP
                         SetTextinfojob(joblist.Substring(0, joblist.Length - 1));
 
                         //get detail
-                        res = wc.DownloadString(String.Format(txtserver.Text + "/return/resume?doc={0}&output=spreadsheet", txtpsn.Text));
+                        res = wc.DownloadString(String.Format(mServerApi + "/return/resume?doc={0}&output=spreadsheet", txtpsn.Text));
                         res_jes = JObject.Parse(res);
                         rsdata = from p in res_jes["data"] select p;
                         //end get detail
-                        using (var fs = new FileStream(txtpath.Text + "\\" + mpsn + ".xlsx", FileMode.Create, FileAccess.Write))
+                        using (var fs = new FileStream(mLocalPath + "\\" + mpsn + ".xlsx", FileMode.Create, FileAccess.Write))
                         {
                             IWorkbook workbook = new XSSFWorkbook();
                             ISheet sheet = workbook.CreateSheet("RET-PSN");
@@ -384,7 +370,7 @@ namespace SMTCSHARP
                         }
                     }
 
-                    string url = txtserver.Text + "/return/confirm";
+                    string url = mServerApi + "/return/confirm";
                     string myparam = String.Format("doc={0}&{1}dateConfirm={2}&userId={3}", txtpsn.Text, datas, datepc.Value.ToString("yyyy-MM-dd"), ASettings.getmyuserid());
                     string res = wc.UploadString(url, myparam);
                     JObject res_jes = JObject.Parse(res);
@@ -424,6 +410,355 @@ namespace SMTCSHARP
             {
                 SetTextinfo("Please wait...");
                 bgworksearch.RunWorkerAsync();
+            }
+        }
+
+        void loadLCRConfig()
+        {
+            try
+            {
+                RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
+                LCRPortName = ckrk.GetValue("LCR_PORT").ToString();
+                LCRBaudRate = ckrk.GetValue("LCR_BAUD_RATE").ToString();
+            }
+            catch (Exception ex)
+            {
+                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
+                rk.SetValue("LCR_PORT", "");
+                rk.SetValue("LCR_BAUD_RATE", "9600");
+                LCRBaudRate = "9600";
+                MessageBox.Show("Go to Tools > Settings > [LCR Meter]");
+            }
+        }
+
+        private void btnConnect_Click(object sender, EventArgs e)
+        {
+            loadLCRConfig();
+            try
+            {
+                if (!isLCRConnected)
+                {
+                    //serialPort1 = new SerialPort();
+                    serialPort1.BaudRate = Convert.ToInt16(LCRBaudRate);
+                    serialPort1.PortName = LCRPortName;
+                    serialPort1.NewLine = Environment.NewLine;
+                    serialPort1.Handshake = Handshake.None;
+                    serialPort1.Open();
+                    btnConnect.Text = "Disconnect";
+                    lblPortStatus.Text = string.Format("Connected to {0}", LCRPortName);
+                    txtValue.Focus();
+                }
+                else
+                {
+                    btnConnect.Text = "Connect";
+                    lblPortStatus.Text = "....";
+                    serialPort1.Close();
+                }
+                isLCRConnected = !isLCRConnected;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void sendData(string message)
+        {
+            try
+            {
+                message += Environment.NewLine;
+                serialPort1.WriteLine(message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private void receiveData(string message)
+        {
+            try
+            {
+                sendData(message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (isLCRConnected && txtLabelID.ReadOnly)
+            {
+                try
+                {
+                    sendData("*TRG;:MEASure?");
+                    txtValue.Text = MsgBuf;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+        }
+
+        private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            if (serialPort1.BytesToRead > 0)
+            {
+                int charCode;
+
+                charCode = serialPort1.ReadByte();
+
+                if ((char)charCode == '\n')
+                {
+                    if (meas.Equals("PF") || meas.Equals("UF"))
+                    {
+                        measureCapacitor(MsgBuf);
+                    }
+                    else
+                    {
+                        measureResistor(MsgBuf);
+                    }
+                    MsgBuf = string.Empty;
+                }
+                else if ((char)charCode == '\r')
+                {
+
+                }
+                else
+                {
+                    MsgBuf = MsgBuf + (char)charCode;
+                }
+                Console.WriteLine("coba terima " + MsgBuf);
+            }
+            else
+            {
+                Console.WriteLine("coba terima .");
+            }
+
+        }
+
+        private void txtLabelID_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtLabelID.Text.Contains("|"))
+                {
+
+                    isScanQR = true;
+                    // parse qr code
+                    string[] QRArray = txtLabelID.Text.ToUpper().Split('|');
+
+                    int strLength3N1 = 0;
+                    switch (QRArray[0].Substring(0, 2).ToString())
+                    {
+                        case "Z3":
+                            strLength3N1 = QRArray[0].Length - 4;
+                            itemCode = QRArray[0].Substring(4, strLength3N1);
+                            break;
+                        case "3N":
+                            strLength3N1 = QRArray[0].Length - 3;
+                            itemCode = QRArray[0].Substring(3, strLength3N1);
+                            break;
+                        default:
+                            itemCode = QRArray[0];
+                            break;
+                    }
+
+                    string[] Array3N2;
+
+                    OldUniqueCode = QRArray[2];
+
+                    Array3N2 = QRArray[1].Split(' ');
+                    switch (QRArray[1].Substring(0, 3).ToString())
+                    {
+                        case "3N2":
+                            if (Array3N2[1].All(char.IsNumber))
+                            {
+                                itemQty = Array3N2[1];
+                                itemLotno = Array3N2[2];
+                            }
+                            break;
+
+                        default:
+                            if (Array3N2[0].All(char.IsNumber))
+                            {
+                                itemLotno = Array3N2[1];
+                            }
+                            break;
+                    }
+
+                }
+                else
+                {
+                    isScanQR = false;
+                    if (txtLabelID.Text.Length > 3)
+                    {
+                        if (txtLabelID.Text.Substring(0, 3) != "3N1")
+                        {
+                            MessageBox.Show("Unknown Format C3 Label");
+                            txtLabelID.Text = "";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unknown Format C3 Label.");
+                        return;
+                    }
+                    if (txtLabelID.Text.Contains(" "))
+                    {
+                        string[] an1 = txtLabelID.Text.Split(' ');
+                        msupqty = an1[1];
+                        int strleng = an1[0].Length - 3;
+                        itemCode = an1[0].Substring(3, strleng);
+                    }
+                    else
+                    {
+                        int strleng = txtLabelID.Text.Length - 3;
+                        itemCode = txtLabelID.Text.Substring(3, strleng);
+                        msupqty = "";
+                    }
+                }
+
+                using (WebClient wc = new WebClient())
+                {
+                    try
+                    {
+                        var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(itemCode);
+                        string url = String.Format(mServerApi + "/item/{0}/location", Convert.ToBase64String(plainTextBytes));
+                        var res = wc.DownloadString(url);
+
+                        JObject res_jes = JObject.Parse(res);
+                        string sts = (string)res_jes["status"][0]["cd"];
+                        if (sts.Equals("0"))
+                        {
+                            MessageBox.Show((string)res_jes["status"][0]["msg"]);
+                            txtLabelID.Text = "";
+                        }
+                        else
+                        {
+                            txtLabelID.ReadOnly = true;
+
+                            itemName = (string)res_jes["data"][0]["SPTNO"];
+                            txtMin.Text = (string)res_jes["data"][0]["STDMIN"];
+                            txtMax.Text = (string)res_jes["data"][0]["STDMAX"];
+                            lblMeasure.Text = (string)res_jes["data"][0]["MEAS"];
+
+                            if (isScanQR)
+                            {
+                                txtValue.Focus();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message);
+                    }
+                }
+            }
+        }
+
+        private void btnNewCheck_Click(object sender, EventArgs e)
+        {
+            newProcess();
+        }
+
+        private void newProcess()
+        {
+            txtLabelID.Text = "";
+            txtMin.Text = "";
+            txtMax.Text = "";
+            txtValue.Text = "";
+            lblMeasure.Text = "";
+            txtLabelID.Focus();
+            txtLabelID.ReadOnly = false;
+        }
+
+        private void measureResistor(string readValue)
+        {
+            string[] LCRDataArr = readValue.Split(',');
+            double LCRval;
+
+            double MeasVal = 0;
+            LCRval = Convert.ToDouble(LCRDataArr[0]);
+            switch (meas)
+            {
+                case "MOHM":
+                    MeasVal = 1E+06;
+                    break;
+                case "KOHM":
+                    MeasVal = 1E+03;
+                    break;
+                case "OHM":
+                    MeasVal = 1;
+                    break;
+            }
+            if (LCRval < 50E+6)
+            {
+                LCRval /= MeasVal;
+                //dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+
+                this.dgvLogs.Invoke((MethodInvoker)delegate
+                {
+                    dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+                });
+                Console.WriteLine(string.Format("{0} ini", LCRval));
+                getAverage();
+            }
+        }
+
+        private void measureCapacitor(string readValue)
+        {
+            string[] LCRDataArr = readValue.Split(',');
+            double LCRval;
+
+            LCRval = Convert.ToDouble(LCRDataArr[1]);
+            double measValC = meas.Equals("PF") ? 1E-12 : 1E-06; // initial value                           
+            if (LCRval > 1E-12)
+            {
+                LCRval /= measValC;
+                dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+
+                getAverage();
+            }
+        }
+
+        private void getAverage()
+        {
+            if (dgvLogs.Rows.Count > 5)
+            {
+                this.txtValue.Invoke((MethodInvoker)delegate
+                {
+                    txtValue.Text = dgvLogs.Rows[2].Cells[1].Value.ToString();
+                    txtValue.Focus();
+                });
+                SendKeys.Send("{ENTER}");
+            }
+        }
+
+        private void txtValue_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
+        private void txtpsn_KeyPress_1(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                mpsn = txtpsn.Text;
+                SetTextinfo("Please wait...");
+                bgworksearch.RunWorkerAsync();
+            }
+        }
+
+        private void ckall_CheckedChanged_1(object sender, EventArgs e)
+        {
+            foreach (DataGridViewRow row in dGV.Rows)
+            {
+                row.Cells[5].Value = ckall.Checked;
             }
         }
     }
