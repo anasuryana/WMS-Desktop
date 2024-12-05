@@ -594,7 +594,6 @@ namespace SMTCSHARP
                 picStatus.BackColor = Color.Aqua;
                 if (txtLabelID.Text.Contains("|"))
                 {
-
                     isScanQR = true;
                     // parse qr code
                     string[] QRArray = txtLabelID.Text.ToUpper().Split('|');
@@ -641,33 +640,18 @@ namespace SMTCSHARP
                 }
                 else
                 {
-                    isScanQR = false;
-                    if (txtLabelID.Text.Length > 3)
+                    int[] relevantLength = { 16, 17 };
+                    string id = txtLabelID.Text.Trim();
+                    if (relevantLength.Contains(id.Length))
                     {
-                        if (txtLabelID.Text.Substring(0, 3) != "3N1")
-                        {
-                            MessageBox.Show("Unknown Format C3 Label");
-                            txtLabelID.Text = "";
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Unknown Format C3 Label.");
+                        getFullQRById(id);
                         return;
                     }
-                    if (txtLabelID.Text.Contains(" "))
-                    {
-                        string[] an1 = txtLabelID.Text.Split(' ');
-                        msupqty = an1[1];
-                        int strleng = an1[0].Length - 3;
-                        itemCode = an1[0].Substring(3, strleng);
-                    }
                     else
                     {
-                        int strleng = txtLabelID.Text.Length - 3;
-                        itemCode = txtLabelID.Text.Substring(3, strleng);
-                        msupqty = "";
+                        MessageBox.Show("Invalid Input, Only QR content or UC is acceptable");
+                        txtLabelID.Text = "";
+                        return;
                     }
                 }
 
@@ -707,6 +691,37 @@ namespace SMTCSHARP
                     {
                         MessageBox.Show(ex.Message);
                     }
+                }
+            }
+        }
+
+        private async void getFullQRById(string uniqueCode)
+        {
+            using (HttpClient hc = new HttpClient())
+            {
+                var response = await hc.GetAsync(String.Format(this.mServerApi + "/label/c3?id={0}", uniqueCode));
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    JObject jobject = JObject.Parse(content);
+                    if (jobject["data"].Any(x => x.Type != JTokenType.Null))
+                    {
+                        txtLabelID.Text = string.Format("Z3N1{0}|3N2 {1} {2}|{3}",
+                            jobject["data"]["item_code"].ToString(),
+                            Convert.ToDouble(jobject["data"]["quantity"].ToString()).ToString(),
+                            jobject["data"]["lot_code"].ToString(),
+                            jobject["data"]["code"].ToString()
+                            );
+                        SendKeys.Send("{ENTER}");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Unique Code is not found");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("failed to contact server API");
                 }
             }
         }
@@ -775,7 +790,7 @@ namespace SMTCSHARP
             if (LCRval > 1E-12)
             {
                 LCRval /= measValC;
-                Console.WriteLine("(Capacitor) Final Calculated Value " + LCRval);
+
                 dgvLogs.Invoke((MethodInvoker)delegate
                 {
                     dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
