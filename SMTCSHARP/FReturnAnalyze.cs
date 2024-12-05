@@ -1,7 +1,9 @@
 ﻿using IniParser;
 using IniParser.Model;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using System;
@@ -13,7 +15,11 @@ using System.IO;
 using System.IO.Ports;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 
 namespace SMTCSHARP
@@ -145,6 +151,32 @@ namespace SMTCSHARP
             dgvLogs.Columns[0].Name = "Time";
             dgvLogs.Columns[0].Width = 200;
             dgvLogs.Columns[1].Name = "Value";
+
+
+            DGVDetail.ColumnCount = 13;
+            DGVDetail.Columns[0].Name = "ID";
+            DGVDetail.Columns[1].Name = "PSN No";
+            DGVDetail.Columns[2].Name = "Category";
+            DGVDetail.Columns[3].Name = "Line";
+            DGVDetail.Columns[3].Width = 70;
+            DGVDetail.Columns[4].Name = "F/R";
+            DGVDetail.Columns[4].Width = 40;
+            DGVDetail.Columns[5].Name = "Machine";
+            DGVDetail.Columns[6].Name = "Item Code";
+            DGVDetail.Columns[7].Name = "Item Name";
+            DGVDetail.Columns[8].Name = "Lot No";
+            DGVDetail.Columns[9].Name = "Sup. QTY";
+            DGVDetail.Columns[9].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            DGVDetail.Columns[10].Name = "Ret. QTY";
+            DGVDetail.Columns[10].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            DGVDetail.Columns[11].Name = "RoHS";
+            DGVDetail.Columns[11].Width = 70;
+            DGVDetail.Columns[12].Name = "Value";
+
+            foreach (DataGridViewColumn column in DGVDetail.Columns)
+            {
+                column.ReadOnly = true;
+            }
         }
 
         void ShowConfig()
@@ -160,9 +192,8 @@ namespace SMTCSHARP
             initcolumn();
             ShowConfig();
             datepc.Value = DateTime.Now;
+            picStatus.BackColor = Color.Aqua;
         }
-
-
 
         private void btnnew_Click(object sender, EventArgs e)
         {
@@ -266,6 +297,37 @@ namespace SMTCSHARP
                         rsdata = from p in res_jes["data"] select p;
                         //end get detail
                         SetDgvinfo(rsdata);
+
+                        //get detail per unique
+                        res = wc.DownloadString(String.Format(mServerApi + "/return/counted?doc={0}", txtpsn.Text));
+                        res_jes = JObject.Parse(res);
+                        rsdata = from p in res_jes["data"] select p;
+                        this.DGVDetail.Invoke((MethodInvoker)delegate
+                        {
+                            DGVDetail.Rows.Clear();
+                            List<DataGridViewRow> rows = new List<DataGridViewRow>();
+                            foreach (var rw in rsdata)
+                            {
+                                DataGridViewRow row = new DataGridViewRow();
+                                row.CreateCells(DGVDetail);
+                                row.Cells[0].Value = rw["RETSCN_ID"];
+                                row.Cells[1].Value = rw["RETSCN_SPLDOC"];
+                                row.Cells[2].Value = rw["RETSCN_CAT"];
+                                row.Cells[3].Value = rw["RETSCN_LINE"];
+                                row.Cells[4].Value = rw["RETSCN_FEDR"];
+                                row.Cells[5].Value = rw["RETSCN_ORDERNO"];
+                                row.Cells[6].Value = rw["RETSCN_ITMCD"];
+                                row.Cells[7].Value = rw["MITM_SPTNO"];
+                                row.Cells[8].Value = rw["RETSCN_LOT"];
+                                row.Cells[9].Value = Convert.ToDouble(rw["RETSCN_QTYBEF"]).ToString("#,#");
+                                row.Cells[10].Value = Convert.ToDouble(rw["RETSCN_QTYAFT"]).ToString("#,#");
+                                row.Cells[11].Value = rw["RETSCN_ROHS"];
+                                row.Cells[12].Value = rw["item_value"];
+                                rows.Add(row);
+                            }
+
+                            DGVDetail.Rows.AddRange(rows.ToArray());
+                        });
                     }
                     else
                     {
@@ -447,6 +509,9 @@ namespace SMTCSHARP
                     btnConnect.Text = "Disconnect";
                     lblPortStatus.Text = string.Format("Connected to {0}", LCRPortName);
                     txtValue.Focus();
+
+                    dgvLogs.Rows.Clear();
+                    picStatus.BackColor = Color.Aqua;
                 }
                 else
                 {
@@ -475,18 +540,6 @@ namespace SMTCSHARP
             }
         }
 
-        private void receiveData(string message)
-        {
-            try
-            {
-                sendData(message);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-        }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (isLCRConnected && txtLabelID.ReadOnly)
@@ -494,7 +547,6 @@ namespace SMTCSHARP
                 try
                 {
                     sendData("*TRG;:MEASure?");
-                    txtValue.Text = MsgBuf;
                 }
                 catch (Exception ex)
                 {
@@ -505,14 +557,18 @@ namespace SMTCSHARP
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (serialPort1.BytesToRead > 0)
+            if (serialPort1.BytesToRead > 0 && txtLabelID.ReadOnly)
             {
-                int charCode;
-
-                charCode = serialPort1.ReadByte();
-
-                if ((char)charCode == '\n')
+                string rcv = string.Empty;
+                StringBuilder buf = new StringBuilder();
+                rcv = serialPort1.ReadExisting();                                // Read data from the receive buffer
+                rcv = rcv.Replace("\r", "");                                    // Delete CR in received data
+                if (rcv.IndexOf("\n") >= 0)                                     // End the loop when LF is received
                 {
+                    rcv = rcv.Substring(0, rcv.IndexOf("\n"));                  // Extract data without LF and the following from the original received data
+                    buf.Append(rcv);                                            // Save the data
+                    MsgBuf = buf.ToString();
+
                     if (meas.Equals("PF") || meas.Equals("UF"))
                     {
                         measureCapacitor(MsgBuf);
@@ -521,29 +577,21 @@ namespace SMTCSHARP
                     {
                         measureResistor(MsgBuf);
                     }
-                    MsgBuf = string.Empty;
-                }
-                else if ((char)charCode == '\r')
-                {
 
+                    MsgBuf = string.Empty;
                 }
                 else
                 {
-                    MsgBuf = MsgBuf + (char)charCode;
+                    buf.Append(rcv);                                            // Save the data                    
                 }
-                Console.WriteLine("coba terima " + MsgBuf);
             }
-            else
-            {
-                Console.WriteLine("coba terima .");
-            }
-
         }
 
         private void txtLabelID_KeyPress_1(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
+                picStatus.BackColor = Color.Aqua;
                 if (txtLabelID.Text.Contains("|"))
                 {
 
@@ -646,6 +694,8 @@ namespace SMTCSHARP
                             txtMin.Text = (string)res_jes["data"][0]["STDMIN"];
                             txtMax.Text = (string)res_jes["data"][0]["STDMAX"];
                             lblMeasure.Text = (string)res_jes["data"][0]["MEAS"];
+                            meas = (string)res_jes["data"][0]["MEAS"];
+                            lblItemDescription.Text = (string)res_jes["data"][0]["ITMD1"];
 
                             if (isScanQR)
                             {
@@ -673,8 +723,12 @@ namespace SMTCSHARP
             txtMax.Text = "";
             txtValue.Text = "";
             lblMeasure.Text = "";
+            meas = string.Empty;
             txtLabelID.Focus();
             txtLabelID.ReadOnly = false;
+            dgvLogs.Rows.Clear();
+            lblItemDescription.Text = "";
+            picStatus.BackColor = Color.Aqua;
         }
 
         private void measureResistor(string readValue)
@@ -698,14 +752,15 @@ namespace SMTCSHARP
             }
             if (LCRval < 50E+6)
             {
+                //LCRval /= MeasVal;
+                Console.WriteLine("(Resistor) Final Calculated Value " + LCRval + "/" + MeasVal + "  = " + LCRval / MeasVal);
                 LCRval /= MeasVal;
-                //dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
 
                 this.dgvLogs.Invoke((MethodInvoker)delegate
                 {
                     dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
                 });
-                Console.WriteLine(string.Format("{0} ini", LCRval));
+
                 getAverage();
             }
         }
@@ -720,7 +775,11 @@ namespace SMTCSHARP
             if (LCRval > 1E-12)
             {
                 LCRval /= measValC;
-                dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+                Console.WriteLine("(Capacitor) Final Calculated Value " + LCRval);
+                dgvLogs.Invoke((MethodInvoker)delegate
+                {
+                    dgvLogs.Rows.Add(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LCRval);
+                });
 
                 getAverage();
             }
@@ -730,12 +789,70 @@ namespace SMTCSHARP
         {
             if (dgvLogs.Rows.Count > 5)
             {
+                string[] Arr1 = { dgvLogs.Rows[0].Cells[1].Value.ToString(),
+                                  dgvLogs.Rows[1].Cells[1].Value.ToString(),
+                                  dgvLogs.Rows[2].Cells[1].Value.ToString(),
+                                  dgvLogs.Rows[3].Cells[1].Value.ToString(),
+                                  dgvLogs.Rows[4].Cells[1].Value.ToString() };
+                Array.Sort(Arr1);
+
                 this.txtValue.Invoke((MethodInvoker)delegate
                 {
-                    txtValue.Text = dgvLogs.Rows[2].Cells[1].Value.ToString();
-                    txtValue.Focus();
+                    txtValue.Text = Arr1[2];
                 });
-                SendKeys.Send("{ENTER}");
+
+                this.dgvLogs.Invoke((MethodInvoker)delegate
+                {
+                    this.dgvLogs.Rows.Clear();
+                });
+
+                var labelIDToUpdate = txtLabelID.Text.Split('|')[2];
+
+                this.txtLabelID.Invoke((MethodInvoker)delegate
+                {
+                    txtLabelID.Text = string.Empty;
+                    txtLabelID.ReadOnly = false;
+                    txtLabelID.Focus();
+                });
+
+                Double StdMin = Convert.ToDouble(txtMin.Text);
+                Double StdMax = Convert.ToDouble(txtMax.Text);
+                Double ValCal = Convert.ToDouble(txtValue.Text);
+
+                if (ValCal >= StdMin && ValCal <= StdMax)
+                {
+                    picStatus.BackColor = Color.Green;
+                    updateValueInDB(labelIDToUpdate, ValCal.ToString());
+                }
+                else
+                {
+                    picStatus.BackColor = Color.Red;
+                }
+            }
+        }
+
+        private async void updateValueInDB(string code, string codeValue)
+        {
+            using (HttpClient hc = new HttpClient())
+            {
+                dynamic dataInput = new JObject();
+                dataInput.userId = ASettings.getmyuserid();
+                dataInput.code = code;
+                dataInput.itemValue = codeValue;
+
+                string values_1 = JsonConvert.SerializeObject(dataInput);
+                var valuesRequest = new StringContent(values_1, Encoding.UTF8, "application/json");
+
+                var response = await hc.PutAsync(String.Format(this.mServerApi + "/label"), valuesRequest);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                }
+                else
+                {
+                    MessageBox.Show("failed to contact server API");
+                    return;
+                }
             }
         }
 
@@ -759,6 +876,14 @@ namespace SMTCSHARP
             foreach (DataGridViewRow row in dGV.Rows)
             {
                 row.Cells[5].Value = ckall.Checked;
+            }
+        }
+
+        private void FReturnAnalyze_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (isLCRConnected)
+            {
+                serialPort1.Close();
             }
         }
     }
