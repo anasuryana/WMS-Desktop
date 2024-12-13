@@ -53,6 +53,9 @@
             this.btnFindpsn = new System.Windows.Forms.Button();
             this.ckOutstaningOnly = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.DGVDetail = new System.Windows.Forms.DataGridView();
+            this.picStatus = new System.Windows.Forms.PictureBox();
+            this.lblItemDescription = new System.Windows.Forms.Label();
             this.btnNewCheck = new System.Windows.Forms.Button();
             this.lblMeasure = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -68,16 +71,13 @@
             this.btnConnect = new System.Windows.Forms.Button();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.lblItemDescription = new System.Windows.Forms.Label();
-            this.picStatus = new System.Windows.Forms.PictureBox();
-            this.DGVDetail = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
             this.tabPage2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGVDetail)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).BeginInit();
             this.SuspendLayout();
             // 
             // btnnew
@@ -293,7 +293,6 @@
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.DGVDetail);
-            this.tabPage2.Controls.Add(this.picStatus);
             this.tabPage2.Controls.Add(this.lblItemDescription);
             this.tabPage2.Controls.Add(this.btnNewCheck);
             this.tabPage2.Controls.Add(this.lblMeasure);
@@ -308,6 +307,7 @@
             this.tabPage2.Controls.Add(this.txtValue);
             this.tabPage2.Controls.Add(this.lblPortStatus);
             this.tabPage2.Controls.Add(this.btnConnect);
+            this.tabPage2.Controls.Add(this.picStatus);
             this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
@@ -315,6 +315,39 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Value Checker";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // DGVDetail
+            // 
+            this.DGVDetail.AllowUserToAddRows = false;
+            this.DGVDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.DGVDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.DGVDetail.Location = new System.Drawing.Point(6, 245);
+            this.DGVDetail.Name = "DGVDetail";
+            this.DGVDetail.RowHeadersWidth = 62;
+            this.DGVDetail.Size = new System.Drawing.Size(828, 168);
+            this.DGVDetail.TabIndex = 57;
+            // 
+            // picStatus
+            // 
+            this.picStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picStatus.Location = new System.Drawing.Point(440, 19);
+            this.picStatus.Name = "picStatus";
+            this.picStatus.Size = new System.Drawing.Size(19, 220);
+            this.picStatus.TabIndex = 16;
+            this.picStatus.TabStop = false;
+            // 
+            // lblItemDescription
+            // 
+            this.lblItemDescription.AutoSize = true;
+            this.lblItemDescription.Font = new System.Drawing.Font("Consolas", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblItemDescription.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.lblItemDescription.Location = new System.Drawing.Point(95, 97);
+            this.lblItemDescription.Name = "lblItemDescription";
+            this.lblItemDescription.Size = new System.Drawing.Size(40, 22);
+            this.lblItemDescription.TabIndex = 15;
+            this.lblItemDescription.Text = "...";
             // 
             // btnNewCheck
             // 
@@ -444,45 +477,12 @@
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 500;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // serialPort1
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
-            // 
-            // lblItemDescription
-            // 
-            this.lblItemDescription.AutoSize = true;
-            this.lblItemDescription.Font = new System.Drawing.Font("Consolas", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblItemDescription.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.lblItemDescription.Location = new System.Drawing.Point(95, 97);
-            this.lblItemDescription.Name = "lblItemDescription";
-            this.lblItemDescription.Size = new System.Drawing.Size(40, 22);
-            this.lblItemDescription.TabIndex = 15;
-            this.lblItemDescription.Text = "...";
-            // 
-            // picStatus
-            // 
-            this.picStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picStatus.Location = new System.Drawing.Point(446, 19);
-            this.picStatus.Name = "picStatus";
-            this.picStatus.Size = new System.Drawing.Size(13, 220);
-            this.picStatus.TabIndex = 16;
-            this.picStatus.TabStop = false;
-            // 
-            // DGVDetail
-            // 
-            this.DGVDetail.AllowUserToAddRows = false;
-            this.DGVDetail.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.DGVDetail.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DGVDetail.Location = new System.Drawing.Point(6, 245);
-            this.DGVDetail.Name = "DGVDetail";
-            this.DGVDetail.RowHeadersWidth = 62;
-            this.DGVDetail.Size = new System.Drawing.Size(828, 168);
-            this.DGVDetail.TabIndex = 57;
             // 
             // FReturnAnalyze
             // 
@@ -505,9 +505,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DGVDetail)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).EndInit();
             this.ResumeLayout(false);
 
         }

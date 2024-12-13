@@ -331,14 +331,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SMTCSHARP.exe" size="314368">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="SMTCSHARP.exe" size="314880">
       <assemblyIdentity name="SMTCSHARP" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2o6sg7dZvXxezj3YQE5BSWcyehUQbqFcP4tozVXBpFU=</dsig:DigestValue>
+        <dsig:DigestValue>A6uW8XnSDqcKu6jaiw4b8OjCMX9iklz91Cc996PZyG4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

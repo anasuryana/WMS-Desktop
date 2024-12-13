@@ -512,6 +512,7 @@ namespace SMTCSHARP
 
                     dgvLogs.Rows.Clear();
                     picStatus.BackColor = Color.Aqua;
+                    tabPage2.BackColor = Color.White;
                 }
                 else
                 {
@@ -592,6 +593,7 @@ namespace SMTCSHARP
             if (e.KeyChar == (char)13)
             {
                 picStatus.BackColor = Color.Aqua;
+                tabPage2.BackColor = Color.White;
                 if (txtLabelID.Text.Contains("|"))
                 {
                     isScanQR = true;
@@ -744,6 +746,7 @@ namespace SMTCSHARP
             dgvLogs.Rows.Clear();
             lblItemDescription.Text = "";
             picStatus.BackColor = Color.Aqua;
+            tabPage2.BackColor = Color.White;
         }
 
         private void measureResistor(string readValue)
@@ -765,10 +768,8 @@ namespace SMTCSHARP
                     MeasVal = 1;
                     break;
             }
-            if (LCRval < 50E+6)
+            if (LCRval < 50E+6 & LCRval >= 0)
             {
-                //LCRval /= MeasVal;
-                Console.WriteLine("(Resistor) Final Calculated Value " + LCRval + "/" + MeasVal + "  = " + LCRval / MeasVal);
                 LCRval /= MeasVal;
 
                 this.dgvLogs.Invoke((MethodInvoker)delegate
@@ -837,16 +838,19 @@ namespace SMTCSHARP
                 if (ValCal >= StdMin && ValCal <= StdMax)
                 {
                     picStatus.BackColor = Color.Green;
-                    updateValueInDB(labelIDToUpdate, ValCal.ToString());
+                    tabPage2.BackColor = Color.Green;
+                    updateValueInDB(labelIDToUpdate, ValCal.ToString(), 'O');
                 }
                 else
                 {
+                    updateValueInDB(labelIDToUpdate, ValCal.ToString(), 'N');
                     picStatus.BackColor = Color.Red;
+                    tabPage2.BackColor = Color.Red;
                 }
             }
         }
 
-        private async void updateValueInDB(string code, string codeValue)
+        private async void updateValueInDB(string code, string codeValue, char measurementStatus)
         {
             using (HttpClient hc = new HttpClient())
             {
@@ -854,6 +858,7 @@ namespace SMTCSHARP
                 dataInput.userId = ASettings.getmyuserid();
                 dataInput.code = code;
                 dataInput.itemValue = codeValue;
+                dataInput.measurementStatus = measurementStatus.ToString();
 
                 string values_1 = JsonConvert.SerializeObject(dataInput);
                 var valuesRequest = new StringContent(values_1, Encoding.UTF8, "application/json");
