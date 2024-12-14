@@ -258,6 +258,12 @@
     <Compile Include="FP_PSNList.Designer.cs">
       <DependentUpon>FP_PSNList.cs</DependentUpon>
     </Compile>
+    <Compile Include="FP_ReportValueChecking.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FP_ReportValueChecking.Designer.cs">
+      <DependentUpon>FP_ReportValueChecking.cs</DependentUpon>
+    </Compile>
     <Compile Include="FReturnAnalyze.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -324,6 +330,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FP_PSNList.resx">
       <DependentUpon>FP_PSNList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FP_ReportValueChecking.resx">
+      <DependentUpon>FP_ReportValueChecking.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FReturnAnalyze.resx">
       <DependentUpon>FReturnAnalyze.cs</DependentUpon>

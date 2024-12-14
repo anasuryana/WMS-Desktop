@@ -71,6 +71,7 @@
             this.picStatus = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.btnReport = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
@@ -294,6 +295,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.btnReport);
             this.tabPage2.Controls.Add(this.DGVDetail);
             this.tabPage2.Controls.Add(this.lblItemDescription);
             this.tabPage2.Controls.Add(this.btnNewCheck);
@@ -486,6 +488,16 @@
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
+            // btnReport
+            // 
+            this.btnReport.Location = new System.Drawing.Point(99, 19);
+            this.btnReport.Name = "btnReport";
+            this.btnReport.Size = new System.Drawing.Size(86, 26);
+            this.btnReport.TabIndex = 58;
+            this.btnReport.Text = "Report";
+            this.btnReport.UseVisualStyleBackColor = true;
+            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
+            // 
             // FReturnAnalyze
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -554,5 +566,6 @@
         private System.Windows.Forms.Label lblItemDescription;
         private System.Windows.Forms.PictureBox picStatus;
         private System.Windows.Forms.DataGridView DGVDetail;
+        private System.Windows.Forms.Button btnReport;
     }
 }

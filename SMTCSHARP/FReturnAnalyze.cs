@@ -905,5 +905,11 @@ namespace SMTCSHARP
                 serialPort1.Close();
             }
         }
+
+        private void btnReport_Click(object sender, EventArgs e)
+        {
+            FP_ReportValueChecking fmitem = new FP_ReportValueChecking();
+            fmitem.ShowDialog();
+        }
     }
 }
