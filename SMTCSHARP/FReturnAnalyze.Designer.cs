@@ -54,7 +54,6 @@
             this.ckOutstaningOnly = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.DGVDetail = new System.Windows.Forms.DataGridView();
-            this.picStatus = new System.Windows.Forms.PictureBox();
             this.lblItemDescription = new System.Windows.Forms.Label();
             this.btnNewCheck = new System.Windows.Forms.Button();
             this.lblMeasure = new System.Windows.Forms.Label();
@@ -69,6 +68,7 @@
             this.txtValue = new System.Windows.Forms.TextBox();
             this.lblPortStatus = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.picStatus = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             this.tabControl1.SuspendLayout();
@@ -76,8 +76,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVDetail)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).BeginInit();
             this.SuspendLayout();
             // 
             // btnnew
@@ -95,7 +95,7 @@
             // 
             this.btnexport.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnexport.Image = ((System.Drawing.Image)(resources.GetObject("btnexport.Image")));
-            this.btnexport.Location = new System.Drawing.Point(444, 174);
+            this.btnexport.Location = new System.Drawing.Point(388, 118);
             this.btnexport.Name = "btnexport";
             this.btnexport.Size = new System.Drawing.Size(30, 26);
             this.btnexport.TabIndex = 58;
@@ -105,7 +105,7 @@
             // btnconform
             // 
             this.btnconform.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnconform.Location = new System.Drawing.Point(480, 174);
+            this.btnconform.Location = new System.Drawing.Point(300, 118);
             this.btnconform.Name = "btnconform";
             this.btnconform.Size = new System.Drawing.Size(83, 26);
             this.btnconform.TabIndex = 59;
@@ -141,6 +141,8 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.ckall);
+            this.tabPage1.Controls.Add(this.btnexport);
+            this.tabPage1.Controls.Add(this.btnconform);
             this.tabPage1.Controls.Add(this.dGV);
             this.tabPage1.Controls.Add(this.lblinfo);
             this.tabPage1.Controls.Add(this.txtjob);
@@ -329,15 +331,6 @@
             this.DGVDetail.Size = new System.Drawing.Size(828, 168);
             this.DGVDetail.TabIndex = 57;
             // 
-            // picStatus
-            // 
-            this.picStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picStatus.Location = new System.Drawing.Point(440, 19);
-            this.picStatus.Name = "picStatus";
-            this.picStatus.Size = new System.Drawing.Size(19, 220);
-            this.picStatus.TabIndex = 16;
-            this.picStatus.TabStop = false;
-            // 
             // lblItemDescription
             // 
             this.lblItemDescription.AutoSize = true;
@@ -474,6 +467,15 @@
             this.btnConnect.UseVisualStyleBackColor = true;
             this.btnConnect.Click += new System.EventHandler(this.btnConnect_Click);
             // 
+            // picStatus
+            // 
+            this.picStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.picStatus.Location = new System.Drawing.Point(440, 19);
+            this.picStatus.Name = "picStatus";
+            this.picStatus.Size = new System.Drawing.Size(19, 220);
+            this.picStatus.TabIndex = 16;
+            this.picStatus.TabStop = false;
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -490,8 +492,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 520);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.btnconform);
-            this.Controls.Add(this.btnexport);
             this.Controls.Add(this.btnnew);
             this.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -506,8 +506,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGVDetail)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvLogs)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picStatus)).EndInit();
             this.ResumeLayout(false);
 
         }
