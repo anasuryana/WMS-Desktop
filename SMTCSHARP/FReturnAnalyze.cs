@@ -500,7 +500,6 @@ namespace SMTCSHARP
             {
                 if (!isLCRConnected)
                 {
-                    //serialPort1 = new SerialPort();
                     serialPort1.BaudRate = Convert.ToInt16(LCRBaudRate);
                     serialPort1.PortName = LCRPortName;
                     serialPort1.NewLine = Environment.NewLine;
@@ -558,7 +557,7 @@ namespace SMTCSHARP
 
         private void serialPort1_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            if (serialPort1.BytesToRead > 0 && txtLabelID.ReadOnly)
+            if (serialPort1.BytesToRead > 0 && txtLabelID.ReadOnly && meas.Length >= 1)
             {
                 string rcv = string.Empty;
                 StringBuilder buf = new StringBuilder();
