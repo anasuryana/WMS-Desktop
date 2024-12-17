@@ -204,6 +204,7 @@ namespace SMTCSHARP
             txtpsn.Focus();
             dGV.Rows.Clear();
             lblinfo.Text = "";
+            DGVDetail.Rows.Clear();
         }
 
         private void SetDgvinfo(IEnumerable<JToken> text)
@@ -877,7 +878,10 @@ namespace SMTCSHARP
 
         private void txtValue_KeyPress(object sender, KeyPressEventArgs e)
         {
+            if (e.KeyChar == (char)13)
+            {
 
+            }
         }
 
         private void txtpsn_KeyPress_1(object sender, KeyPressEventArgs e)

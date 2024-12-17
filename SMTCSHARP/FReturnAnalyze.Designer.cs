@@ -53,6 +53,7 @@
             this.btnFindpsn = new System.Windows.Forms.Button();
             this.ckOutstaningOnly = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnReport = new System.Windows.Forms.Button();
             this.DGVDetail = new System.Windows.Forms.DataGridView();
             this.lblItemDescription = new System.Windows.Forms.Label();
             this.btnNewCheck = new System.Windows.Forms.Button();
@@ -71,7 +72,6 @@
             this.picStatus = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.btnReport = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
@@ -85,7 +85,7 @@
             // 
             this.btnnew.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.btnnew.Image = ((System.Drawing.Image)(resources.GetObject("btnnew.Image")));
-            this.btnnew.Location = new System.Drawing.Point(408, 174);
+            this.btnnew.Location = new System.Drawing.Point(353, 118);
             this.btnnew.Name = "btnnew";
             this.btnnew.Size = new System.Drawing.Size(30, 26);
             this.btnnew.TabIndex = 57;
@@ -106,7 +106,7 @@
             // btnconform
             // 
             this.btnconform.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.btnconform.Location = new System.Drawing.Point(300, 118);
+            this.btnconform.Location = new System.Drawing.Point(424, 118);
             this.btnconform.Name = "btnconform";
             this.btnconform.Size = new System.Drawing.Size(83, 26);
             this.btnconform.TabIndex = 59;
@@ -142,6 +142,7 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.ckall);
+            this.tabPage1.Controls.Add(this.btnnew);
             this.tabPage1.Controls.Add(this.btnexport);
             this.tabPage1.Controls.Add(this.btnconform);
             this.tabPage1.Controls.Add(this.dGV);
@@ -320,6 +321,16 @@
             this.tabPage2.Text = "Value Checker";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // btnReport
+            // 
+            this.btnReport.Location = new System.Drawing.Point(99, 19);
+            this.btnReport.Name = "btnReport";
+            this.btnReport.Size = new System.Drawing.Size(86, 26);
+            this.btnReport.TabIndex = 58;
+            this.btnReport.Text = "Report";
+            this.btnReport.UseVisualStyleBackColor = true;
+            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
+            // 
             // DGVDetail
             // 
             this.DGVDetail.AllowUserToAddRows = false;
@@ -488,23 +499,12 @@
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
-            // btnReport
-            // 
-            this.btnReport.Location = new System.Drawing.Point(99, 19);
-            this.btnReport.Name = "btnReport";
-            this.btnReport.Size = new System.Drawing.Size(86, 26);
-            this.btnReport.TabIndex = 58;
-            this.btnReport.Text = "Report";
-            this.btnReport.UseVisualStyleBackColor = true;
-            this.btnReport.Click += new System.EventHandler(this.btnReport_Click);
-            // 
             // FReturnAnalyze
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(871, 520);
             this.Controls.Add(this.tabControl1);
-            this.Controls.Add(this.btnnew);
             this.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FReturnAnalyze";
