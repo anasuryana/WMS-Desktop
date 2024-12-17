@@ -455,6 +455,7 @@
             // 
             this.txtValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtValue.Location = new System.Drawing.Point(284, 209);
+            this.txtValue.MaxLength = 25;
             this.txtValue.Name = "txtValue";
             this.txtValue.Size = new System.Drawing.Size(112, 25);
             this.txtValue.TabIndex = 2;

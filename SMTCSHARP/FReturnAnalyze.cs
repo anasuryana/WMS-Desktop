@@ -880,7 +880,17 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
-
+                string valValue = txtValue.Text.Trim();
+                if (meas.Length == 0 && valValue.Length > 0)
+                {
+                    string labelIDToUpdate = txtLabelID.Text.Split('|')[2];
+                    updateValueInDB(labelIDToUpdate, valValue, 'T');
+                    txtValue.Text = string.Empty;
+                    txtLabelID.Text = string.Empty;
+                    txtLabelID.ReadOnly = false;
+                    txtLabelID.Focus();
+                    lblItemDescription.Text = string.Empty; 
+                }
             }
         }
 
