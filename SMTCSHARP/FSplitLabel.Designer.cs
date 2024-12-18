@@ -50,6 +50,8 @@
             this.txtCopies = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.label7 = new System.Windows.Forms.Label();
+            this.txtItemValue = new System.Windows.Forms.TextBox();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtQty)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtCopies)).BeginInit();
@@ -286,11 +288,33 @@
             this.linkLabel1.Text = "Failed to print ?";
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // label7
+            // 
+            this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(352, 103);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(48, 18);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "Value";
+            // 
+            // txtItemValue
+            // 
+            this.txtItemValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtItemValue.Location = new System.Drawing.Point(404, 100);
+            this.txtItemValue.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtItemValue.MaxLength = 25;
+            this.txtItemValue.Name = "txtItemValue";
+            this.txtItemValue.Size = new System.Drawing.Size(134, 25);
+            this.txtItemValue.TabIndex = 18;
+            // 
             // FSplitLabel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(646, 405);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.txtItemValue);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.txtCopies);
             this.Controls.Add(this.label6);
@@ -345,5 +369,7 @@
         private System.Windows.Forms.NumericUpDown txtCopies;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox txtItemValue;
     }
 }

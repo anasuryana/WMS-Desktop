@@ -23,6 +23,7 @@ namespace SMTCSHARP
         string mretqty = string.Empty;
         string mUniqueCode = string.Empty;
         string mretitemnm = string.Empty;
+        string mItemValue = string.Empty;
         int timeOutClearing = 0;
         public FSplitLabel()
         {
@@ -272,7 +273,7 @@ namespace SMTCSHARP
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                     string url = serverURLEnpoint + "/item/split";
-                    string myparam = String.Format("item_code={0}&old_qty={1}&mode={2}&new_qty={3}&user_id={4}&uniqueBefore={5}&lot_number={6}&machineName={7}",
+                    string myparam = String.Format("item_code={0}&old_qty={1}&mode={2}&new_qty={3}&user_id={4}&uniqueBefore={5}&lot_number={6}&machineName={7}&itemValue={8}",
                         txt3n1.Text,
                         msupqty,
                         radTwo.Checked ? '1' : '2',
@@ -280,7 +281,9 @@ namespace SMTCSHARP
                         txtNIK.Text,
                         uniqueKey,
                         lotNumber,
-                        Environment.MachineName.ToString());
+                        Environment.MachineName.ToString(),
+                        txtItemValue.Text.Trim()
+                        );
 
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
@@ -299,6 +302,7 @@ namespace SMTCSHARP
 
                         txt3n2.Text = string.Empty;
                         txtQty.Text = string.Empty;
+                        txtItemValue.Text = string.Empty;
                         txtQty.Maximum = 0;
                         uniqueKey = string.Empty;
                         txt3n1.Focus();
@@ -313,6 +317,7 @@ namespace SMTCSHARP
                             mretqty = rw["quantity"].ToString();
                             mUniqueCode = rw["code"].ToString();
                             mretitemnm = rw["SPTNO"].ToString();
+                            mItemValue = rw["item_value"].ToString();
                             printsmtlabel();
                         }
 
@@ -344,6 +349,7 @@ namespace SMTCSHARP
             datanya.Add("user_name", txtName.Text);
             datanya.Add("mretrohs", "1");
             datanya.Add("copies", txtCopies.Value.ToString());
+            datanya.Add("itemValue", mItemValue);
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
