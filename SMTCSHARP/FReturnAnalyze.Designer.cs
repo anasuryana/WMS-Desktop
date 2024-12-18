@@ -72,6 +72,8 @@
             this.picStatus = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
+            this.lblCheckingMethod = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
@@ -296,6 +298,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.lblCheckingMethod);
             this.tabPage2.Controls.Add(this.btnReport);
             this.tabPage2.Controls.Add(this.DGVDetail);
             this.tabPage2.Controls.Add(this.lblItemDescription);
@@ -500,6 +503,23 @@
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
             // 
+            // lblCheckingMethod
+            // 
+            this.lblCheckingMethod.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblCheckingMethod.AutoSize = true;
+            this.lblCheckingMethod.Font = new System.Drawing.Font("Consolas", 21F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCheckingMethod.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.lblCheckingMethod.Location = new System.Drawing.Point(254, 19);
+            this.lblCheckingMethod.Name = "lblCheckingMethod";
+            this.lblCheckingMethod.Size = new System.Drawing.Size(60, 33);
+            this.lblCheckingMethod.TabIndex = 59;
+            this.lblCheckingMethod.Text = "...";
+            this.toolTip1.SetToolTip(this.lblCheckingMethod, "Measurement Method");
+            // 
+            // toolTip1
+            // 
+            this.toolTip1.ShowAlways = true;
+            // 
             // FReturnAnalyze
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -568,5 +588,7 @@
         private System.Windows.Forms.PictureBox picStatus;
         private System.Windows.Forms.DataGridView DGVDetail;
         private System.Windows.Forms.Button btnReport;
+        private System.Windows.Forms.Label lblCheckingMethod;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

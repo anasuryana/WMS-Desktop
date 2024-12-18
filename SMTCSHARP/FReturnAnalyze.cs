@@ -687,6 +687,8 @@ namespace SMTCSHARP
                             {
                                 txtValue.Focus();
                             }
+
+                            lblCheckingMethod.Text = (meas.Length == 0 || meas.Equals("0")) ? "Check Body" : "LCR";
                         }
                     }
                     catch (Exception ex)
@@ -747,6 +749,7 @@ namespace SMTCSHARP
             lblItemDescription.Text = "";
             picStatus.BackColor = Color.Aqua;
             tabPage2.BackColor = Color.White;
+            lblCheckingMethod.Text = "...";
         }
 
         private void measureResistor(string readValue)
@@ -887,9 +890,10 @@ namespace SMTCSHARP
                     updateValueInDB(labelIDToUpdate, valValue, 'T');
                     txtValue.Text = string.Empty;
                     txtLabelID.Text = string.Empty;
+                    lblCheckingMethod.Text = "...";
                     txtLabelID.ReadOnly = false;
                     txtLabelID.Focus();
-                    lblItemDescription.Text = string.Empty; 
+                    lblItemDescription.Text = string.Empty;
                 }
             }
         }
