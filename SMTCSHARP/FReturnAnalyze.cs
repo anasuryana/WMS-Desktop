@@ -192,7 +192,7 @@ namespace SMTCSHARP
             initcolumn();
             ShowConfig();
             datepc.Value = DateTime.Now;
-            picStatus.BackColor = Color.Aqua;
+            picStatus.BackColor = Color.Aqua;            
         }
 
         private void btnnew_Click(object sender, EventArgs e)
@@ -592,6 +592,12 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
+                if(tabPage2.BackColor == Color.Red)
+                {
+                    MessageBox.Show("Please click [New Button] first");
+                    return;
+                }
+
                 picStatus.BackColor = Color.Aqua;
                 tabPage2.BackColor = Color.White;
                 if (txtLabelID.Text.Contains("|"))
