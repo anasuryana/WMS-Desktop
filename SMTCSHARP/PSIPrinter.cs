@@ -2,6 +2,7 @@
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Windows.Forms;
 
@@ -117,6 +118,10 @@ namespace SMTCSHARP
                 }
             }
 
+            EventLog eventLog = new EventLog();
+            eventLog.Source = "Application";
+            eventLog.WriteEntry(String.Format("RIBBONSIZE={0}, ADDRESS={1}, TYPE={2}, DARKNESS={3}, TICKNESS={4}, NARROW={5}, SPEED={6}, with {7}",
+                ribbonSize, myaddr, mytype, myDARk, myTHICKNESS, myNARROW, mySPEED, string.Join(Environment.NewLine, this.data)), EventLogEntryType.Information, 1008);
 
             if (ret == LabelConst.CLS_SUCCESS)
             {
