@@ -27,6 +27,7 @@ namespace SMTCSHARP
         string mUniqueCode = string.Empty;
         string mNIK = string.Empty;
         string mNIKName = string.Empty;
+        string itemValue = string.Empty;
 
 
         public FLabelMasterHistory()
@@ -45,7 +46,7 @@ namespace SMTCSHARP
 
         void initColumn()
         {
-            dGV.ColumnCount = 10;
+            dGV.ColumnCount = 11;
             dGV.Columns[0].Name = "ID";
             dGV.Columns[0].Width = 150;
             dGV.Columns[1].Name = "Document";
@@ -60,6 +61,7 @@ namespace SMTCSHARP
             dGV.Columns[7].Name = "NIK";
             dGV.Columns[8].Name = "User Name";
             dGV.Columns[9].Name = "Rack";
+            dGV.Columns[10].Name = "Value";
 
             foreach (DataGridViewColumn column in dGV.Columns)
             {
@@ -100,7 +102,8 @@ namespace SMTCSHARP
                 row.Cells[7].Value = r["created_by"];
                 row.Cells[8].Value = r["user_nicename"];
                 row.Cells[9].Value = r["LOC"];
-                row.Cells[10].Value = false;
+                row.Cells[10].Value = r["item_value"];
+                row.Cells[11].Value = false;
                 rows.Add(row);
             }
             dGV.Rows.AddRange(rows.ToArray());
@@ -165,7 +168,7 @@ namespace SMTCSHARP
         {
             foreach (DataGridViewRow row in dGV.Rows)
             {
-                if (Convert.ToBoolean(row.Cells[10].Value))
+                if (Convert.ToBoolean(row.Cells[11].Value))
                 {
                     mretitemcd = row.Cells[2].Value.ToString().Trim();
                     mretqty = row.Cells[5].Value.ToString().Trim();
@@ -176,6 +179,7 @@ namespace SMTCSHARP
 
                     mrackcd = row.Cells[9].Value.ToString().Trim();
                     mUniqueCode = row.Cells[0].Value.ToString().Trim();
+                    itemValue = row.Cells[10].Value.ToString().Trim();
                     printsmtlabel();
 
                     using (HttpClient hc = new HttpClient())
@@ -208,6 +212,10 @@ namespace SMTCSHARP
             datanya.Add("itemName", mretitemnm);
             datanya.Add("nik", mNIK);
             datanya.Add("user_name", mNIKName);
+            if (itemValue.Trim().Length>0)
+            {
+                datanya.Add("itemValue", itemValue);
+            }
             datanya.Add("mretrohs", "1");
             PSIprinter.setData(datanya);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
