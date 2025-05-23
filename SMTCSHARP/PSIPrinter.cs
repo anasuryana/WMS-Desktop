@@ -85,8 +85,8 @@ namespace SMTCSHARP
 
                 if (this.data.ContainsKey("itemValue"))
                 {
-                    lbldsg.DrawRect(620, 270, 60, 170, myTHICKNESS);
-                    lbldsg.DrawTextPtrFont(this.data["itemValue"], LabelConst.CLS_LOCALE_JP, LabelConst.CLS_PRT_FNT_1, LabelConst.CLS_RT_LEFT90, 2, 2, LabelConst.CLS_PRT_FNT_SIZE_12, 670, 280);
+                    lbldsg.DrawRect(620, 230, 60, 230, myTHICKNESS);
+                    lbldsg.DrawTextPtrFont(this.data["itemValue"], LabelConst.CLS_LOCALE_JP, LabelConst.CLS_PRT_FNT_1, LabelConst.CLS_RT_LEFT90, 2, 2, LabelConst.CLS_PRT_FNT_SIZE_6, 670, 231);
                 }
             }
             else
