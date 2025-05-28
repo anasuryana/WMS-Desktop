@@ -1,5 +1,7 @@
 ﻿using com.citizen.sdk.LabelPrint;
 using Microsoft.Win32;
+using NPOI.SS.Formula.Functions;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -85,8 +87,8 @@ namespace SMTCSHARP
 
                 if (this.data.ContainsKey("itemValue"))
                 {
-                    lbldsg.DrawRect(620, 230, 60, 230, myTHICKNESS);
-                    lbldsg.DrawTextPtrFont(this.data["itemValue"], LabelConst.CLS_LOCALE_JP, LabelConst.CLS_PRT_FNT_1, LabelConst.CLS_RT_LEFT90, 2, 2, LabelConst.CLS_PRT_FNT_SIZE_6, 670, 231);
+                    lbldsg.DrawRect(620, 225, 60, 238, myTHICKNESS);
+                    lbldsg.DrawTextPCFont(this.data["itemValue"], "Times New Roman", LabelConst.CLS_RT_LEFT90, (mhratio - 13), (mvratio - 13), 7, (LabelConst.CLS_FNT_DEFAULT), 650, 230);
                 }
             }
             else
@@ -113,8 +115,8 @@ namespace SMTCSHARP
 
                 if (this.data.ContainsKey("itemValue"))
                 {
-                    lbldsg.DrawRect(620, 270, 60, 170, myTHICKNESS);
-                    lbldsg.DrawTextPtrFont(this.data["itemValue"], LabelConst.CLS_LOCALE_JP, LabelConst.CLS_PRT_FNT_1, LabelConst.CLS_RT_LEFT90, 2, 2, LabelConst.CLS_PRT_FNT_SIZE_12, 670, 280);
+                    lbldsg.DrawRect(620, 225, 60, 238, myTHICKNESS);
+                    lbldsg.DrawTextPCFont(this.data["itemValue"], "Times New Roman", LabelConst.CLS_RT_LEFT90, (mhratio - 13), (mvratio - 13), 7, (LabelConst.CLS_FNT_DEFAULT), 650, 230);
                 }
             }
 
