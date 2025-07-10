@@ -225,3 +225,11 @@ C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\D
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FLabelMasterHistory.resources
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FCombineRMLabelPSN.resources
 C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FP_ReportValueChecking.resources
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.exe.config
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FIncomingLabel.resources
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\Microsoft.Bcl.Cryptography.dll
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Formats.Asn1.dll
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.ValueTuple.dll
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\Microsoft.Bcl.Cryptography.xml
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\bin\Debug\System.Formats.Asn1.xml
+C:\Users\ana.s\Documents\nitip-ana\c#sc\SMTCSHARP-v1.0.1 citizen\SMTCSHARP\obj\Debug\SMTCSHARP.FP_IncomingDocument.resources

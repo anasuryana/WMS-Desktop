@@ -14,14 +14,14 @@
     <framework targetVersion="4.8" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="SMTCSHARP.exe.manifest" size="31119">
+    <dependentAssembly dependencyType="install" codebase="SMTCSHARP.exe.manifest" size="33201">
       <assemblyIdentity name="SMTCSHARP.exe" version="1.0.7.1" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>X4sjiIGJJdngZZjJ1GAcJRBd1oziJhvCUuOm7Agfjy4=</dsig:DigestValue>
+        <dsig:DigestValue>HG4Nu//lVdV3y5u/3QIRpNW6lwI9DfzHRjr1DYeSHR0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
