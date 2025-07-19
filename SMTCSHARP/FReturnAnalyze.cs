@@ -450,21 +450,7 @@ namespace SMTCSHARP
 
         private void btnFindpsn_Click(object sender, EventArgs e)
         {
-            ASettings.setmyflag(ckOutstaningOnly.Checked ? '0' : '1');
-            ASettings.setmyContext('r');
-            using (var pf = new FP_PSNList())
-            {
-                var res = pf.ShowDialog();
-                if (res == DialogResult.OK)
-                {
-                    txtpsn.Text = pf.ReturnValue1;
-
-                    mpsn = txtpsn.Text;
-                    SetTextinfo("Please wait...");
-                    bgworksearch.RunWorkerAsync();
-
-                }
-            }
+            
         }
 
         private void ckOutstaningOnly_CheckedChanged(object sender, EventArgs e)
@@ -934,6 +920,25 @@ namespace SMTCSHARP
         {
             FP_ReportValueChecking fmitem = new FP_ReportValueChecking();
             fmitem.ShowDialog();
+        }
+
+        private void btnFindpsn_Click_1(object sender, EventArgs e)
+        {
+            ASettings.setmyflag(ckOutstaningOnly.Checked ? '0' : '1');
+            ASettings.setmyContext('r');
+            using (var pf = new FP_PSNList())
+            {
+                var res = pf.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    txtpsn.Text = pf.ReturnValue1;
+
+                    mpsn = txtpsn.Text;
+                    SetTextinfo("Please wait...");
+                    bgworksearch.RunWorkerAsync();
+
+                }
+            }
         }
     }
 }

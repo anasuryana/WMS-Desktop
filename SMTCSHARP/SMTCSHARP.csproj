@@ -322,6 +322,9 @@
       <DependentUpon>FSplitLabel.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
+    <Compile Include="ProgressBarWithText.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSIPrinter.cs" />
     <Compile Include="RS_232C_USB.cs" />

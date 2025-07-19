@@ -53,6 +53,7 @@
             this.btnFindpsn = new System.Windows.Forms.Button();
             this.ckOutstaningOnly = new System.Windows.Forms.CheckBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.lblCheckingMethod = new System.Windows.Forms.Label();
             this.btnReport = new System.Windows.Forms.Button();
             this.DGVDetail = new System.Windows.Forms.DataGridView();
             this.lblItemDescription = new System.Windows.Forms.Label();
@@ -72,7 +73,6 @@
             this.picStatus = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
-            this.lblCheckingMethod = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -285,6 +285,7 @@
             this.btnFindpsn.Size = new System.Drawing.Size(33, 27);
             this.btnFindpsn.TabIndex = 78;
             this.btnFindpsn.UseVisualStyleBackColor = true;
+            this.btnFindpsn.Click += new System.EventHandler(this.btnFindpsn_Click_1);
             // 
             // ckOutstaningOnly
             // 
@@ -323,6 +324,19 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Value Checker";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // lblCheckingMethod
+            // 
+            this.lblCheckingMethod.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.lblCheckingMethod.AutoSize = true;
+            this.lblCheckingMethod.Font = new System.Drawing.Font("Consolas", 21F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCheckingMethod.ForeColor = System.Drawing.Color.DeepSkyBlue;
+            this.lblCheckingMethod.Location = new System.Drawing.Point(254, 19);
+            this.lblCheckingMethod.Name = "lblCheckingMethod";
+            this.lblCheckingMethod.Size = new System.Drawing.Size(60, 33);
+            this.lblCheckingMethod.TabIndex = 59;
+            this.lblCheckingMethod.Text = "...";
+            this.toolTip1.SetToolTip(this.lblCheckingMethod, "Measurement Method");
             // 
             // btnReport
             // 
@@ -502,19 +516,6 @@
             // serialPort1
             // 
             this.serialPort1.DataReceived += new System.IO.Ports.SerialDataReceivedEventHandler(this.serialPort1_DataReceived);
-            // 
-            // lblCheckingMethod
-            // 
-            this.lblCheckingMethod.Anchor = System.Windows.Forms.AnchorStyles.Top;
-            this.lblCheckingMethod.AutoSize = true;
-            this.lblCheckingMethod.Font = new System.Drawing.Font("Consolas", 21F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCheckingMethod.ForeColor = System.Drawing.Color.DeepSkyBlue;
-            this.lblCheckingMethod.Location = new System.Drawing.Point(254, 19);
-            this.lblCheckingMethod.Name = "lblCheckingMethod";
-            this.lblCheckingMethod.Size = new System.Drawing.Size(60, 33);
-            this.lblCheckingMethod.TabIndex = 59;
-            this.lblCheckingMethod.Text = "...";
-            this.toolTip1.SetToolTip(this.lblCheckingMethod, "Measurement Method");
             // 
             // toolTip1
             // 
