@@ -39,11 +39,13 @@
             this.btnPrint = new System.Windows.Forms.Button();
             this.nudQty = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtLotNumber = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.dGV2 = new System.Windows.Forms.DataGridView();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.progressBar1 = new ProgressBarWithText();
+            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
+            this.label2 = new System.Windows.Forms.Label();
+            this.txtLotNumber = new System.Windows.Forms.TextBox();
+            this.txtPartCode = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dGV)).BeginInit();
             this.groupBox2.SuspendLayout();
@@ -83,6 +85,8 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
+            this.groupBox1.Controls.Add(this.txtPartCode);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.lblInfo);
             this.groupBox1.Controls.Add(this.dGV);
             this.groupBox1.Location = new System.Drawing.Point(13, 98);
@@ -161,6 +165,7 @@
             this.nudQty.Size = new System.Drawing.Size(173, 25);
             this.nudQty.TabIndex = 86;
             this.nudQty.ThousandsSeparator = true;
+            this.nudQty.ValueChanged += new System.EventHandler(this.nudQty_ValueChanged);
             this.nudQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nudQty_KeyPress);
             // 
             // label3
@@ -174,38 +179,21 @@
             this.label3.TabIndex = 85;
             this.label3.Text = "Quantity";
             // 
-            // txtLotNumber
-            // 
-            this.txtLotNumber.Location = new System.Drawing.Point(203, 39);
-            this.txtLotNumber.MaxLength = 25;
-            this.txtLotNumber.Name = "txtLotNumber";
-            this.txtLotNumber.Size = new System.Drawing.Size(165, 25);
-            this.txtLotNumber.TabIndex = 84;
-            this.txtLotNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLotNumber_KeyPress);
-            // 
-            // label2
-            // 
-            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(200, 20);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 18);
-            this.label2.TabIndex = 83;
-            this.label2.Text = "Lot Number";
-            // 
             // dGV2
             // 
             this.dGV2.AllowUserToAddRows = false;
+            this.dGV2.AllowUserToDeleteRows = false;
             this.dGV2.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dGV2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dGV2.Location = new System.Drawing.Point(6, 72);
             this.dGV2.Name = "dGV2";
+            this.dGV2.ReadOnly = true;
             this.dGV2.RowHeadersWidth = 51;
             this.dGV2.Size = new System.Drawing.Size(509, 332);
             this.dGV2.TabIndex = 82;
+            this.dGV2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV2_CellClick);
             // 
             // groupBox3
             // 
@@ -227,6 +215,45 @@
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(503, 30);
             this.progressBar1.TabIndex = 84;
+            // 
+            // label2
+            // 
+            this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(200, 20);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(88, 18);
+            this.label2.TabIndex = 83;
+            this.label2.Text = "Lot Number";
+            // 
+            // txtLotNumber
+            // 
+            this.txtLotNumber.Location = new System.Drawing.Point(203, 39);
+            this.txtLotNumber.MaxLength = 25;
+            this.txtLotNumber.Name = "txtLotNumber";
+            this.txtLotNumber.Size = new System.Drawing.Size(165, 25);
+            this.txtLotNumber.TabIndex = 84;
+            this.txtLotNumber.TextChanged += new System.EventHandler(this.txtLotNumber_TextChanged);
+            this.txtLotNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtLotNumber_KeyPress);
+            // 
+            // txtPartCode
+            // 
+            this.txtPartCode.Location = new System.Drawing.Point(9, 41);
+            this.txtPartCode.MaxLength = 25;
+            this.txtPartCode.Name = "txtPartCode";
+            this.txtPartCode.Size = new System.Drawing.Size(165, 25);
+            this.txtPartCode.TabIndex = 86;
+            this.txtPartCode.TextChanged += new System.EventHandler(this.txtPartCode_TextChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 21);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(80, 18);
+            this.label4.TabIndex = 85;
+            this.label4.Text = "Part Code";
             // 
             // FIncomingLabel
             // 
@@ -266,13 +293,15 @@
         private System.Windows.Forms.DataGridView dGV;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView dGV2;
-        private System.Windows.Forms.TextBox txtLotNumber;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown nudQty;
         private System.Windows.Forms.Button btnPrint;
         private System.Windows.Forms.GroupBox groupBox3;
         private ProgressBarWithText progressBar1;
         private System.Windows.Forms.Label lblInfo;
+        private System.Windows.Forms.TextBox txtPartCode;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox txtLotNumber;
+        private System.Windows.Forms.Label label2;
     }
 }

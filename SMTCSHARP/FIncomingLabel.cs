@@ -22,8 +22,12 @@ namespace SMTCSHARP
         string serverURLEnpoint = "";
         string sItemCode = String.Empty;
         string sPallet = String.Empty;
-
-        ProgressBarWithText myProgressBar = new ProgressBarWithText();
+        string sUniqueCode = String.Empty;
+        string sRackCode = String.Empty;
+        string sQty = String.Empty;
+        string sLotCode = String.Empty;
+        string sItemName = String.Empty;
+        BindingSource bs = new BindingSource();
 
         public FIncomingLabel()
         {
@@ -32,21 +36,29 @@ namespace SMTCSHARP
 
         void Initcolumn()
         {
-            dGV.ColumnCount = 4;
+            dGV.ColumnCount = 5;
             dGV.RowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             dGV.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
             dGV.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dGV.MultiSelect = false;
+            dGV.AutoGenerateColumns = false;
             dGV.Columns[0].Name = "Pallet";
             dGV.Columns[0].Width = 100;
+            dGV.Columns[0].DataPropertyName = "pallet";
             dGV.Columns[1].Name = "Part Code";
             dGV.Columns[1].Width = 100;
+            dGV.Columns[1].DataPropertyName = "part_code";
             dGV.Columns[2].Name = "Part Name";
             dGV.Columns[2].Width = 150;
+            dGV.Columns[2].DataPropertyName = "part_name";
             dGV.Columns[3].Name = "Quantity";
             dGV.Columns[3].Width = 100;
+            dGV.Columns[3].DataPropertyName = "qty";
             dGV.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dGV.Columns[3].DefaultCellStyle.Format = "N0";
+            dGV.Columns[4].Name = "Rack";
+            dGV.Columns[4].Width = 100;
+            dGV.Columns[4].DataPropertyName = "rack";
 
 
             dGV2.ColumnCount = 3;
@@ -54,7 +66,7 @@ namespace SMTCSHARP
             dGV2.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
             dGV2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dGV2.Columns[0].Name = "Unique Code";
-            dGV2.Columns[0].Width = 100;
+            dGV2.Columns[0].Width = 150;
             dGV2.Columns[1].Name = "Lot Number";
             dGV2.Columns[1].Width = 100;
             dGV2.Columns[2].Name = "Quantity";
@@ -142,33 +154,44 @@ namespace SMTCSHARP
                     if (!pf.ReturnValue1.Equals(""))
                     {
                         btnFindpsn.Enabled = false;
-                        dGV.Rows.Clear();
                         lblInfo.Text = "Please wait";
 
                         Dictionary<string, string> datanya = new Dictionary<string, string>();
                         datanya.Add("doc", pf.ReturnValue1);
                         string[] strings = await searchLabel(datanya);
-
+                        if (strings[0].Equals("0"))
+                        {
+                            MessageBox.Show(strings[1]);
+                            btnFindpsn.Enabled = true;
+                            lblInfo.Text = ".";
+                            return;
+                        }
                         JObject jobject = JObject.Parse(strings[2]);
                         var percentage = Convert.ToInt16(jobject["progress"]);
                         progressBar1.Value = percentage;
 
-
-
                         var RSData = from r in jobject["data"] select r;
-                        List<DataGridViewRow> rows = new List<DataGridViewRow>();
+
+                        DataTable dataTable = new DataTable();
+                        dataTable.Columns.Add("pallet");
+                        dataTable.Columns.Add("part_code");
+                        dataTable.Columns.Add("part_name");
+                        dataTable.Columns.Add("qty");
+                        dataTable.Columns.Add("rack");
                         foreach (var r in RSData)
                         {
-                            DataGridViewRow row = new DataGridViewRow();
-                            row.CreateCells(dGV);
-                            row.Cells[0].Value = r["pallet"];
-                            row.Cells[1].Value = r["item_code"];
-                            row.Cells[2].Value = r["SPTNO"];
-                            row.Cells[3].Value = Convert.ToDecimal(r["total_qty"]);
-                            rows.Add(row);
+                            dataTable.Rows.Add(
+                                r["pallet"].ToString(),
+                                r["item_code"].ToString(),
+                                r["SPTNO"].ToString(),
+                                Convert.ToDecimal(r["total_qty"]),
+                                r["RACK_CD"].ToString()
+                            );
                         }
+                        bs.DataSource = dataTable;
+                        dGV.DataSource = bs;
+
                         btnFindpsn.Enabled = true;
-                        dGV.Rows.AddRange(rows.ToArray());
                         lblInfo.Text = ".";
                     }
                 }
@@ -206,9 +229,13 @@ namespace SMTCSHARP
         {
             if (e.RowIndex >= 0)
             {
+                sUniqueCode = String.Empty;
+
                 DataGridViewRow selectedRow = dGV.Rows[e.RowIndex];
                 string _itemCode = selectedRow.Cells[1].Value.ToString();
                 string _pallet = selectedRow.Cells[0].Value.ToString();
+                sRackCode = selectedRow.Cells[4].Value.ToString();
+                sItemName = selectedRow.Cells[2].Value.ToString();
 
                 sItemCode = _itemCode;
                 sPallet = _pallet;
@@ -222,10 +249,7 @@ namespace SMTCSHARP
                 datanya.Add("item", _itemCode);
 
                 string[] strings = await accessApiItemInDocument(datanya);
-
                 JObject jobject = JObject.Parse(strings[2]);
-
-
 
                 var RSData = from r in jobject["data"] select r;
                 var BalanceData = from r in jobject["balance_data"] select r;
@@ -240,6 +264,7 @@ namespace SMTCSHARP
                     rows.Add(row);
                 }
                 dGV2.Rows.AddRange(rows.ToArray());
+                dGV2.ClearSelection();
 
                 // validasi maksimum buat label per pallet
                 foreach (var r in BalanceData)
@@ -258,71 +283,98 @@ namespace SMTCSHARP
 
         private async void btnPrint_Click(object sender, EventArgs e)
         {
-            if (txtLotNumber.Text.Length == 0)
+            if (sUniqueCode.Length > 0)
             {
-                MessageBox.Show("Lot number should not be empty");
-                return;
-            }
-
-            if (txtDONumber.Text.Length == 0)
-            {
-                MessageBox.Show("DO Number should not be empty");
-                return;
-            }
-
-            Dictionary<string, string> datanya = new Dictionary<string, string>();
-            datanya.Add("doc", txtDONumber.Text);
-            datanya.Add("item_code", sItemCode);
-            datanya.Add("machineName", Environment.MachineName.ToString());
-            datanya.Add("qty", nudQty.Value.ToString());
-            datanya.Add("lot_number", txtLotNumber.Text);
-            datanya.Add("user_id", ASettings.getmyuserid());
-            datanya.Add("pallet", sPallet);
-            btnPrint.Enabled = false;
-
-            string[] strings = await accessApiRegisterC3(datanya);
-
-            MessageBox.Show(strings[1]);
-
-            if (strings[1].Equals("OK"))
-            {
-
-                JObject jobject = JObject.Parse(strings[2]);
-                var data = jobject["data"];
-                var RSData = from r in jobject["data"] select r;
-                var BalanceData = from r in jobject["balance_data"] select r;
-
-                var percentage = Convert.ToInt16(jobject["progress"]);
-                progressBar1.Value = percentage;
-
-                // validasi maksimum buat label per pallet
-                foreach (var r in BalanceData)
+                DialogResult dialogResult = MessageBox.Show("It will reprint, are you sure ?", "Decide", MessageBoxButtons.YesNo);
+                if (dialogResult != DialogResult.Yes)
                 {
-                    if (r["pallet"].ToString().Equals(sPallet))
-                    {
-                        nudQty.Maximum = Convert.ToDecimal(r["total_bal_qty"]);
-                    }
+                    return;
                 }
 
-                // cetak label
+
+                btnPrint.Enabled = true;
                 Dictionary<string, string> dataToPrint = new Dictionary<string, string>();
-                dataToPrint.Add("rackCode", data["LOC"].ToString());
-                dataToPrint.Add("itemQty", data["quantity"].ToString());
+                dataToPrint.Add("rackCode", sRackCode);
+                dataToPrint.Add("itemQty", sQty);
                 dataToPrint.Add("itemCode", sItemCode);
-                dataToPrint.Add("itemLot", txtLotNumber.Text);
-                dataToPrint.Add("itemKey", data["code"].ToString());
-                dataToPrint.Add("itemName", data["SPTNO"].ToString());
+                dataToPrint.Add("itemLot", sLotCode);
+                dataToPrint.Add("itemKey", sUniqueCode);
+                dataToPrint.Add("itemName", sItemName);
                 dataToPrint.Add("nik", ASettings.getmyuserid());
                 dataToPrint.Add("user_name", ASettings.getmyuserfname());
                 dataToPrint.Add("mretrohs", "1");
 
                 printsmtlabel(dataToPrint);
+            }
+            else
+            {
+                if (txtLotNumber.Text.Length == 0)
+                {
+                    MessageBox.Show("Lot number should not be empty");
+                    return;
+                }
 
-                nudQty.Value = 0;
-                txtLotNumber.Text = String.Empty;
+                if (txtDONumber.Text.Length == 0)
+                {
+                    MessageBox.Show("DO Number should not be empty");
+                    return;
+                }
+
+                Dictionary<string, string> datanya = new Dictionary<string, string>();
+                datanya.Add("doc", txtDONumber.Text);
+                datanya.Add("item_code", sItemCode);
+                datanya.Add("machineName", Environment.MachineName.ToString());
+                datanya.Add("qty", nudQty.Value.ToString());
+                datanya.Add("lot_number", txtLotNumber.Text);
+                datanya.Add("user_id", ASettings.getmyuserid());
+                datanya.Add("pallet", sPallet);
+                btnPrint.Enabled = false;
+
+                string[] strings = await accessApiRegisterC3(datanya);
+
+                MessageBox.Show(strings[1]);
+
+                if (strings[1].Equals("OK"))
+                {
+
+                    JObject jobject = JObject.Parse(strings[2]);
+                    var data = jobject["data"];
+                    var RSData = from r in jobject["data"] select r;
+                    var BalanceData = from r in jobject["balance_data"] select r;
+
+                    var percentage = Convert.ToInt16(jobject["progress"]);
+                    progressBar1.Value = percentage;
+
+                    // validasi maksimum buat label per pallet
+                    foreach (var r in BalanceData)
+                    {
+                        if (r["pallet"].ToString().Equals(sPallet))
+                        {
+                            nudQty.Maximum = Convert.ToDecimal(r["total_bal_qty"]);
+                        }
+                    }
+
+                    // cetak label
+                    Dictionary<string, string> dataToPrint = new Dictionary<string, string>();
+                    dataToPrint.Add("rackCode", data["LOC"].ToString());
+                    dataToPrint.Add("itemQty", data["quantity"].ToString());
+                    dataToPrint.Add("itemCode", sItemCode);
+                    dataToPrint.Add("itemLot", txtLotNumber.Text);
+                    dataToPrint.Add("itemKey", data["code"].ToString());
+                    dataToPrint.Add("itemName", data["SPTNO"].ToString());
+                    dataToPrint.Add("nik", ASettings.getmyuserid());
+                    dataToPrint.Add("user_name", ASettings.getmyuserfname());
+                    dataToPrint.Add("mretrohs", "1");
+
+                    printsmtlabel(dataToPrint);
+
+                    nudQty.Value = 0;
+                    txtLotNumber.Text = String.Empty;
+                }
+
+                btnPrint.Enabled = true;
             }
 
-            btnPrint.Enabled = true;
         }
 
 
@@ -351,6 +403,31 @@ namespace SMTCSHARP
             return new string[] { returnCode, message, data };
         }
 
+        private async Task<string[]> accessApiGetC3(Dictionary<string, string> dataInput)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+            using (HttpClient hc = new HttpClient())
+            {
+                var valuesRequest = new FormUrlEncodedContent(dataInput);
+                var response = await hc.PostAsync(String.Format(serverURLEnpoint + "/label/c3-reprint"), valuesRequest);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    returnCode = "0";
+                    message = "the response is not success yet";
+                }
+
+            }
+            return new string[] { returnCode, message, data };
+        }
+
         void printsmtlabel(Dictionary<string, string> dataInput)
         {
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
@@ -359,6 +436,33 @@ namespace SMTCSHARP
 
             PSIprinter.setData(dataInput);
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
+        }
+
+        private void dGV2_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow selectedRow = dGV2.Rows[e.RowIndex];
+                sUniqueCode = selectedRow.Cells[0].Value.ToString();
+                sLotCode = selectedRow.Cells[1].Value.ToString();
+
+                sQty = ((int)Convert.ToDouble(selectedRow.Cells[2].Value)).ToString();
+            }
+        }
+
+        private void txtLotNumber_TextChanged(object sender, EventArgs e)
+        {
+            sUniqueCode = String.Empty;
+        }
+
+        private void nudQty_ValueChanged(object sender, EventArgs e)
+        {
+            sUniqueCode = String.Empty;
+        }
+
+        private void txtPartCode_TextChanged(object sender, EventArgs e)
+        {
+            bs.Filter = String.Format("part_code LIKE '%{0}%'", txtPartCode.Text);
         }
     }
 }
