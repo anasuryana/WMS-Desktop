@@ -53,13 +53,41 @@ namespace SMTCSHARP
                 DataGridViewRow row = new DataGridViewRow();
                 row.CreateCells(dGV);
                 row.Cells[0].Value = r["delivery_doc"];
-                row.Cells[1].Value = r["delivery_date"];               
+                row.Cells[1].Value = r["delivery_date"];
                 rows.Add(row);
             }
             dGV.Rows.AddRange(rows.ToArray());
 
-            btnSearch.Enabled = true;            
+            if (RSData.Count() == 0)
+            {
+                if (txtsearch.Text.Trim().Length > 3)
+                {
+                    strings = await accessApiSyncDocument(datanya);
+                    if (strings[0].Equals("1"))
+                    {
+                        lblInfo.Text = String.Format("{0}, but please wait", strings[1]);
+                        strings = await searchLabel(datanya);
+
+                        jobject = JObject.Parse(strings[2]);
+                        dGV.Rows.Clear();
+                        RSData = from r in jobject["data"] select r;
+                        rows = new List<DataGridViewRow>();
+                        foreach (var r in RSData)
+                        {
+                            DataGridViewRow row = new DataGridViewRow();
+                            row.CreateCells(dGV);
+                            row.Cells[0].Value = r["delivery_doc"];
+                            row.Cells[1].Value = r["delivery_date"];
+                            rows.Add(row);
+                        }
+                        dGV.Rows.AddRange(rows.ToArray());
+                    }
+                }
+            }
+
             lblInfo.Text = String.Format("({0}) row(s) found", dGV.Rows.Count);
+            btnSearch.Enabled = true;
+
         }
 
         private void FP_IncomingDocument_Load(object sender, EventArgs e)
@@ -115,6 +143,51 @@ namespace SMTCSHARP
 
             }
             return new string[] { returnCode, message, data };
+        }
+
+        private async Task<string[]> accessApiSyncDocument(Dictionary<string, string> dataInput)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+
+            using (HttpClient hc = new HttpClient())
+            {
+                string theUrl = String.Format(serverURLEnpoint + "/receive/synchronize-for-labeling");
+                var valuesRequest = new FormUrlEncodedContent(dataInput);
+                var response = await hc.PostAsync(theUrl, valuesRequest);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    JObject jobject = JObject.Parse(data);
+                    double synchronized_items_count = jobject["synchronized_items_count"].ToObject<double>();
+
+                    returnCode = synchronized_items_count > 0 ? "1" : "0";
+
+                    message = jobject["message"].ToString();
+                }
+                else
+                {
+                    returnCode = "0";
+                    message = "the response is not success yet";
+                }
+            }
+
+            return new string[] { returnCode, message, data };
+        }
+
+        private void txtsearch_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtsearch.Text.Trim().Length <= 3)
+                {
+                    MessageBox.Show("Please input valid the Document Number");
+                    return;
+                }
+                btnSearch.Focus();
+            }
         }
     }
 }

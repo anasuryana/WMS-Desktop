@@ -73,8 +73,9 @@
             this.txtsearch.Location = new System.Drawing.Point(15, 24);
             this.txtsearch.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtsearch.Name = "txtsearch";
-            this.txtsearch.Size = new System.Drawing.Size(191, 29);
+            this.txtsearch.Size = new System.Drawing.Size(191, 25);
             this.txtsearch.TabIndex = 0;
+            this.txtsearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtsearch_KeyPress);
             // 
             // lblInfo
             // 
@@ -84,7 +85,7 @@
             this.lblInfo.ForeColor = System.Drawing.Color.White;
             this.lblInfo.Location = new System.Drawing.Point(293, 80);
             this.lblInfo.Name = "lblInfo";
-            this.lblInfo.Size = new System.Drawing.Size(40, 22);
+            this.lblInfo.Size = new System.Drawing.Size(32, 18);
             this.lblInfo.TabIndex = 4;
             this.lblInfo.Text = "...";
             this.lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -108,7 +109,7 @@
             // 
             // FP_IncomingDocument
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 22F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(623, 383);
             this.Controls.Add(this.dGV);
