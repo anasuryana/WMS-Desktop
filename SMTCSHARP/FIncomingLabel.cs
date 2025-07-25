@@ -1,6 +1,7 @@
 ﻿using IniParser;
 using IniParser.Model;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using NPOI.SS.Formula.Functions;
 using System;
@@ -88,9 +89,14 @@ namespace SMTCSHARP
             dGV2.Columns[1].Name = "Lot Number";
             dGV2.Columns[1].Width = 100;
             dGV2.Columns[2].Name = "Part Qty";
-            dGV2.Columns[2].Width = 100;
+            dGV2.Columns[2].Width = 75;
             dGV2.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dGV2.Columns[2].DefaultCellStyle.Format = "N0";
+
+            DataGridViewButtonColumn hbt = new DataGridViewButtonColumn();
+            hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            hbt.Width = 100;
+            dGV2.Columns.Add(hbt);
         }
 
         private async Task<string[]> searchLabel(Dictionary<string, string> dataInput)
@@ -145,6 +151,47 @@ namespace SMTCSHARP
                     var content = await response.Content.ReadAsStringAsync();
                     data = content;
                     message = "OK";
+                }
+                else
+                {
+                    returnCode = "0";
+                    message = "the response is not success yet";
+                }
+            }
+
+            return new string[] { returnCode, message, data };
+        }
+
+        private async Task<string[]> accessApiDeleteLabel(Dictionary<string, string> dataInput)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+
+            using (HttpClient hc = new HttpClient())
+            {
+                var dataBody = new
+                {
+                    code = dataInput["code"],
+                    user_id = ASettings.getmyuserid(),
+                };
+                var json = JsonConvert.SerializeObject(dataBody);
+                string theUrl = String.Format(serverURLEnpoint + "/label/c3");
+
+                var request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Delete,
+                    RequestUri = new Uri(theUrl),
+                    Content = new StringContent(json, Encoding.UTF8, "application/json")
+                };
+
+                var response = await hc.SendAsync(request);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    JObject jobject = JObject.Parse(data);
+                    message = jobject["message"].ToString();
                 }
                 else
                 {
@@ -246,6 +293,7 @@ namespace SMTCSHARP
                 row.Cells[0].Value = r["code"];
                 row.Cells[1].Value = r["lot_code"];
                 row.Cells[2].Value = Convert.ToDecimal(r["quantity"]);
+                row.Cells[3].Value = "Delete";
                 rows.Add(row);
             }
             dGV2.Rows.AddRange(rows.ToArray());
@@ -426,16 +474,7 @@ namespace SMTCSHARP
                     nudQty.Value = 0;
                     txtLotNumber.Text = String.Empty;
 
-                    // reload data grid resume
-                    datanya = new Dictionary<string, string>();
-                    datanya.Add("doc", txtDONumber.Text);
-                    loadDataPerDocument(datanya);
-
-                    // reload data grid detail
-                    datanya = new Dictionary<string, string>();
-                    datanya.Add("doc", txtDONumber.Text);
-                    datanya.Add("item", lblPartCode.Text);
-                    loadDetailPerData(datanya);
+                    reloadAll();
                 }
 
                 btnPrint.Enabled = true;
@@ -504,7 +543,7 @@ namespace SMTCSHARP
             PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
 
-        private void dGV2_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void dGV2_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
@@ -514,6 +553,26 @@ namespace SMTCSHARP
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[2].Value)).ToString();
             }
+
+            switch (dGV2.CurrentCell.ColumnIndex)
+            {
+                case 0:
+
+                    break;
+                case 3:
+                    if (MessageBox.Show("Are you sure want to delete ?", "Decide", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    {
+                        Dictionary<string, string> dataToDelete = new Dictionary<string, string>();
+                        dataToDelete.Add("code", sUniqueCode);
+
+                        string[] strings = await accessApiDeleteLabel(dataToDelete);
+                        MessageBox.Show(strings[1]);
+
+                        reloadAll();
+                    }
+                    break;
+            }
+
         }
 
         private void txtLotNumber_TextChanged(object sender, EventArgs e)
@@ -552,6 +611,20 @@ namespace SMTCSHARP
         private void cbOutstandingOnly_CheckedChanged(object sender, EventArgs e)
         {
             filterDGV();
+        }
+
+        private void reloadAll()
+        {
+            // reload data grid resume
+            Dictionary<string, string> datanya = new Dictionary<string, string>();
+            datanya.Add("doc", txtDONumber.Text);
+            loadDataPerDocument(datanya);
+
+            // reload data grid detail
+            datanya = new Dictionary<string, string>();
+            datanya.Add("doc", txtDONumber.Text);
+            datanya.Add("item", lblPartCode.Text);
+            loadDetailPerData(datanya);
         }
     }
 }
