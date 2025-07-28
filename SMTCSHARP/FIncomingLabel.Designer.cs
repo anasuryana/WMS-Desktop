@@ -145,6 +145,7 @@
             this.txtPartCode.Size = new System.Drawing.Size(165, 25);
             this.txtPartCode.TabIndex = 86;
             this.txtPartCode.TextChanged += new System.EventHandler(this.txtPartCode_TextChanged);
+            this.txtPartCode.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtPartCode_KeyPress);
             // 
             // label4
             // 
@@ -249,6 +250,7 @@
             0,
             0,
             0});
+            this.nudPrintQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nudPrintQty_KeyPress);
             // 
             // label6
             // 
@@ -300,6 +302,7 @@
             // 
             // txtLotNumber
             // 
+            this.txtLotNumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtLotNumber.Location = new System.Drawing.Point(117, 111);
             this.txtLotNumber.MaxLength = 25;
             this.txtLotNumber.Name = "txtLotNumber";

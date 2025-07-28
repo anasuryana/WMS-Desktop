@@ -418,6 +418,12 @@ namespace SMTCSHARP
                     return;
                 }
 
+                if (nudQty.Value == 0)
+                {
+                    MessageBox.Show("Qty to print should not be zero");
+                    return;
+                }
+
                 Dictionary<string, string> datanya = new Dictionary<string, string>();
                 datanya.Add("doc", txtDONumber.Text);
                 datanya.Add("item_code", sItemCode);
@@ -625,6 +631,67 @@ namespace SMTCSHARP
             datanya.Add("doc", txtDONumber.Text);
             datanya.Add("item", lblPartCode.Text);
             loadDetailPerData(datanya);
+        }
+
+        private void nudPrintQty_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                btnPrint.Focus();
+            }
+        }
+
+        private void txtPartCode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtPartCode.Text.Length <= 3)
+                {
+                    MessageBox.Show("Unknown Format C3 Label");
+                    txtPartCode.Text = "";
+                    return;
+                }
+
+
+                if (txtPartCode.Text.Contains("|"))
+                {
+
+                }
+                else
+                {
+                    int[] intsArray = { 16, 17 };
+                    if (intsArray.Contains(txtPartCode.Text.Trim().Length))
+                    {
+
+                    }
+                    else
+                    {
+                        if (txtPartCode.Text.Substring(0, 3) != "3N1")
+                        {
+                            MessageBox.Show("Unknown Format C3 Label");
+                            txtPartCode.Text = "";
+                            return;
+                        }
+
+                        if (txtPartCode.Text.Contains(" "))
+                        {
+                            string[] an1 = txtPartCode.Text.Split(' ');
+                            nudQty.Value = Convert.ToDecimal(an1[1]);
+                            int strleng = an1[0].Length - 3;
+                            txtPartCode.Text = an1[0].Substring(3, strleng);
+                        }
+                        else
+                        {
+                            int strleng = txtPartCode.Text.Length - 3;
+                            txtPartCode.Text = txtPartCode.Text.Substring(3, strleng);
+                            nudQty.Value = 0;
+                        }
+
+                        nudQty.Focus();
+                    }
+                }
+
+            }
         }
     }
 }
