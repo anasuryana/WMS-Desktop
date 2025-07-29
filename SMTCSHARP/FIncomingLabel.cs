@@ -28,7 +28,7 @@ namespace SMTCSHARP
         string sRackCode = String.Empty;
         string sQty = String.Empty;
         string sLotCode = String.Empty;
-        string sItemName = String.Empty;
+        string sItemName = String.Empty;        
         BindingSource bs = new BindingSource();
 
         public FIncomingLabel()
@@ -223,6 +223,10 @@ namespace SMTCSHARP
 
                         btnFindpsn.Enabled = true;
                         lblInfo.Text = ".";
+
+                        txtPartCode.Text = String.Empty;
+                        cbOutstandingOnly.Checked = false;
+                        txtPallet.Text = String.Empty;
                     }
                 }
             }
@@ -479,6 +483,8 @@ namespace SMTCSHARP
 
                     nudQty.Value = 0;
                     txtLotNumber.Text = String.Empty;
+                    nudPrintQty.Value = 1;
+                    txtQty.Text = String.Empty;
 
                     reloadAll();
                 }
@@ -556,7 +562,7 @@ namespace SMTCSHARP
                 DataGridViewRow selectedRow = dGV2.Rows[e.RowIndex];
                 sUniqueCode = selectedRow.Cells[0].Value.ToString();
                 sLotCode = selectedRow.Cells[1].Value.ToString();
-                
+
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[2].Value)).ToString();
             }
@@ -646,14 +652,6 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
-                if (txtPartCode.Text.Length <= 3)
-                {
-                    MessageBox.Show("Unknown Format C3 Label");
-                    txtPartCode.Text = "";
-                    return;
-                }
-
-
                 if (txtPartCode.Text.Contains("|"))
                 {
 
@@ -667,24 +665,24 @@ namespace SMTCSHARP
                     }
                     else
                     {
-                        if (txtPartCode.Text.Substring(0, 3) != "3N1")
-                        {
-                            MessageBox.Show("Unknown Format C3 Label");
-                            txtPartCode.Text = "";
-                            return;
-                        }
-
+                        bool isContainSpace = false;
                         if (txtPartCode.Text.Contains(" "))
                         {
                             string[] an1 = txtPartCode.Text.Split(' ');
                             nudQty.Value = Convert.ToDecimal(an1[1]);
                             int strleng = an1[0].Length - 3;
                             txtPartCode.Text = an1[0].Substring(3, strleng);
+                            txtQty.Text = an1[1];
+                            isContainSpace = true;
                         }
                         else
                         {
-                            int strleng = txtPartCode.Text.Length - 3;
-                            txtPartCode.Text = txtPartCode.Text.Substring(3, strleng);
+                            if (txtPartCode.Text.Contains("3N1"))
+                            {
+                                int strleng = txtPartCode.Text.Length - 3;
+                                txtPartCode.Text = txtPartCode.Text.Substring(3, strleng);
+                            }
+
                             nudQty.Value = 0;
                         }
 
@@ -692,7 +690,14 @@ namespace SMTCSHARP
                         {
                             DataGridViewCellEventArgs args = new DataGridViewCellEventArgs(0, 0);
                             dGV_CellClick(dGV, args);
-                            txtQty.Focus();
+                            if (isContainSpace)
+                            {
+                                txtLotNumber.Focus();
+                            }
+                            else
+                            {
+                                txtQty.Focus();
+                            }
                         }
                         else
                         {
@@ -703,7 +708,6 @@ namespace SMTCSHARP
                         }
                     }
                 }
-
             }
         }
 
