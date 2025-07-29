@@ -41,6 +41,7 @@
             this.lblInfo = new System.Windows.Forms.Label();
             this.dGV = new System.Windows.Forms.DataGridView();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtQty = new System.Windows.Forms.TextBox();
             this.lblPartCode = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.nudPrintQty = new System.Windows.Forms.NumericUpDown();
@@ -139,6 +140,7 @@
             // 
             // txtPartCode
             // 
+            this.txtPartCode.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtPartCode.Location = new System.Drawing.Point(192, 42);
             this.txtPartCode.MaxLength = 25;
             this.txtPartCode.Name = "txtPartCode";
@@ -188,6 +190,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.txtQty);
             this.groupBox2.Controls.Add(this.lblPartCode);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.nudPrintQty);
@@ -204,6 +207,16 @@
             this.groupBox2.TabIndex = 82;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Detail";
+            // 
+            // txtQty
+            // 
+            this.txtQty.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.txtQty.Location = new System.Drawing.Point(5, 111);
+            this.txtQty.MaxLength = 50;
+            this.txtQty.Name = "txtQty";
+            this.txtQty.Size = new System.Drawing.Size(106, 25);
+            this.txtQty.TabIndex = 92;
+            this.txtQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtQty_KeyPress);
             // 
             // lblPartCode
             // 
@@ -276,7 +289,7 @@
             // 
             // nudQty
             // 
-            this.nudQty.Location = new System.Drawing.Point(7, 112);
+            this.nudQty.Location = new System.Drawing.Point(382, 48);
             this.nudQty.Maximum = new decimal(new int[] {
             3000000,
             0,
@@ -286,6 +299,7 @@
             this.nudQty.Size = new System.Drawing.Size(95, 25);
             this.nudQty.TabIndex = 86;
             this.nudQty.ThousandsSeparator = true;
+            this.nudQty.Visible = false;
             this.nudQty.ValueChanged += new System.EventHandler(this.nudQty_ValueChanged);
             this.nudQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.nudQty_KeyPress);
             // 
@@ -414,5 +428,6 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lblPartCode;
+        private System.Windows.Forms.TextBox txtQty;
     }
 }

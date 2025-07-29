@@ -345,7 +345,7 @@ namespace SMTCSHARP
                 DataGridViewRow selectedRow = dGV.Rows[e.RowIndex];
                 string _itemCode = selectedRow.Cells[2].Value.ToString();
                 string _pallet = selectedRow.Cells[1].Value.ToString();
-                sRackCode = selectedRow.Cells[5].Value.ToString();
+                sRackCode = selectedRow.Cells[7].Value.ToString();
                 sItemName = selectedRow.Cells[3].Value.ToString();
                 lblPartCode.Text = _itemCode;
 
@@ -556,6 +556,7 @@ namespace SMTCSHARP
                 DataGridViewRow selectedRow = dGV2.Rows[e.RowIndex];
                 sUniqueCode = selectedRow.Cells[0].Value.ToString();
                 sLotCode = selectedRow.Cells[1].Value.ToString();
+                
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[2].Value)).ToString();
             }
@@ -687,10 +688,55 @@ namespace SMTCSHARP
                             nudQty.Value = 0;
                         }
 
-                        nudQty.Focus();
+                        if (dGV.Rows.Count == 1)
+                        {
+                            DataGridViewCellEventArgs args = new DataGridViewCellEventArgs(0, 0);
+                            dGV_CellClick(dGV, args);
+                            txtQty.Focus();
+                        }
+                        else
+                        {
+                            if (dGV.Rows.Count == 0 && txtDONumber.Text.Trim().Length > 0)
+                            {
+                                MessageBox.Show("the part code is not in " + txtDONumber.Text);
+                            }
+                        }
                     }
                 }
 
+            }
+        }
+
+        private void txtQty_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtQty.Text.ToUpper().Substring(0, txtQty.Text.Length).Equals("3N2"))
+                {
+                    string[] mthis_ar = txtQty.Text.Split(' ');
+
+                    if (mthis_ar[1].All(char.IsNumber))
+                    {
+                        txtQty.Text = mthis_ar[1];
+                        nudQty.Value = Convert.ToDecimal(mthis_ar[1]);
+                        txtLotNumber.Text = mthis_ar[2];
+                    }
+
+                    btnPrint.Focus();
+                }
+                else
+                {
+                    if (txtQty.Text.All(char.IsNumber))
+                    {
+                        nudQty.Value = Convert.ToDecimal(txtQty.Text);
+                        txtLotNumber.Focus();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Qty should be a number");
+                        txtQty.Text = "";
+                    }
+                }
             }
         }
     }
