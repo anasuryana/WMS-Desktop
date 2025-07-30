@@ -43,6 +43,12 @@ namespace SMTCSHARP
             Dictionary<string, string> datanya = new Dictionary<string, string>();
             datanya.Add("doc", txtsearch.Text);
             string[] strings = await searchLabel(datanya);
+            if (strings[0].Equals("0"))
+            {
+                lblInfo.Text = strings[1];
+                btnSearch.Enabled = true;
+                return;
+            }
 
             JObject jobject = JObject.Parse(strings[2]);
             dGV.Rows.Clear();

@@ -227,6 +227,8 @@ namespace SMTCSHARP
                         txtPartCode.Text = String.Empty;
                         cbOutstandingOnly.Checked = false;
                         txtPallet.Text = String.Empty;
+
+                        dGV2.Rows.Clear();
                     }
                 }
             }
@@ -704,6 +706,7 @@ namespace SMTCSHARP
                             if (dGV.Rows.Count == 0 && txtDONumber.Text.Trim().Length > 0)
                             {
                                 MessageBox.Show("the part code is not in " + txtDONumber.Text);
+                                txtPartCode.Text = String.Empty;
                             }
                         }
                     }
