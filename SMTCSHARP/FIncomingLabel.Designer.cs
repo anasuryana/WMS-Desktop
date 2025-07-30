@@ -185,6 +185,7 @@
             this.dGV.Size = new System.Drawing.Size(625, 332);
             this.dGV.TabIndex = 81;
             this.dGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellClick);
+            this.dGV.SelectionChanged += new System.EventHandler(this.dGV_SelectionChanged);
             // 
             // groupBox2
             // 

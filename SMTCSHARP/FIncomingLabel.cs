@@ -28,8 +28,9 @@ namespace SMTCSHARP
         string sRackCode = String.Empty;
         string sQty = String.Empty;
         string sLotCode = String.Empty;
-        string sItemName = String.Empty;        
+        string sItemName = String.Empty;
         BindingSource bs = new BindingSource();
+        string sSupqty = String.Empty;
 
         public FIncomingLabel()
         {
@@ -330,7 +331,7 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
-                btnPrint.Focus();
+                nudPrintQty.Focus();
             }
         }
 
@@ -348,7 +349,7 @@ namespace SMTCSHARP
             {
                 sUniqueCode = String.Empty;
 
-                DataGridViewRow selectedRow = dGV.Rows[e.RowIndex];
+                DataGridViewRow selectedRow = dGV.CurrentRow;
                 string _itemCode = selectedRow.Cells[2].Value.ToString();
                 string _pallet = selectedRow.Cells[1].Value.ToString();
                 sRackCode = selectedRow.Cells[7].Value.ToString();
@@ -369,7 +370,8 @@ namespace SMTCSHARP
 
                 txtLotNumber.Enabled = true;
                 lblInfo.Text = ".";
-                nudQty.Focus();
+                txtQty.Text = sSupqty.Length == 0 ? "" : sSupqty;
+                txtQty.Focus();
             }
         }
 
@@ -487,6 +489,7 @@ namespace SMTCSHARP
                     txtLotNumber.Text = String.Empty;
                     nudPrintQty.Value = 1;
                     txtQty.Text = String.Empty;
+                    sSupqty = String.Empty;
 
                     reloadAll();
                 }
@@ -654,6 +657,7 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
+                sSupqty = String.Empty;
                 if (txtPartCode.Text.Contains("|"))
                 {
 
@@ -661,21 +665,26 @@ namespace SMTCSHARP
                 else
                 {
                     int[] intsArray = { 16, 17 };
-                    if (intsArray.Contains(txtPartCode.Text.Trim().Length))
+                    bool isContainSpace = false;
+                    if (txtPartCode.Text.Contains(" "))
+                    {
+                        isContainSpace = true;
+                    }
+                    if (intsArray.Contains(txtPartCode.Text.Trim().Length) && !isContainSpace)
                     {
 
                     }
                     else
                     {
-                        bool isContainSpace = false;
-                        if (txtPartCode.Text.Contains(" "))
+                        if (isContainSpace)
                         {
                             string[] an1 = txtPartCode.Text.Split(' ');
                             nudQty.Value = Convert.ToDecimal(an1[1]);
+                            sSupqty = an1[1];
+
                             int strleng = an1[0].Length - 3;
                             txtPartCode.Text = an1[0].Substring(3, strleng);
                             txtQty.Text = an1[1];
-                            isContainSpace = true;
                         }
                         else
                         {
@@ -692,14 +701,8 @@ namespace SMTCSHARP
                         {
                             DataGridViewCellEventArgs args = new DataGridViewCellEventArgs(0, 0);
                             dGV_CellClick(dGV, args);
-                            if (isContainSpace)
-                            {
-                                txtLotNumber.Focus();
-                            }
-                            else
-                            {
-                                txtQty.Focus();
-                            }
+
+                            txtQty.Focus();
                         }
                         else
                         {
@@ -718,24 +721,40 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
-                if (txtQty.Text.ToUpper().Substring(0, txtQty.Text.Length).Equals("3N2"))
+                if (txtQty.Text.Contains("3N2"))
                 {
                     string[] mthis_ar = txtQty.Text.Split(' ');
-
-                    if (mthis_ar[1].All(char.IsNumber))
+                    if (sSupqty.Length > 0)
                     {
-                        txtQty.Text = mthis_ar[1];
-                        nudQty.Value = Convert.ToDecimal(mthis_ar[1]);
-                        txtLotNumber.Text = mthis_ar[2];
-                    }
+                        decimal _txtqty = Convert.ToDecimal(sSupqty);
+                        decimal _confirmedQty = _txtqty > nudQty.Maximum ? nudQty.Maximum : _txtqty;
 
-                    btnPrint.Focus();
+                        nudQty.Value = _confirmedQty;
+                        txtQty.Text = _confirmedQty.ToString("F0");
+                        txtLotNumber.Text = mthis_ar[1];
+                    }
+                    else
+                    {
+                        if (mthis_ar[1].All(char.IsNumber))
+                        {
+                            decimal _txtqty = Convert.ToDecimal(mthis_ar[1]);
+                            decimal _confirmedQty = _txtqty > nudQty.Maximum ? nudQty.Maximum : _txtqty;
+
+                            nudQty.Value = _confirmedQty;
+                            txtQty.Text = _confirmedQty.ToString("F0");
+                            txtLotNumber.Text = mthis_ar[2];
+                        }
+                    }
+                    txtLotNumber.Focus();
                 }
                 else
                 {
                     if (txtQty.Text.All(char.IsNumber))
                     {
-                        nudQty.Value = Convert.ToDecimal(txtQty.Text);
+                        decimal _txtqty = Convert.ToDecimal(txtQty.Text);
+                        decimal _confirmedQty = _txtqty > nudQty.Maximum ? nudQty.Maximum : _txtqty;
+                        nudQty.Value = _confirmedQty;
+                        txtQty.Text = _confirmedQty.ToString("F0");
                         txtLotNumber.Focus();
                     }
                     else
@@ -745,6 +764,10 @@ namespace SMTCSHARP
                     }
                 }
             }
+        }
+
+        private void dGV_SelectionChanged(object sender, EventArgs e)
+        {
         }
     }
 }
