@@ -496,6 +496,7 @@ namespace SMTCSHARP
 
                 btnPrint.Enabled = true;
             }
+            txtPartCode.Focus();
 
         }
 
