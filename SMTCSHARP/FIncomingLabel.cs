@@ -432,6 +432,12 @@ namespace SMTCSHARP
                     return;
                 }
 
+                if (txtLotNumber.Text.Contains(" "))
+                {
+                    MessageBox.Show("lot number should not contain any space char");
+                    return;
+                }
+
                 Dictionary<string, string> datanya = new Dictionary<string, string>();
                 datanya.Add("doc", txtDONumber.Text);
                 datanya.Add("item_code", sItemCode);
@@ -722,6 +728,29 @@ namespace SMTCSHARP
         {
             if (e.KeyChar == (char)13)
             {
+                initialize3n2();
+            }
+        }
+
+        private void dGV_SelectionChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void txtQty_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (e.KeyCode == Keys.Tab)
+            {
+                if (txtQty.Text.Length != 0)
+                {
+                    initialize3n2();
+                }
+            }
+        }
+
+        private void initialize3n2()
+        {
+            if (txtQty.Text.Length > 0)
+            {
                 if (txtQty.Text.Contains("3N2"))
                 {
                     string[] mthis_ar = txtQty.Text.Split(' ');
@@ -767,8 +796,9 @@ namespace SMTCSHARP
             }
         }
 
-        private void dGV_SelectionChanged(object sender, EventArgs e)
+        private void txtQty_Leave(object sender, EventArgs e)
         {
+            initialize3n2();
         }
     }
 }

@@ -218,6 +218,8 @@
             this.txtQty.Size = new System.Drawing.Size(106, 25);
             this.txtQty.TabIndex = 92;
             this.txtQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtQty_KeyPress);
+            this.txtQty.Leave += new System.EventHandler(this.txtQty_Leave);
+            this.txtQty.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.txtQty_PreviewKeyDown);
             // 
             // lblPartCode
             // 
