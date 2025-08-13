@@ -248,7 +248,7 @@
             // 
             this.nudPrintQty.Location = new System.Drawing.Point(241, 111);
             this.nudPrintQty.Maximum = new decimal(new int[] {
-            21,
+            99,
             0,
             0,
             0});
