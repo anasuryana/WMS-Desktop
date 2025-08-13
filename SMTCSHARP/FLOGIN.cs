@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MySqlConnector;
 
 namespace SMTCSHARP
 {
@@ -17,11 +18,6 @@ namespace SMTCSHARP
         public FLOGIN()
         {
             InitializeComponent();
-        }
-
-        private void txtusername_TextChanged(object sender, EventArgs e)
-        {
-
         }
 
         string getHashSHA256(string text)
@@ -35,6 +31,18 @@ namespace SMTCSHARP
                 hashStr += String.Format("{0:x2}", x);
             }
             return hashStr;
+        }
+
+        string decryptString(string base64EncodedData)
+        {
+            var base64EncodedByte = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedByte);
+        }
+
+        string encryptString(string plainText)
+        {
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
         }
 
         private void txtusername_Enter(object sender, EventArgs e)
@@ -58,15 +66,14 @@ namespace SMTCSHARP
         private void btntest_Click(object sender, EventArgs e)
         {
             pictureBox1.InitialImage = null;
-            showImageInfo("Please \n wait...");
+            showImageInfo("Please \n wait...", pictureBox1);
             pictureBox1.BackColor = Color.LightSkyBlue;
             backgroundWorker1.RunWorkerAsync();
-
         }
 
-        private void showImageInfo(string thetext)
+        private void showImageInfo(string thetext, PictureBox pictureBox)
         {
-            Bitmap bm = new Bitmap(pictureBox1.Width, pictureBox1.Height);
+            Bitmap bm = new Bitmap(pictureBox.Width, pictureBox.Height);
             using (Graphics g = Graphics.FromImage(bm))
             {
                 using (SolidBrush myBrush = new SolidBrush(Color.Black))
@@ -75,7 +82,7 @@ namespace SMTCSHARP
                     {
                         g.TextRenderingHint = TextRenderingHint.AntiAlias;
                         g.DrawString(thetext, myFont, myBrush, 0, 0);
-                        pictureBox1.Image = bm;
+                        pictureBox.Image = bm;
                     }
                 }
             }
@@ -91,14 +98,29 @@ namespace SMTCSHARP
             }
             else
             {
+                // retrieve WMS database connection string
+
                 txts_server.Text = ckrk.GetValue("SERVER").ToString();
                 txts_db.Text = ckrk.GetValue("DB").ToString();
                 txts_user.Text = ckrk.GetValue("USER").ToString();
                 txts_pw.Text = ckrk.GetValue("PW").ToString();
+
                 ASettings.setmys_server(txts_server.Text);
                 ASettings.setmys_db(txts_db.Text);
                 ASettings.setmys_user(txts_user.Text);
                 ASettings.setmys_pw(txts_pw.Text);
+
+                // retrieve X Ray database connection string
+
+                txtServerX.Text = ckrk.GetValue("SERVERX").ToString();
+                txtDBX.Text = ckrk.GetValue("DBX").ToString();
+                txtUserX.Text = ckrk.GetValue("USERX").ToString();
+                txtPasswordX.Text = decryptString(ckrk.GetValue("PWX").ToString());
+
+                ASettings.setMysserverX(txtServerX.Text);
+                ASettings.setMysdbX(txtDBX.Text);
+                ASettings.setMysuserX(txtUserX.Text);
+                ASettings.setMyspwX(txtPasswordX.Text);
             }
             ActiveControl = txtusername;
             this.Text = string.Concat(this.Text, " ", ASettings.getVersion());
@@ -112,18 +134,34 @@ namespace SMTCSHARP
             rk.SetValue("USER", txts_user.Text);
             rk.SetValue("PW", txts_pw.Text);
 
+            rk.SetValue("SERVERX", txtServerX.Text);
+            rk.SetValue("DBX", txtDBX.Text);
+            rk.SetValue("USERX", txtUserX.Text);
+            rk.SetValue("PWX", encryptString(txtPasswordX.Text));
+
             ASettings.setmys_server(txts_server.Text);
             ASettings.setmys_db(txts_db.Text);
             ASettings.setmys_user(txts_user.Text);
             ASettings.setmys_pw(txts_pw.Text);
+
+            ASettings.setMysserverX(txtServerX.Text);
+            ASettings.setMysdbX(txtDBX.Text);
+            ASettings.setMysuserX(txtUserX.Text);
+            ASettings.setMyspwX(txtPasswordX.Text);
         }
 
         void setstatesettingRO_ctl(bool pstate)
         {
+            // WMS DB
             txts_server.ReadOnly = pstate;
             txts_db.ReadOnly = pstate;
             txts_user.ReadOnly = pstate;
             txts_pw.ReadOnly = pstate;
+
+            // X Ray DB
+            txtDBX.ReadOnly = pstate;
+            txtUserX.ReadOnly = pstate;
+            txtPasswordX.ReadOnly = pstate;
         }
 
         private void btnsave_Click(object sender, EventArgs e)
@@ -136,9 +174,9 @@ namespace SMTCSHARP
             }
             else
             {
+                setstatesettingRO_ctl(true);
                 btnsave.Text = "Edit";
                 savesetting();
-                setstatesettingRO_ctl(true);
             }
         }
 
@@ -220,16 +258,15 @@ namespace SMTCSHARP
                 {
                     conn.Open();
                     pictureBox1.BackColor = Color.SeaGreen;
-                    showImageInfo("Success");
+                    showImageInfo("Success", pictureBox1);
                     SetText("Success");
                 }
                 catch (SqlException exx)
                 {
-                    showImageInfo("Sorry");
+                    showImageInfo("Sorry", pictureBox1);
                     pictureBox1.BackColor = Color.DarkRed;
                     SetText(exx.Message);
                 }
-
             }
         }
 
@@ -249,7 +286,21 @@ namespace SMTCSHARP
             else
             {
                 toolTip1.SetToolTip(pictureBox1, text);
-                //this.textBox1.Text = text;
+            }
+        }
+        private void SetTextX(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.pictureBox2.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetTextX);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                toolTip1.SetToolTip(pictureBox2, text);
             }
         }
 
@@ -308,7 +359,42 @@ namespace SMTCSHARP
                     MessageBox.Show("Not authorized", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
+        }
 
+        private void btnTestX_Click(object sender, EventArgs e)
+        {
+            pictureBox2.InitialImage = null;
+            showImageInfo("Please \n wait...", pictureBox2);
+            pictureBox2.BackColor = Color.LightSkyBlue;
+            backgroundWorker2.RunWorkerAsync();
+        }
+
+        private void backgroundWorker2_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            string constr = string.Format(ASettings.getconstrX(), txtServerX.Text, txtDBX.Text, txtUserX.Text, txtPasswordX.Text);
+            using (MySqlConnection conn = new MySqlConnection(constr))
+            {
+                try
+                {
+                    conn.Open();
+                    pictureBox2.BackColor = Color.SeaGreen;
+                    showImageInfo("Success", pictureBox2);
+                    SetTextX("Success");
+                }
+                catch (MySqlException exx)
+                {
+                    showImageInfo("Sorry", pictureBox2);
+                    pictureBox2.BackColor = Color.DarkRed;
+                    SetTextX(exx.Message);
+                }
+                finally
+                { conn.Close(); }
+            }
+        }
+
+        private void txtServerX_DoubleClick(object sender, EventArgs e)
+        {
+            txtServerX.ReadOnly = !txtServerX.ReadOnly;
         }
     }
 }

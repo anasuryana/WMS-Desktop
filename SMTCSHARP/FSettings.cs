@@ -3,8 +3,11 @@ using IniParser;
 using IniParser.Model;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.IO.Ports;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace SMTCSHARP
 {
@@ -39,6 +42,14 @@ namespace SMTCSHARP
                 rk.SetValue("PRINTER_TYPE", "");
                 rk.SetValue("PRINTER_ADDRESS", "");
                 rk.SetValue("PRINTER_SPEED", "17");
+                rk.SetValue("PRINTER_DEFAULT_BRAND", "citizen");
+                rk.SetValue("PRINTER_BRAND_TSC_NAME", "");
+                rk.SetValue("PRINTER_BRAND_TSC_SIZE", "2.87,1.97");
+                rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
+                rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
+                rk.SetValue("PRINTER_RIBBON_SIZE", "");
+                rk.SetValue("LCR_PORT", cmbLcrMeterPort.SelectedValue.ToString());
+                rk.SetValue("LCR_BAUD_RATE", "9600");
             }
             else
             {
@@ -52,6 +63,12 @@ namespace SMTCSHARP
                     rk.SetValue("PRINTER_TYPE", "");
                     rk.SetValue("PRINTER_ADDRESS", "");
                     rk.SetValue("PRINTER_SPEED", "17");
+                    rk.SetValue("PRINTER_DEFAULT_BRAND", "citizen");
+                    rk.SetValue("PRINTER_BRAND_TSC_NAME", "");
+                    rk.SetValue("PRINTER_BRAND_TSC_SIZE", "2.87,1.97");
+                    rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
+                    rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
+                    rk.SetValue("PRINTER_RIBBON_SIZE", "");
                 }
                 else
                 {
@@ -64,23 +81,81 @@ namespace SMTCSHARP
                     trackbarspeed.Value = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
                     textspeed.Text = trackbarspeed.Value.ToString();
                 }
+
+
+                // adaptation new key related printer
+                var kchild2 = ckrk.GetValue("PRINTER_DEFAULT_BRAND");
+                if (kchild2 == null)
+                {
+                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
+                    rk.SetValue("PRINTER_DARK", trackbdark.Value);
+                    rk.SetValue("PRINTER_TICK", trackbthick.Value);
+                    rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
+                    rk.SetValue("PRINTER_TYPE", "");
+                    rk.SetValue("PRINTER_ADDRESS", "");
+                    rk.SetValue("PRINTER_SPEED", "17");
+                    rk.SetValue("PRINTER_DEFAULT_BRAND", "CITIZEN");
+                    rk.SetValue("PRINTER_BRAND_TSC_NAME", "");
+                    rk.SetValue("PRINTER_BRAND_TSC_SIZE", "2.87,1.97");
+                    rk.SetValue("PRINTER_BRAND_TSC_SPEED", "2");
+                    rk.SetValue("PRINTER_BRAND_TSC_DENSITY", "8");
+                    rk.SetValue("PRINTER_RIBBON_SIZE", "");
+                }
+                else
+                {
+                    cmbDefaultPrinter.Text = ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString();
+                    cmbPrinterTSC.Text = ckrk.GetValue("PRINTER_BRAND_TSC_NAME").ToString();
+                    txtPrinterTSCSize.Text = ckrk.GetValue("PRINTER_BRAND_TSC_SIZE").ToString();
+                    nudSpeed.Text = ckrk.GetValue("PRINTER_BRAND_TSC_SPEED").ToString();
+                    cmbRibbonSize.Text = ckrk.GetValue("PRINTER_RIBBON_SIZE").ToString();
+                    tbDensity.Value = UInt16.Parse(ckrk.GetValue("PRINTER_BRAND_TSC_DENSITY").ToString().Length == 0 ? "0" : ckrk.GetValue("PRINTER_BRAND_TSC_DENSITY").ToString());
+                    toolTip1.SetToolTip(tbDensity, tbDensity.Value.ToString());
+                }
+
+                getPorts();
+
+                kchild2 = ckrk.GetValue("LCR_PORT");
+                if (kchild2 == null)
+                {
+                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
+                    rk.SetValue("LCR_PORT", "");
+                    rk.SetValue("LCR_BAUD_RATE", "9600");
+                }
+                else
+                {
+                    cmbLcrMeterPort.Text = ckrk.GetValue("LCR_PORT").ToString();
+                }
             }
             ckrk.Close();
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
             txtserver.Text = data["SERVER"]["ADDRESS"];
+
+            listView1.Items.Clear();
+            listView1.Columns.Add("Port", 120, HorizontalAlignment.Left);
+            listView1.Columns.Add("", 210, HorizontalAlignment.Left);
+
         }
 
         private void FSettings_Load(object sender, EventArgs e)
         {
+            // get printer TSC List
+            foreach (string printerName in System.Drawing.Printing.PrinterSettings.InstalledPrinters)
+            {
+                if (printerName.ToUpper().Contains("TSC"))
+                {
+                    cmbPrinterTSC.Items.Add(printerName);
+                }
+            }
+
             ShowConfig();
         }
 
         private void btnSaveconfig_Click(object sender, EventArgs e)
-        {            
+        {
             int type = (int)ifCmbBox.SelectedValue;
-            string straddres = listView1.SelectedItems.Count <= 0 ? "" : listView1.SelectedItems[0].Text;            
-            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);                  
+            string straddres = listView1.SelectedItems.Count <= 0 ? "" : listView1.SelectedItems[0].Text;
+            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
             rk.SetValue("PRINTER_DARK", trackbdark.Value.ToString());
             rk.SetValue("PRINTER_TICK", trackbthick.Value.ToString());
             rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value.ToString());
@@ -88,14 +163,51 @@ namespace SMTCSHARP
             rk.SetValue("PRINTER_ADDRESS", straddres);
             rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());
 
+            rk.SetValue("PRINTER_DEFAULT_BRAND", cmbDefaultPrinter.Text);
+            rk.SetValue("PRINTER_BRAND_TSC_NAME", cmbPrinterTSC.Text);
+            rk.SetValue("PRINTER_BRAND_TSC_SIZE", txtPrinterTSCSize.Text);
+            rk.SetValue("PRINTER_BRAND_TSC_SPEED", nudSpeed.Text);
+            rk.SetValue("PRINTER_BRAND_TSC_DENSITY", tbDensity.Value.ToString());
+            rk.SetValue("PRINTER_RIBBON_SIZE", cmbRibbonSize.Text);
+
+            rk.SetValue("LCR_PORT", cmbLcrMeterPort.Text ?? "");
 
             MessageBox.Show("Saved");
             this.Close();
         }
 
-        private void trackbdark_Scroll(object sender, EventArgs e)
+        private void cmbDefaultPrinter_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cmbDefaultPrinter.Text.ToUpper().Equals("TSC"))
+            {
+                tabControl2.SelectedIndex = 1;
+            }
+            else
+            {
+                tabControl2.SelectedIndex = 0;
+            }
+        }
 
+        private void btnPrintTestpage_Click(object sender, EventArgs e)
+        {
+            if (cmbDefaultPrinter.Text.Length == 0)
+            {
+                MessageBox.Show("Please select default printer");
+                return;
+            }
+            PSIPrinter PSIprinter = new PSIPrinter();
+            Dictionary<string, string> datanya = new Dictionary<string, string>();
+            datanya.Add("rackCode", "rack01");
+            datanya.Add("itemQty", "150");
+            datanya.Add("itemCode", "21334");
+            datanya.Add("itemLot", "lot01");
+            datanya.Add("itemKey", "24041");
+            datanya.Add("itemName", "MCR");
+            datanya.Add("mretrohs", "1");
+            datanya.Add("itemValue", "10");
+
+            PSIprinter.setData(datanya);
+            PSIprinter.print(cmbDefaultPrinter.Text.ToLower());
         }
 
         private void trackbdark_ValueChanged(object sender, EventArgs e)
@@ -116,6 +228,130 @@ namespace SMTCSHARP
         private void trackbarspeed_ValueChanged(object sender, EventArgs e)
         {
             textspeed.Text = trackbarspeed.Value.ToString();
+        }
+
+        private void tbDensity_Scroll(object sender, EventArgs e)
+        {
+            toolTip1.SetToolTip(tbDensity, tbDensity.Value.ToString());
+        }
+
+        private void btnsearchprinter_Click(object sender, EventArgs e)
+        {
+            int searchmode = 0;     // searchmode == 0  : SearchCitizenPrinter
+            //            != 0  : SearchLabelPrinter
+            int res = 0;
+            int type = 0;
+            LabelPrinter printer = new LabelPrinter();
+
+            //Initialize
+            listView1.Items.Clear();
+            type = (int)ifCmbBox.SelectedValue;
+
+            if (searchmode == 0)
+            {
+                // 
+                // example for SearchCitizenPrinter
+                //
+
+                CitizenPrinterInfo[] info;
+
+                //Search available Citizen printers
+                info = printer.SearchCitizenPrinter(type, 10, out res);
+                if (res != LabelConst.CLS_SUCCESS)
+                {
+                    if (res == LabelConst.CLS_E_NO_LIST)
+                    {
+                        MessageBox.Show("Printer Not Found.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("SearchCitizenPrinter Failed");
+                    }
+                    return;
+                }
+
+                //List up all available Citizen printers in the listView
+                for (int i = 0; i < info.Length; i++)
+                {
+                    string[] CLSs = new string[2];
+                    switch (type)
+                    {
+
+                        case LabelConst.CLS_PORT_NET:
+                            CLSs[0] = info[i].ipAddress;
+                            CLSs[1] = info[i].macAddress;
+                            break;
+
+                        case LabelConst.CLS_PORT_USB:
+                            CLSs[0] = info[i].deviceName;
+                            CLSs[1] = info[i].printerModel;
+                            break;
+
+                        case LabelConst.CLS_PORT_COM:
+                            CLSs[0] = info[i].deviceName;
+                            break;
+
+                        case LabelConst.CLS_PORT_LPT:
+                            CLSs[0] = info[i].deviceName;
+                            break;
+
+                        case LabelConst.CLS_PORT_Bluetooth:
+                            CLSs[0] = info[i].bdAddress;
+                            CLSs[1] = info[i].deviceName;
+                            break;
+
+                    }
+                    listView1.Items.Add(new ListViewItem(CLSs));
+                }
+            }
+            else
+            {
+                // 
+                // example for SearchLabelPrinter
+                //
+
+                string[] address;
+
+                //Search available Label printers
+                address = printer.SearchLabelPrinter(type, 10, out res);
+                if (res != LabelConst.CLS_SUCCESS)
+                {
+                    if (res == LabelConst.CLS_E_NO_LIST)
+                    {
+                        MessageBox.Show("Printer Not Found.");
+                    }
+                    else
+                    {
+                        MessageBox.Show("SearchLabelPrinter Failed");
+                    }
+                    return;
+                }
+
+                //List up all available Label printers in the listView
+                for (int i = 0; i < address.Length; i++)
+                {
+                    string CLSs = address[i];
+                    listView1.Items.Add(new ListViewItem(CLSs));
+                }
+            }
+
+            listView1.Focus();
+            listView1.Items[0].Selected = true;
+        }
+
+        private void btnRefreshPort_Click(object sender, EventArgs e)
+        {
+            getPorts();
+        }
+
+        void getPorts()
+        {
+            cmbLcrMeterPort.Items.Clear();
+            string[] ports = SerialPort.GetPortNames();
+            foreach (string port in ports)
+            {
+                cmbLcrMeterPort.Items.Add(port);
+            }
         }
     }
 }

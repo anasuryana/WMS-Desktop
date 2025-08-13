@@ -6,23 +6,30 @@ namespace SMTCSHARP
 {
     static class ASettings
     {
-        const string myversion = "2.0.1";
+        const string myversion = "2.2.6";
         static string myuser;
         static string myuserfname;
         static string myuserid;
         static string mypw;
         static string mygroup;
         static string myconstr = "Server={0};Database={1};User Id={2};Password ={3};";
+        static string myconstrX = "Server={0};Database={1};User={2};Password={3};";
 
-        static string mysserver;
         static string mysserver_api;
+        static string mysserver;
         static string mysuser;
         static string myspw;
         static string mysdb;
+
+        static string mysserverX;
+        static string mysuserX;
+        static string myspwX;
+        static string mysdbX;
+
         static string myBusinessGroup;
         static bool runsess = false;
-        static char myflag; 
-        static char myContext; 
+        static char myflag;
+        static char myContext;
 
         public static string getVersion()
         {
@@ -84,6 +91,11 @@ namespace SMTCSHARP
         public static string getconstr()
         {
             return myconstr;
+        }
+        
+        public static string getconstrX()
+        {
+            return myconstrX;
         }
 
         public static void setmygroup(string pgroup)
@@ -196,7 +208,7 @@ namespace SMTCSHARP
             catch (Exception ex)
             {
                 throw new Exception(ex.Message, ex.InnerException);
-            }            
+            }
         }
 
         public static void setmyContext(char p1)
@@ -207,6 +219,46 @@ namespace SMTCSHARP
         public static char getmyContext()
         {
             return myContext;
+        }
+
+        public static string getMysserverX()
+        {
+            return mysserverX;
+        }
+
+        public static void setMysserverX(string p1)
+        {
+            mysserverX = p1;
+        }
+
+        public static string getMysuserX()
+        {
+            return mysuserX;
+        }
+
+        public static void setMysuserX(string p1)
+        {
+            mysuserX = p1;
+        }
+
+        public static string getMyspwX()
+        {
+            return myspwX;
+        }
+
+        public static void setMyspwX(string p1)
+        {
+            myspwX = p1;
+        }
+
+        public static string getMysdbX()
+        {
+            return mysdbX;
+        }
+
+        public static void setMysdbX(string p1)
+        {
+            mysdbX = p1;
         }
 
     }

@@ -2,6 +2,7 @@
 using IniParser;
 using IniParser.Model;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SMTCSHARP
@@ -23,7 +26,10 @@ namespace SMTCSHARP
         string mretqty = "";
         string mretlot = "";
         string mretitemnm = "";
-        string mretrohs = "";
+
+        string mUniqueCode = "";
+        string mServerApi = "";
+        bool isScanQR = false;
         public FKittingReturn()
         {
             InitializeComponent();
@@ -35,10 +41,8 @@ namespace SMTCSHARP
             dataTable1.Rows.Add("COM", LabelConst.CLS_PORT_COM);
             dataTable1.Rows.Add("LPT", LabelConst.CLS_PORT_LPT);
             dataTable1.Rows.Add("Bluetooth", LabelConst.CLS_PORT_Bluetooth);
-            ifCmbBox.DataSource = dataTable1;
-            ifCmbBox.DisplayMember = "Display";
-            ifCmbBox.ValueMember = "Value";
-            ifCmbBox.SelectedIndex = 0;
+
+            txtRackcd.ReadOnly = true;
         }
 
         void get_countrylist()
@@ -47,7 +51,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = txtserver.Text + "/country";
+                    string url = this.mServerApi + "/country";
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -62,7 +66,7 @@ namespace SMTCSHARP
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message + "[" + txtserver.Text + "]");
+                    MessageBox.Show(ex.Message + "[" + this.mServerApi + "]");
                 }
 
             }
@@ -70,42 +74,9 @@ namespace SMTCSHARP
 
         void ShowConfig()
         {
-            RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-            if (ckrk == null)
-            {
-                RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
-                rk.SetValue("PRINTER_DARK", trackbdark.Value);
-                rk.SetValue("PRINTER_TICK", trackbthick.Value);
-                rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
-                rk.SetValue("PRINTER_TYPE", "");
-                rk.SetValue("PRINTER_ADDRESS", "");
-                rk.SetValue("PRINTER_SPEED", "17");
-            }
-            else
-            {
-                var kchild = ckrk.GetValue("PRINTER_DARK");
-                if (kchild == null)
-                {
-                    RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
-                    rk.SetValue("PRINTER_DARK", trackbdark.Value);
-                    rk.SetValue("PRINTER_TICK", trackbthick.Value);
-                    rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value);
-                    rk.SetValue("PRINTER_TYPE", "");
-                    rk.SetValue("PRINTER_ADDRESS", "");
-                    rk.SetValue("PRINTER_SPEED", "17");
-                }
-                else
-                {
-                    trackbdark.Value = UInt16.Parse(ckrk.GetValue("PRINTER_DARK").ToString());
-                    trackbthick.Value = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
-                    trackbnarrow.Value = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
-                    trackbarspeed.Value = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
-                }
-            }
-            ckrk.Close();
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile("config.ini");
-            txtserver.Text = data["SERVER"]["ADDRESS"];
+            this.mServerApi = data["SERVER"]["ADDRESS"];
         }
 
         void initcolumn()
@@ -149,8 +120,6 @@ namespace SMTCSHARP
             htx.ReadOnly = true;
             dGV.Columns.Add(htx);
 
-
-
             DataGridViewButtonColumn hbt = new DataGridViewButtonColumn();
             hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             hbt.Width = 100;
@@ -162,9 +131,11 @@ namespace SMTCSHARP
             htx.ReadOnly = true;
             dGV.Columns.Add(htx);
 
-            listView1.Items.Clear();
-            listView1.Columns.Add("Port", 120, HorizontalAlignment.Left);
-            listView1.Columns.Add("", 210, HorizontalAlignment.Left);
+            htx = new DataGridViewTextBoxColumn();
+            htx.Name = "Key";
+            htx.Width = 150;
+            htx.ReadOnly = true;
+            dGV.Columns.Add(htx);
 
 
             //DG Joined Label
@@ -186,7 +157,7 @@ namespace SMTCSHARP
             {
                 try
                 {
-                    string url = String.Format(txtserver.Text + "/return/counted?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text).ToString();
+                    string url = String.Format(this.mServerApi + "/return/counted?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text).ToString();
                     var res = wc.DownloadString(url);
                     JObject res_jes = JObject.Parse(res);
                     var rsdata = from p in res_jes["data"] select p;
@@ -233,6 +204,7 @@ namespace SMTCSHARP
                         row.Cells[14].Value = savedorno;
                         row.Cells[15].Value = flghold;
                         row.Cells[16].Value = rw["SPL_RACKNO"];
+                        row.Cells[17].Value = rw["RETSCN_UNIQUEKEY"];
                         rows.Add(row);
                     }
                     dGV.Rows.AddRange(rows.ToArray());
@@ -245,34 +217,6 @@ namespace SMTCSHARP
         }
 
 
-        private void btnsetting_Click(object sender, EventArgs e)
-        {
-            panel2.Show();
-        }
-
-        private void btnSaveconfig_Click(object sender, EventArgs e)
-        {
-            panel2.Visible = false;
-            int type = (int)ifCmbBox.SelectedValue;
-            string straddres = "";
-            if (listView1.SelectedItems.Count <= 0)
-            {
-                straddres = "";
-            }
-            else
-            {
-                straddres = listView1.SelectedItems[0].Text;
-            }
-            RegistryKey rk = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\" + Application.ProductName);
-            rk.SetValue("PRINTER_DARK", trackbdark.Value.ToString());
-            rk.SetValue("PRINTER_TICK", trackbthick.Value.ToString());
-            rk.SetValue("PRINTER_NARRROW", trackbnarrow.Value.ToString());
-            rk.SetValue("PRINTER_TYPE", type.ToString());
-            rk.SetValue("PRINTER_ADDRESS", straddres);
-            rk.SetValue("PRINTER_SPEED", trackbarspeed.Value.ToString());
-            MessageBox.Show("Saved");
-        }
-
 
         private void txtpsn_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -282,7 +226,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(txtserver.Text + "/supply/validate-document?doc=" + txtpsn.Text);
+                        var res = wc.DownloadString(this.mServerApi + "/supply/validate-document?doc=" + txtpsn.Text);
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (!sts.Equals("0"))
@@ -310,73 +254,21 @@ namespace SMTCSHARP
             get_countrylist();
         }
 
-        private void trackbdark_ValueChanged(object sender, EventArgs e)
-        {
-            txtdarkness.Text = trackbdark.Value.ToString();
-        }
-
         void printsmtlabel()
         {
-            LabelPrinter printer = new LabelPrinter();
-            printer.SetMeasurementUnit(LabelConst.CLS_UNIT_MILLI);
-            printer.SetFormatAttribute(1);
-
             RegistryKey ckrk = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\" + Application.ProductName);
-            string myaddr = ckrk.GetValue("PRINTER_ADDRESS").ToString();
-            int mytype = UInt16.Parse(ckrk.GetValue("PRINTER_TYPE").ToString());
-            string myDARk = ckrk.GetValue("PRINTER_DARK").ToString();
-            UInt16 myTHICKNESS = UInt16.Parse(ckrk.GetValue("PRINTER_TICK").ToString());
-            UInt16 myNARROW = UInt16.Parse(ckrk.GetValue("PRINTER_NARRROW").ToString());
-            UInt16 mySPEED = UInt16.Parse(ckrk.GetValue("PRINTER_SPEED").ToString());
 
-            int ret = printer.Connect(mytype, myaddr);
-            if (ret != LabelConst.CLS_SUCCESS)
-            {
-                MessageBox.Show("Connect error: " + ret.ToString(), "Error");
-                //return;
-            }
-            else
-            {
-                //MessageBox.Show("terhubung");
-            }
-            LabelDesign lbldsg = new LabelDesign();
-            CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
-            DateTimeFormatInfo dtfi = culture.DateTimeFormat;
-            dtfi.DateSeparator = "/";
-            int startx = 35;
-            int mhratio = 105; //105, 75
-            int mvratio = 110; //150,75
-
-            lbldsg.DrawTextPCFont(String.Format("RACK : {0}    {1}", mrackcd, Environment.MachineName.ToString()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 410 + 20);
-            lbldsg.DrawTextPCFont(String.Format("QTY : {0}    LOT NO : {1}", mretqty, mretlot), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 385 + 10);
-            lbldsg.DrawTextPCFont(String.Format("(3N1) {0}", mretitemcd), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 360);
-            lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(3N2) {0} {1}", mretqty, mretlot.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 255);
-            lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", mretqty.Replace(",", string.Empty), mretlot.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(1P) {0}", mretitemnm), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
-            lbldsg.DrawBarCode(String.Format("1P{0}", mretitemnm.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
-
-            if (mretrohs.Equals("1"))
-            {
-                lbldsg.DrawTextPCFont("RoHS Compliant", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 45);
-            }
-            lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
-            lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
-            lbldsg.DrawTextPCFont(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss", dtfi), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 20);
-            
-            if (ret == LabelConst.CLS_SUCCESS)
-            {
-                printer.SetPrintDarkness(UInt16.Parse(myDARk));
-                printer.SetPrintSpeed(mySPEED);
-                printer.Print(lbldsg, 1);
-                printer.Disconnect();
-            }
-            else
-            {
-                printer.Preview(lbldsg, LabelConst.CLS_PRT_RES_203, LabelConst.CLS_UNIT_MILLI, 700, 500);
-            }
-            //                        
+            PSIPrinter PSIprinter = new PSIPrinter();
+            Dictionary<string, string> datanya = new Dictionary<string, string>();
+            datanya.Add("rackCode", mrackcd);
+            datanya.Add("itemQty", mretqty);
+            datanya.Add("itemCode", mretitemcd.Trim());
+            datanya.Add("itemLot", mretlot.Trim());
+            datanya.Add("itemKey", mUniqueCode);
+            datanya.Add("itemName", mretitemnm.Trim());
+            datanya.Add("mretrohs", "1");
+            PSIprinter.setData(datanya);
+            PSIprinter.print(ckrk.GetValue("PRINTER_DEFAULT_BRAND").ToString().ToLower());
         }
 
         private void btnreturnprint_Click(object sender, EventArgs e)
@@ -390,9 +282,9 @@ namespace SMTCSHARP
                     mretqty = row.Cells[10].Value.ToString().Trim();
                     mretlot = row.Cells[8].Value.ToString().Trim();
                     mretitemnm = row.Cells[7].Value.ToString().Trim();
-                    mretrohs = row.Cells[11].Value.ToString().Trim();
                     mrackcd = row.Cells[16].Value.ToString().Trim();
                     txtRackcd.Text = row.Cells[16].Value.ToString().Trim();
+                    mUniqueCode = row.Cells[17].Value.ToString().Trim();
                     printsmtlabel();
                 }
             }
@@ -407,7 +299,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}", txtpsn.Text, txtcat.Text));
+                        var res = wc.DownloadString(String.Format(this.mServerApi + "/supply/validate-document?doc={0}&category={1}", txtpsn.Text, txtcat.Text));
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (!sts.Equals("0"))
@@ -436,7 +328,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        var res = wc.DownloadString(String.Format(txtserver.Text + "/supply/validate-document?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text));
+                        var res = wc.DownloadString(String.Format(this.mServerApi + "/supply/validate-document?doc={0}&category={1}&line={2}", txtpsn.Text, txtcat.Text, txtline.Text));
                         JObject res_jes = JObject.Parse(res);
                         string sts = (string)res_jes["status"][0]["cd"];
                         if (sts.Equals("1"))
@@ -466,114 +358,11 @@ namespace SMTCSHARP
             }
         }
 
-        private void btnsearchprinter_Click_1(object sender, EventArgs e)
-        {
-            int searchmode = 0;     // searchmode == 0  : SearchCitizenPrinter
-            //            != 0  : SearchLabelPrinter
-            int res = 0;
-            int type = 0;
-            LabelPrinter printer = new LabelPrinter();
-
-            //Initialize
-            listView1.Items.Clear();
-            type = (int)ifCmbBox.SelectedValue;
-
-            if (searchmode == 0)
-            {
-                // 
-                // example for SearchCitizenPrinter
-                //
-
-                CitizenPrinterInfo[] info;
-
-                //Search available Citizen printers
-                info = printer.SearchCitizenPrinter(type, 10, out res);
-                if (res != LabelConst.CLS_SUCCESS)
-                {
-                    if (res == LabelConst.CLS_E_NO_LIST)
-                    {
-                        MessageBox.Show("Printer Not Found.");
-                    }
-                    else
-                    {
-                        MessageBox.Show("SearchCitizenPrinter Failed");
-                    }
-                    return;
-                }
-
-                //List up all available Citizen printers in the listView
-                for (int i = 0; i < info.Length; i++)
-                {
-                    string[] CLSs = new string[2];
-                    switch (type)
-                    {
-
-                        case LabelConst.CLS_PORT_NET:
-                            CLSs[0] = info[i].ipAddress;
-                            CLSs[1] = info[i].macAddress;
-                            break;
-
-                        case LabelConst.CLS_PORT_USB:
-                            CLSs[0] = info[i].deviceName;
-                            CLSs[1] = info[i].printerModel;
-                            break;
-
-                        case LabelConst.CLS_PORT_COM:
-                            CLSs[0] = info[i].deviceName;
-                            break;
-
-                        case LabelConst.CLS_PORT_LPT:
-                            CLSs[0] = info[i].deviceName;
-                            break;
-
-                        case LabelConst.CLS_PORT_Bluetooth:
-                            CLSs[0] = info[i].bdAddress;
-                            CLSs[1] = info[i].deviceName;
-                            break;
-
-                    }
-                    listView1.Items.Add(new ListViewItem(CLSs));
-                }
-            }
-            else
-            {
-                // 
-                // example for SearchLabelPrinter
-                //
-
-                string[] address;
-
-                //Search available Label printers
-                address = printer.SearchLabelPrinter(type, 10, out res);
-                if (res != LabelConst.CLS_SUCCESS)
-                {
-                    if (res == LabelConst.CLS_E_NO_LIST)
-                    {
-                        MessageBox.Show("Printer Not Found.");
-                    }
-                    else
-                    {
-                        MessageBox.Show("SearchLabelPrinter Failed");
-                    }
-                    return;
-                }
-
-                //List up all available Label printers in the listView
-                for (int i = 0; i < address.Length; i++)
-                {
-                    string CLSs = address[i];
-                    listView1.Items.Add(new ListViewItem(CLSs));
-                }
-            }
-
-            listView1.Focus();
-            listView1.Items[0].Selected = true;
-        }
-
-        private void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
+        private async void txtitemcd_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
             {
+                bool isUniquekeyMode = false;
                 if (txtpsn.Text == "")
                 {
                     MessageBox.Show("Please fill PSN No");
@@ -607,33 +396,125 @@ namespace SMTCSHARP
                     return;
                 }
 
-                if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                if (txtitemcd.Text.Contains("|"))
                 {
-                    MessageBox.Show("Unknown Format C3 Label");
-                    txtitemcd.Text = "";
-                    txtitmname.Text = "";
-                    return;
-                }
+                    isScanQR = true;
 
-                if (txtitemcd.Text.Contains(" "))
-                {
-                    string[] an1 = txtitemcd.Text.Split(' ');
-                    msupqty = an1[1];
-                    int strleng = an1[0].Length - 3;
-                    txtitemcd.Text = an1[0].Substring(3, strleng);
+                    // parse qr code
+                    string[] QRArray = txtitemcd.Text.ToUpper().Split('|');
+
+                    if (QRArray.Length == 3)
+                    {
+                        string[] strings = await validateUniqueKeyVsPSN(QRArray[2]);
+                        if (strings[0].Equals("1"))
+                        {
+                            JObject response = JObject.Parse(strings[2]);
+                            var rsdata = from p in response["data"] select p;
+                            foreach (var r in rsdata)
+                            {
+                                if (txtpsn.Text.Trim().Length == 0)
+                                {
+                                    txtpsn.Text = r["SPLSCN_DOC"].ToString();
+                                    txtcat.Text = r["SPLSCN_CAT"].ToString();
+                                    txtline.Text = r["SPLSCN_LINE"].ToString();
+                                    txtaftqty.Focus();
+                                    isUniquekeyMode = true;
+                                }
+                                else
+                                {
+                                    if (!txtpsn.Text.Trim().ToUpper().Equals(r["SPLSCN_DOC"].ToString().ToUpper()))
+                                    {
+                                        MessageBox.Show(String.Format("{0} belongs to {1}", QRArray[2], r["SPLSCN_DOC"]), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        txtitemcd.Text = "";
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    int strLength3N1 = 0;
+                    switch (QRArray[0].Substring(0, 2).ToString())
+                    {
+                        case "Z3":
+                            strLength3N1 = QRArray[0].Length - 4;
+                            txtitemcd.Text = QRArray[0].Substring(4, strLength3N1);
+                            break;
+                        case "3N":
+                            strLength3N1 = QRArray[0].Length - 3;
+                            txtitemcd.Text = QRArray[0].Substring(3, strLength3N1);
+                            break;
+                        default:
+                            txtitemcd.Text = QRArray[0];
+                            break;
+                    }
+
+                    string[] Array3N2;
+
+                    if (QRArray.Length == 4)
+                    {
+                        // mungkin ini logic jadul terkait label jadul
+                        txtbefqty.Text = QRArray[1];
+                        txtlot.Text = QRArray[2];
+                        txtbefqty.ReadOnly = true;
+                    }
+                    else
+                    {
+                        Array3N2 = QRArray[1].Split(' ');
+                        switch (QRArray[1].Substring(0, 3).ToString())
+                        {
+                            case "3N2":
+                                if (Array3N2[1].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[1];
+                                    txtlot.Text = Array3N2[2];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+
+                            default:
+                                if (Array3N2[0].All(char.IsNumber))
+                                {
+                                    txtbefqty.Text = Array3N2[0];
+                                    txtlot.Text = Array3N2[1];
+                                    txtbefqty.ReadOnly = true;
+                                }
+                                break;
+                        }
+                    }
                 }
                 else
                 {
-                    int strleng = txtitemcd.Text.Length - 3;
-                    txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
-                    msupqty = "";
+                    isScanQR = false;
+                    if (txtitemcd.Text.Substring(0, 3) != "3N1")
+                    {
+                        MessageBox.Show("Unknown Format C3 Label");
+                        txtitemcd.Text = "";
+                        txtitmname.Text = "";
+                        return;
+                    }
+
+                    if (txtitemcd.Text.Contains(" "))
+                    {
+                        string[] an1 = txtitemcd.Text.Split(' ');
+                        msupqty = an1[1];
+                        int strleng = an1[0].Length - 3;
+                        txtitemcd.Text = an1[0].Substring(3, strleng);
+                    }
+                    else
+                    {
+                        int strleng = txtitemcd.Text.Length - 3;
+                        txtitemcd.Text = txtitemcd.Text.Substring(3, strleng);
+                        msupqty = "";
+                    }
                 }
+
 
                 using (WebClient wc = new WebClient())
                 {
                     try
                     {
-                        string url = String.Format(txtserver.Text + "/supply/validate-item?doc={0}&category={1}&line={2}&item={3}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text);
+                        string url = String.Format(this.mServerApi + "/supply/validate-item?doc={0}&category={1}&line={2}&item={3}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text);
                         var res = wc.DownloadString(url);
 
                         JObject res_jes = JObject.Parse(res);
@@ -647,7 +528,14 @@ namespace SMTCSHARP
                         }
                         else
                         {
-                            txtbefqty.Focus();
+                            if (isScanQR)
+                            {
+                                txtaftqty.Focus();
+                            }
+                            else
+                            {
+                                txtbefqty.Focus();
+                            }
                             txtbefqty.ReadOnly = false;
                             txtitmname.Text = (string)res_jes["data"][0]["ref"];
                             txtRackcd.Text = (string)res_jes["data"][0]["rackno"];
@@ -702,7 +590,7 @@ namespace SMTCSHARP
 
                     using (WebClient wc = new WebClient())
                     {
-                        string url = String.Format(txtserver.Text + "/supply/validate-supplied-item");
+                        string url = String.Format(this.mServerApi + "/supply/validate-supplied-item");
                         string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&lotNumber={4}&qty={5}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, txtlot.Text, txtbefqty.Text);
                         myparam = myparam.Replace("+", "%2B");
                         try
@@ -841,14 +729,26 @@ namespace SMTCSHARP
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = txtserver.Text + "/return";
-                    string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&roHs={4}&qtyBefore={5}&qtyAfter={6}&lotNumber={7}&countryId={8}&userId={9}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtbefqty.Text, txtaftqty.Text, txtlot.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
+                    string url = this.mServerApi + "/return";
+                    string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&roHs={4}&qtyBefore={5}&qtyAfter={6}&lotNumber={7}&countryId={8}&userId={9}&machineName={10}",
+                        txtpsn.Text,
+                        txtcat.Text,
+                        txtline.Text,
+                        txtitemcd.Text,
+                        mrohs,
+                        txtbefqty.Text,
+                        txtaftqty.Text,
+                        txtlot.Text,
+                        comboBox1.SelectedValue.ToString(),
+                        ASettings.getmyuserid(),
+                        Environment.MachineName.ToString());
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
-                    Console.WriteLine(res);
                     JObject res_jes = JObject.Parse(res);
+
                     string sts = (string)res_jes["status"][0]["cd"];
                     string msg = (string)res_jes["status"][0]["msg"];
+
                     if (sts.Equals("02"))
                     {
                         DialogResult dr = MessageBox.Show(msg + ". Proceed anyway ?", "Decide", MessageBoxButtons.YesNo);
@@ -867,6 +767,7 @@ namespace SMTCSHARP
                             mretlot = txtlot.Text.Trim().Length > 12 && txtpsn.Text.ToUpper().Contains("IEI") ? txtlot.Text.Trim().Substring(0, 12) : txtlot.Text.Trim();
                             mretitemnm = txtitmname.Text.Trim();
                             mrackcd = txtRackcd.Text.Trim();
+                            mUniqueCode = (string)res_jes["status"][0]["RETSCN_UNIQUEKEY"];
                             printsmtlabel();
                         }
                         ret_e_getlist();
@@ -937,8 +838,18 @@ namespace SMTCSHARP
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = txtserver.Text + "/return/alternative-saving";
-                    string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&roHs={4}&qtyAfter={5}&countryId={6}&userId={7}", txtpsn.Text, txtcat.Text, txtline.Text, txtitemcd.Text, mrohs, txtaftqty.Text, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
+                    string url = this.mServerApi + "/return/alternative-saving";
+                    string myparam = String.Format("doc={0}&category={1}&line={2}&item={3}&roHs={4}&qtyAfter={5}&countryId={6}&userId={7}&machineName={8}",
+                        txtpsn.Text,
+                        txtcat.Text,
+                        txtline.Text,
+                        txtitemcd.Text,
+                        mrohs,
+                        txtaftqty.Text,
+                        comboBox1.SelectedValue.ToString(),
+                        ASettings.getmyuserid(),
+                        Environment.MachineName.ToString()
+                        );
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
 
@@ -956,6 +867,7 @@ namespace SMTCSHARP
                         mretlot = (string)res_jes["status"][0]["xlot"];
                         mretitemnm = (string)res_jes["status"][0]["xitemnm"];
                         mrackcd = txtRackcd.Text;
+                        mUniqueCode = (string)res_jes["status"][0]["RETSCN_UNIQUEKEY"];
                         printsmtlabel();
                     }
 
@@ -1011,27 +923,23 @@ namespace SMTCSHARP
                             {
                                 using (HttpClient client = new HttpClient())
                                 {
-                                    client.BaseAddress = new Uri(txtserver.Text + '/');
-                                    var response = client.DeleteAsync("return/items/" + idscan).Result;
-                                    if (response.IsSuccessStatusCode)
+                                    client.BaseAddress = new Uri(this.mServerApi + '/');
+                                    var request = new HttpRequestMessage(HttpMethod.Delete, "return/items/" + idscan);
+                                    request.Content = new StringContent(JsonConvert.SerializeObject(new { userId = ASettings.getmyuserid() }), Encoding.UTF8, "application/json");
+                                    using (HttpResponseMessage response2 = client.SendAsync(request).GetAwaiter().GetResult())
                                     {
-                                        string product = response.Content.ReadAsStringAsync().Result;
-                                        JObject responseJobject = JObject.Parse(product);
-                                        string sts = (string)responseJobject["status"][0]["cd"];
-                                        string msg = (string)responseJobject["status"][0]["msg"];
-                                        if (sts.Equals("1"))
+                                        using (HttpContent content = response2.Content)
                                         {
-                                            ret_e_getlist();
+                                            var json = content.ReadAsStringAsync().GetAwaiter().GetResult();
+                                            JObject responseJobject = JObject.Parse(json);
+                                            string sts = (string)responseJobject["status"][0]["cd"];
+                                            string msg = (string)responseJobject["status"][0]["msg"];
+                                            if (sts.Equals("1"))
+                                            {
+                                                ret_e_getlist();
+                                            }
                                             MessageBox.Show(msg);
                                         }
-                                        else
-                                        {
-                                            MessageBox.Show(msg);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show(response.ReasonPhrase);
                                     }
                                 }
                             }
@@ -1066,7 +974,7 @@ namespace SMTCSHARP
                 {
                     try
                     {
-                        client.BaseAddress = new Uri(txtserver.Text + '/');
+                        client.BaseAddress = new Uri(this.mServerApi + '/');
                         var stringContent = new FormUrlEncodedContent(new[]
                         {
                            new KeyValuePair<string, string>("status", state)
@@ -1081,12 +989,8 @@ namespace SMTCSHARP
                             if (sts.Equals("1"))
                             {
                                 ret_e_getlist();
-                                MessageBox.Show(msg);
                             }
-                            else
-                            {
-                                MessageBox.Show(msg);
-                            }
+                            MessageBox.Show(msg);
                         }
                         else
                         {
@@ -1104,26 +1008,6 @@ namespace SMTCSHARP
             }
         }
 
-        private void btnclose_Click(object sender, EventArgs e)
-        {
-            panel2.Visible = false;
-        }
-
-        private void trackbthick_ValueChanged(object sender, EventArgs e)
-        {
-            txthick.Text = trackbthick.Value.ToString();
-        }
-
-        private void trackbnarrow_ValueChanged(object sender, EventArgs e)
-        {
-            textnarrow.Text = trackbnarrow.Value.ToString();
-        }
-
-        private void trackbarspeed_ValueChanged(object sender, EventArgs e)
-        {
-            textspeed.Text = trackbarspeed.Value.ToString();
-        }
-
         private void btnShwJoinLabelPnl_Click(object sender, EventArgs e)
         {
             lbljoinPnl.Show();
@@ -1133,20 +1017,6 @@ namespace SMTCSHARP
         private void btnCloseJoinPnl_Click(object sender, EventArgs e)
         {
             lbljoinPnl.Hide();
-        }
-
-        private void dGV_lbljoin_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-        private void panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void dGV_lbljoin_KeyDown(object sender, KeyEventArgs e)
-        {
         }
 
         private void txtcombinedqty_KeyPress(object sender, KeyPressEventArgs e)
@@ -1242,24 +1112,38 @@ namespace SMTCSHARP
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    string url = txtserver.Text + "/return/combine";
-                    string myparam = String.Format("doc={0}&category={1}&line={2}&{3}roHs={4}&{5}qtyAfter={6}&{7}countryId={8}&userId={9}", txtpsn.Text,
-                        txtcat.Text, txtline.Text, itmcode, mrohs, qtybefore, txtcombinedqty.Text, lotno, comboBox1.SelectedValue.ToString(), ASettings.getmyuserid());
+                    string url = this.mServerApi + "/return/combine";
+                    string myparam = String.Format("doc={0}&category={1}&line={2}&{3}roHs={4}&{5}qtyAfter={6}&{7}countryId={8}&userId={9}&machineName={10}",
+                        txtpsn.Text,
+                        txtcat.Text,
+                        txtline.Text,
+                        itmcode,
+                        mrohs,
+                        qtybefore,
+                        txtcombinedqty.Text,
+                        lotno,
+                        comboBox1.SelectedValue.ToString(),
+                        ASettings.getmyuserid(),
+                        Environment.MachineName.ToString());
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
+
                     JObject res_jes = JObject.Parse(res);
                     string sts = (string)res_jes["status"][0]["cd"];
                     string msg = (string)res_jes["status"][0]["msg"];
-                    string lotnoashome = (string)res_jes["status"][0]["lotno"];
+
                     MessageBox.Show(msg);
+
                     if (sts.Equals("11"))
                     {
+                        string lotnoashome = (string)res_jes["status"][0]["lotno"];
+
                         mretitemcd = itmcode_print;
                         mretqty = txtcombinedqty.Text;
                         mretlot = lotnoashome;
                         mretitemnm = itmname_print;
-                        mretrohs = mrohs;
                         mrackcd = txtRackcd.Text;
+                        mUniqueCode = (string)res_jes["status"][0]["RETSCN_UNIQUEKEY"];
                         printsmtlabel();
                     }
                     ret_e_getlist();
@@ -1275,6 +1159,29 @@ namespace SMTCSHARP
                     txtbefqty.ReadOnly = false;
                 }
             }
+        }
+
+        private async Task<string[]> validateUniqueKeyVsPSN(string key)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+            using (HttpClient hc = new HttpClient())
+            {
+                var response = await hc.GetAsync(String.Format(this.mServerApi + "/supply/validate-label?uniquekey={0}", key));
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    message = "the response is not success yet";
+                }
+
+            }
+            return new string[] { returnCode, message, data };
         }
     }
 }

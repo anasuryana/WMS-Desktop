@@ -14,6 +14,7 @@ using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 using System.IO;
 using System.Net.Http;
+using System.Drawing;
 
 namespace SMTCSHARP
 {
@@ -26,6 +27,7 @@ namespace SMTCSHARP
         string mretlot = "";
         string mretitemnm = "";
         string mserverAddress = "";
+        string mUniqueCode = "";
 
         public FReturnWithoutPSN()
         {
@@ -73,6 +75,13 @@ namespace SMTCSHARP
             hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             hbt.Width = 100;
             dGV.Columns.Add(hbt);
+
+            DataGridViewTextBoxColumn htx = new DataGridViewTextBoxColumn();
+            htx.Name = "Key";
+            htx.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            htx.Width = 50;
+            htx.ReadOnly = true;
+            dGV.Columns.Add(htx);
         }
 
         private void FReturnWithoutPSN_Load(object sender, EventArgs e)
@@ -170,7 +179,6 @@ namespace SMTCSHARP
                     {
                         MessageBox.Show(ex.Message);
                     }
-
                 }
             }
         }
@@ -182,15 +190,20 @@ namespace SMTCSHARP
 
         private void btnsave_Click(object sender, EventArgs e)
         {
-            string loca = "";
-            loca = cmbLoc.SelectedValue.ToString();
+            string loca = cmbLoc.SelectedValue.ToString();
             using (WebClient wc = new WebClient())
             {
                 try
                 {
                     wc.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
                     string url = mserverAddress + "/return/without-psn";
-                    string myparam = String.Format("item={0}&qtyBefore={1}&qtyAfter={2}&lotNumber={3}&userId={4}", txt3N1.Text, txt3N2.Text, txtActualQty.Text, txtLotNum.Text, ASettings.getmyuserid());
+                    string myparam = String.Format("item={0}&qtyBefore={1}&qtyAfter={2}&lotNumber={3}&userId={4}&machineName={5}",
+                        txt3N1.Text,
+                        txt3N2.Text,
+                        txtActualQty.Text,
+                        txtLotNum.Text,
+                        ASettings.getmyuserid(),
+                        Environment.MachineName.ToString());
                     myparam = myparam.Replace("+", "%2B");
                     string res = wc.UploadString(url, myparam);
                     JObject res_jes = JObject.Parse(res);
@@ -203,6 +216,7 @@ namespace SMTCSHARP
                         mretqty = txtActualQty.Text.Trim();
                         mretlot = txtLotNum.Text.Trim().Length > 12 ? txtLotNum.Text.Trim().Substring(0, 12) : txtLotNum.Text.Trim();
                         mretitemnm = txtitemname.Text.Trim();
+                        mUniqueCode = (string)res_jes["status"][0]["SER_ID"];
                         printsmtlabel();
                     }
                     ret_e_getlist();
@@ -254,6 +268,7 @@ namespace SMTCSHARP
                         row.Cells[9].Value = rw["RETRM_CREATEDAT"];
                         row.Cells[10].Value = false;
                         row.Cells[11].Value = "Cancel";
+                        row.Cells[12].Value = rw["RETRM_UNIQUEKEY"];
                         rows.Add(row);
                     }
                     dGV.Rows.AddRange(rows.ToArray());
@@ -287,10 +302,6 @@ namespace SMTCSHARP
                 MessageBox.Show("Connect error: " + ret.ToString(), "Error");
                 //return;
             }
-            else
-            {
-                //MessageBox.Show("terhubung");
-            }
             LabelDesign lbldsg = new LabelDesign();
             CultureInfo culture = CultureInfo.CreateSpecificCulture("en-US");
             DateTimeFormatInfo dtfi = culture.DateTimeFormat;
@@ -305,10 +316,10 @@ namespace SMTCSHARP
             lbldsg.DrawBarCode(String.Format("3N1{0}", mretitemcd.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 300, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("(3N2) {0} {1}", mretqty, mretlot.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 255);
             lbldsg.DrawBarCode(String.Format("3N2 {0} {1} ", mretqty.Replace(",", string.Empty), mretlot.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 200, LabelConst.CLS_BCS_TEXT_HIDE);
-            lbldsg.DrawTextPCFont(String.Format("(1P) {0}", mretitemnm), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
-            lbldsg.DrawBarCode(String.Format("1P{0}", mretitemnm.Trim()), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
+            lbldsg.DrawTextPCFont(String.Format("(UC) {0}", mUniqueCode), "Times New Roman", LabelConst.CLS_RT_NORMAL, mhratio, mvratio, 7, (LabelConst.CLS_FNT_DEFAULT), startx, 155 + 5);
+            lbldsg.DrawBarCode(String.Format(mUniqueCode), LabelConst.CLS_BCS_CODE128, LabelConst.CLS_RT_NORMAL, myTHICKNESS, myNARROW, 55, startx, 100 + 5, LabelConst.CLS_BCS_TEXT_HIDE);
             lbldsg.DrawTextPCFont(String.Format("PART NO : {0}", mretitemnm.Trim()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 70);
-
+            lbldsg.DrawQRCode(String.Format("Z3N1{0}|3N2 {1} {2}|{3}", mretitemcd, mretqty.Replace(",", string.Empty), mretlot.Trim(), mUniqueCode), LabelConst.CLS_ENC_CDPG_IBM850, LabelConst.CLS_RT_NORMAL, 2, LabelConst.CLS_QRCODE_EC_LEVEL_H, startx + 520, 29);
 
             lbldsg.DrawTextPCFont("C/O Made in SMT", "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), 310, 45);
             lbldsg.DrawTextPCFont(String.Format("{0} : {1}", ASettings.getmyuserid(), ASettings.getmyuserfname()), "Times New Roman", LabelConst.CLS_RT_NORMAL, (mhratio - 5), (mvratio - 5), 7, (LabelConst.CLS_FNT_DEFAULT), startx, 20);
@@ -326,7 +337,6 @@ namespace SMTCSHARP
             {
                 printer.Preview(lbldsg, LabelConst.CLS_PRT_RES_203, LabelConst.CLS_UNIT_MILLI, 700, 500);
             }
-            //                        
         }
 
 
@@ -404,6 +414,7 @@ namespace SMTCSHARP
                     mretlot = row.Cells[5].Value.ToString().Trim();
                     mretitemnm = row.Cells[4].Value.ToString().Trim();
                     mrackcd = row.Cells[8].Value.ToString().Trim();
+                    mUniqueCode = row.Cells[12].Value.ToString().Trim();
                     printsmtlabel();
                 }
             }
@@ -465,45 +476,7 @@ namespace SMTCSHARP
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            string txtdt1 = dt1.Value.ToString("yyyy-MM-dd");
-            string txtdt2 = dt2.Value.ToString("yyyy-MM-dd");
-            string txtitemcd = txtSearchItemcd.Text;
-            using (WebClient wc = new WebClient())
-            {
-                string url = String.Format(mserverAddress + "/report/return-without-psn?dateFrom={0}&dateTo={1}&item={2}&businessGroup={3}", txtdt1, txtdt2, txtitemcd, ASettings.getmyBusinessGroup()).ToString();
-                try
-                {
-                    var res = wc.DownloadString(url);
-
-                    JObject res_jes = JObject.Parse(res);
-                    var rsdata = from p in res_jes["data"] select p;
-                    dGV.Rows.Clear();
-                    List<DataGridViewRow> rows = new List<DataGridViewRow>();
-                    foreach (var rw in rsdata)
-                    {
-                        DataGridViewRow row = new DataGridViewRow();
-                        row.CreateCells(dGV);
-                        row.Cells[0].Value = rw["RETRM_DOC"];
-                        row.Cells[1].Value = rw["RETRM_LINE"];
-                        row.Cells[2].Value = rw["RETRM_ITMCD"];
-                        row.Cells[3].Value = rw["ITMD1"];
-                        row.Cells[4].Value = rw["SPTNO"];
-                        row.Cells[5].Value = rw["RETRM_LOTNUM"];
-                        row.Cells[6].Value = Convert.ToDouble(rw["RETRM_OLDQTY"]).ToString("#,#");
-                        row.Cells[7].Value = Convert.ToDouble(rw["RETRM_NEWQTY"]).ToString("#,#");
-                        row.Cells[8].Value = rw["ITMLOC_LOC"];
-                        row.Cells[9].Value = rw["RETRM_CREATEDAT"];
-                        row.Cells[10].Value = false;
-                        row.Cells[11].Value = "Cancel";
-                        rows.Add(row);
-                    }
-                    dGV.Rows.AddRange(rows.ToArray());
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
+            ret_e_getlist();
         }
 
         private void btnexport_Click(object sender, EventArgs e)

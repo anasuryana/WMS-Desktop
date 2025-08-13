@@ -32,6 +32,9 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.businessGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultPrinterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripStatusLabel2 = new System.Windows.Forms.ToolStripStatusLabel();
@@ -43,7 +46,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tvmenu = new System.Windows.Forms.TreeView();
             this.panlesep = new System.Windows.Forms.Panel();
-            this.businessGroupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -51,11 +53,14 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.helpToolStripMenuItem,
-            this.businessGroupToolStripMenuItem});
+            this.businessGroupToolStripMenuItem,
+            this.toolsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 1, 0, 1);
             this.menuStrip1.Size = new System.Drawing.Size(813, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
@@ -65,7 +70,7 @@
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 22);
             this.helpToolStripMenuItem.Text = "Help";
             // 
             // aboutToolStripMenuItem
@@ -75,9 +80,32 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // businessGroupToolStripMenuItem
+            // 
+            this.businessGroupToolStripMenuItem.Name = "businessGroupToolStripMenuItem";
+            this.businessGroupToolStripMenuItem.Size = new System.Drawing.Size(100, 22);
+            this.businessGroupToolStripMenuItem.Text = "Business Group";
+            this.businessGroupToolStripMenuItem.Click += new System.EventHandler(this.businessGroupToolStripMenuItem_Click);
+            // 
+            // toolsToolStripMenuItem
+            // 
+            this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultPrinterToolStripMenuItem});
+            this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(46, 22);
+            this.toolsToolStripMenuItem.Text = "Tools";
+            // 
+            // defaultPrinterToolStripMenuItem
+            // 
+            this.defaultPrinterToolStripMenuItem.Name = "defaultPrinterToolStripMenuItem";
+            this.defaultPrinterToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.defaultPrinterToolStripMenuItem.Text = "Settings";
+            this.defaultPrinterToolStripMenuItem.Click += new System.EventHandler(this.defaultPrinterToolStripMenuItem_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.BackColor = System.Drawing.Color.LightSkyBlue;
+            this.statusStrip1.ImageScalingSize = new System.Drawing.Size(24, 24);
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripStatusLabel1,
             this.toolStripStatusLabel2,
@@ -131,7 +159,7 @@
             this.toolStripStatusLabel3.Name = "toolStripStatusLabel3";
             this.toolStripStatusLabel3.Size = new System.Drawing.Size(676, 19);
             this.toolStripStatusLabel3.Spring = true;
-            this.toolStripStatusLabel3.Text = "WMS";            
+            this.toolStripStatusLabel3.Text = "WMS";
             // 
             // naTabForm
             // 
@@ -163,7 +191,6 @@
             this.tvmenu.Size = new System.Drawing.Size(194, 329);
             this.tvmenu.TabIndex = 0;
             this.tvmenu.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tvmenu_NodeMouseDoubleClick);
-            this.tvmenu.DoubleClick += new System.EventHandler(this.tvmenu_DoubleClick);
             // 
             // panlesep
             // 
@@ -176,13 +203,6 @@
             this.panlesep.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseDown);
             this.panlesep.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseMove);
             this.panlesep.MouseUp += new System.Windows.Forms.MouseEventHandler(this.panlesep_MouseUp);
-            // 
-            // businessGroupToolStripMenuItem
-            // 
-            this.businessGroupToolStripMenuItem.Name = "businessGroupToolStripMenuItem";
-            this.businessGroupToolStripMenuItem.Size = new System.Drawing.Size(100, 20);
-            this.businessGroupToolStripMenuItem.Text = "Business Group";
-            this.businessGroupToolStripMenuItem.Click += new System.EventHandler(this.businessGroupToolStripMenuItem_Click);
             // 
             // FRM_MAIN
             // 
@@ -232,5 +252,7 @@
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel4;
         private System.Windows.Forms.ToolStripStatusLabel lbluserid;
         private System.Windows.Forms.ToolStripMenuItem businessGroupToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultPrinterToolStripMenuItem;
     }
 }

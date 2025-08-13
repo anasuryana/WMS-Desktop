@@ -396,3 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/SMTCSHARP/bin/Debug/app.publish/SMTCSHARP.exe
+/SMTCSHARP/obj/Debug/SMTCSHARP.exe
+/SMTCSHARP/obj/Debug/SMTCSHARP.pdb
+/SMTCSHARP/bin/Debug/SMTCSHARP.pdb
+/SMTCSHARP/bin/Debug/SMTCSHARP.application
