@@ -332,6 +332,7 @@ namespace SMTCSHARP
             if (e.KeyChar == (char)13)
             {
                 nudPrintQty.Focus();
+                nudPrintQty.Select(0, nudPrintQty.Text.Length);
             }
         }
 
