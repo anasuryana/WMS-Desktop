@@ -481,7 +481,7 @@ namespace SMTCSHARP
                         dataToPrint.Add("rackCode", r["LOC"].ToString());
                         dataToPrint.Add("itemQty", r["quantity"].ToString());
                         dataToPrint.Add("itemCode", sItemCode);
-                        dataToPrint.Add("itemLot", txtLotNumber.Text);
+                        dataToPrint.Add("itemLot", txtLotNumber.Text.Trim());
                         dataToPrint.Add("itemKey", r["code"].ToString());
                         dataToPrint.Add("itemName", r["SPTNO"].ToString());
                         dataToPrint.Add("nik", ASettings.getmyuserid());
