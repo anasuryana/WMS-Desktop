@@ -42,6 +42,7 @@ namespace SMTCSHARP
             lblInfo.Text = "Please wait";
             Dictionary<string, string> datanya = new Dictionary<string, string>();
             datanya.Add("doc", txtsearch.Text);
+            datanya.Add("user_id", ASettings.getmyuserid());
             string[] strings = await searchLabel(datanya);
             if (strings[0].Equals("0"))
             {
