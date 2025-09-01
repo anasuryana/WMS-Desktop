@@ -98,6 +98,25 @@ namespace SMTCSHARP
             hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
             hbt.Width = 100;
             dGV2.Columns.Add(hbt);
+
+
+            dgvwo.ColumnCount = 5;
+            dgvwo.RowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
+            dgvwo.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
+            dgvwo.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dgvwo.Columns[0].Name = "Unique Code";
+            dgvwo.Columns[0].Width = 150;
+            dgvwo.Columns[1].Name = "Part Code";
+            dgvwo.Columns[1].Width = 170;
+            dgvwo.Columns[2].Name = "Lot Number";
+            dgvwo.Columns[2].Width = 170;
+            dgvwo.Columns[3].Name = "Part Qty";
+            dgvwo.Columns[3].Width = 105;
+            dgvwo.Columns[3].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            dgvwo.Columns[3].DefaultCellStyle.Format = "N0";
+            dgvwo.Columns[4].Name = "DO Number";
+            dgvwo.Columns[4].Width = 170;
+
         }
 
         private async Task<string[]> searchLabel(Dictionary<string, string> dataInput)
@@ -145,6 +164,36 @@ namespace SMTCSHARP
                 bytes = Encoding.UTF8.GetBytes(dataInput["item"]);
                 string base64Item = Convert.ToBase64String(bytes);
                 string theUrl = String.Format(serverURLEnpoint + "/receive/document/{0}/{1}", base64, base64Item);
+
+                var response = await hc.GetAsync(theUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    returnCode = "0";
+                    message = "the response is not success yet";
+                }
+            }
+
+            return new string[] { returnCode, message, data };
+        }
+
+        private async Task<string[]> accessApiItemInDocumentEmergency(Dictionary<string, string> dataInput)
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+
+            using (HttpClient hc = new HttpClient())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(dataInput["doc"]);
+                string base64 = Convert.ToBase64String(bytes);
+
+                string theUrl = String.Format(serverURLEnpoint + "/receive/document-emergency/{0}", base64);
 
                 var response = await hc.GetAsync(theUrl);
                 if (response.IsSuccessStatusCode)
@@ -314,6 +363,34 @@ namespace SMTCSHARP
                     nudQty.Maximum = Convert.ToDecimal(r["total_bal_qty"]);
                 }
             }
+        }
+
+        private async void loadDetailPerDataEmergency(Dictionary<string, string> dataInput)
+        {
+            dgvwo.Rows.Clear();
+            string[] strings = await accessApiItemInDocumentEmergency(dataInput);
+            if (strings[0].Equals("0"))
+            {
+                MessageBox.Show(strings[1]);
+                return;
+            }
+            JObject jobject = JObject.Parse(strings[2]);
+
+            var RSData = from r in jobject["data"] select r;
+            List<DataGridViewRow> rows = new List<DataGridViewRow>();
+            foreach (var r in RSData)
+            {
+                DataGridViewRow row = new DataGridViewRow();
+                row.CreateCells(dgvwo);
+                row.Cells[0].Value = r["code"];
+                row.Cells[1].Value = r["item_code"];
+                row.Cells[2].Value = r["lot_code"];
+                row.Cells[3].Value = Convert.ToDecimal(r["quantity"]);
+                row.Cells[4].Value = r["doc_code"];
+                rows.Add(row);
+            }
+            dgvwo.Rows.AddRange(rows.ToArray());
+            dgvwo.ClearSelection();
         }
 
         private void FIncomingLabel_Load(object sender, EventArgs e)
@@ -533,7 +610,7 @@ namespace SMTCSHARP
             return new string[] { returnCode, message, data };
         }
 
-        private async Task<string[]> accessApiGetC3(Dictionary<string, string> dataInput)
+        private async Task<string[]> accessApiRegisterC3WithoutReference(Dictionary<string, string> dataInput)
         {
             string message = "";
             string data = "";
@@ -541,7 +618,7 @@ namespace SMTCSHARP
             using (HttpClient hc = new HttpClient())
             {
                 var valuesRequest = new FormUrlEncodedContent(dataInput);
-                var response = await hc.PostAsync(String.Format(serverURLEnpoint + "/label/c3-reprint"), valuesRequest);
+                var response = await hc.PostAsync(String.Format(serverURLEnpoint + "/label/c3-emergency"), valuesRequest);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
@@ -551,7 +628,16 @@ namespace SMTCSHARP
                 else
                 {
                     returnCode = "0";
-                    message = "the response is not success yet";
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (content.Contains("Item is not found"))
+                    {
+                        message = "Item is not found";
+                    }
+                    else
+                    {
+                        message = "the response is not success yet";
+                    }
+
                 }
 
             }
@@ -800,6 +886,214 @@ namespace SMTCSHARP
         private void txtQty_Leave(object sender, EventArgs e)
         {
             initialize3n2();
+        }
+
+        private void txtwo_donumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtwo_donumber.Text.Trim().Length > 3)
+                {
+                    txtwo_partcode.Focus();
+                }
+            }
+        }
+
+        private void txtwo_partcode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtwo_partcode.Text.Trim().Length <= 3)
+                {
+                    MessageBox.Show("Part code is not valid");
+                    return;
+                }
+
+                bool isContainSpace = false;
+                if (txtwo_partcode.Text.Contains(" "))
+                {
+                    isContainSpace = true;
+                }
+
+                if (isContainSpace)
+                {
+                    string[] an1 = txtwo_partcode.Text.Split(' ');
+                    txtwo_qty.Text = an1[1];
+                    sSupqty = an1[1];
+
+                    int strleng = an1[0].Length - 3;
+                    txtwo_partcode.Text = an1[0].Substring(3, strleng);
+
+                    txtwo_lotnumber.Focus();
+                }
+                else
+                {
+                    if (txtwo_partcode.Text.Contains("3N1"))
+                    {
+                        int strleng = txtwo_partcode.Text.Length - 3;
+                        txtwo_partcode.Text = txtwo_partcode.Text.Substring(3, strleng);
+                        txtwo_qty.Text = "";
+                    }
+                    else
+                    {
+
+                    }
+                    txtwo_qty.Focus();
+                }
+            }
+        }
+
+        private async void btnwo_print_Click(object sender, EventArgs e)
+        {
+            if (txtwo_lotnumber.Text.Length == 0)
+            {
+                MessageBox.Show("Lot number should not be empty");
+                return;
+            }
+
+            if (txtwo_donumber.Text.Length == 0)
+            {
+                MessageBox.Show("DO Number should not be empty");
+                return;
+            }
+
+            if (!txtwo_qty.Text.All(char.IsNumber))
+            {
+                MessageBox.Show("Qty to print should not be zero");
+                return;
+            }
+
+            if (txtLotNumber.Text.Contains(" "))
+            {
+                MessageBox.Show("lot number should not contain any space char");
+                return;
+            }
+
+            Dictionary<string, string> datanya = new Dictionary<string, string>();
+            datanya.Add("doc", txtwo_donumber.Text);
+            datanya.Add("item_code", txtwo_partcode.Text);
+            datanya.Add("machineName", Environment.MachineName.ToString());
+            datanya.Add("qty", txtwo_qty.Text);
+            datanya.Add("lot_number", txtwo_lotnumber.Text.Trim());
+            datanya.Add("user_id", ASettings.getmyuserid());
+            datanya.Add("print_qty", nudwo_printqty.Value.ToString());
+            btnwo_print.Enabled = false;
+
+            string[] strings = await accessApiRegisterC3WithoutReference(datanya);
+
+            MessageBox.Show(strings[1]);
+
+            if (strings[1].Equals("OK"))
+            {
+                JObject jobject = JObject.Parse(strings[2]);
+                var data = jobject["data"];
+                var RSData = from r in jobject["data"] select r;
+
+                // cetak label
+                foreach (var r in RSData)
+                {
+                    Dictionary<string, string> dataToPrint = new Dictionary<string, string>();
+                    dataToPrint.Add("rackCode", r["LOC"].ToString());
+                    dataToPrint.Add("itemQty", r["quantity"].ToString());
+                    dataToPrint.Add("itemCode", r["ITMCD"].ToString());
+                    dataToPrint.Add("itemLot", txtwo_lotnumber.Text.Trim());
+                    dataToPrint.Add("itemKey", r["code"].ToString());
+                    dataToPrint.Add("itemName", r["SPTNO"].ToString());
+                    dataToPrint.Add("nik", ASettings.getmyuserid());
+                    dataToPrint.Add("user_name", ASettings.getmyuserfname());
+                    dataToPrint.Add("mretrohs", "1");
+
+                    printsmtlabel(dataToPrint);
+                }
+
+                loadDetailPerDataEmergency(datanya);
+
+            }
+
+            txtwo_partcode.Text = String.Empty;
+            txtwo_qty.Text = String.Empty;
+            txtwo_lotnumber.Text = String.Empty;
+            txtwo_partcode.Focus();
+
+            btnwo_print.Enabled = true;
+        }
+
+        private void txtwo_qty_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtwo_qty.Text.Contains("3N2"))
+                {
+                    string[] mthis_ar = txtwo_qty.Text.Split(' ');
+
+                    if (mthis_ar[1].All(char.IsNumber))
+                    {
+                        decimal _txtqty = Convert.ToDecimal(mthis_ar[1]);
+
+                        txtwo_qty.Text = _txtqty.ToString("F0");
+                        txtwo_lotnumber.Text = mthis_ar[2];
+                    }
+
+                    nudwo_printqty.Focus();
+                }
+                else
+                {
+                    txtwo_lotnumber.Focus();
+                }
+            }
+        }
+
+        private void txtwo_lotnumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                if (txtwo_lotnumber.Text.Contains("3N2"))
+                {
+                    string[] mthis_ar = txtwo_lotnumber.Text.Split(' ');
+
+                    txtwo_lotnumber.Text = mthis_ar[1];
+
+                    nudwo_printqty.Focus();
+                }
+                else
+                {
+                    nudwo_printqty.Focus();
+                }
+
+            }
+        }
+
+        private void nudwo_printqty_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                btnwo_print.Focus();
+            }
+        }
+
+        private void txtwo_partcode_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tabControl1_Click(object sender, EventArgs e)
+        {
+            txtwo_donumber.Focus();
+        }
+
+        private void txtwo_donumber_Leave(object sender, EventArgs e)
+        {
+            if (txtwo_donumber.Text.Length == 0)
+            {
+                txtwo_donumber.Focus();
+                MessageBox.Show("DO Number should not be empty");
+            }
+            else
+            {
+                Dictionary<string, string> datanya = new Dictionary<string, string>();
+                datanya.Add("doc", txtwo_donumber.Text.Trim());
+                loadDetailPerDataEmergency(datanya);
+            }
         }
     }
 }
