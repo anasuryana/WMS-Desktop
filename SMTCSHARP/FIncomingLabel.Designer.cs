@@ -32,6 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtQty = new System.Windows.Forms.TextBox();
             this.lblPartCode = new System.Windows.Forms.Label();
@@ -68,7 +69,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtwo_donumber = new System.Windows.Forms.TextBox();
-            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -124,6 +124,15 @@
             this.groupBox3.TabIndex = 90;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Labeling Progress";
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(9, 24);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(314, 30);
+            this.progressBar1.TabIndex = 84;
             // 
             // groupBox2
             // 
@@ -487,6 +496,7 @@
             this.dgvwo.RowHeadersWidth = 51;
             this.dgvwo.Size = new System.Drawing.Size(1228, 343);
             this.dgvwo.TabIndex = 99;
+            this.dgvwo.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvwo_CellClick);
             // 
             // btnwo_print
             // 
@@ -578,15 +588,6 @@
             this.txtwo_donumber.TabIndex = 88;
             this.txtwo_donumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtwo_donumber_KeyPress);
             this.txtwo_donumber.Leave += new System.EventHandler(this.txtwo_donumber_Leave);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(9, 24);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(314, 30);
-            this.progressBar1.TabIndex = 84;
             // 
             // FIncomingLabel
             // 

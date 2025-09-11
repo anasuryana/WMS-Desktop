@@ -99,8 +99,7 @@ namespace SMTCSHARP
             hbt.Width = 100;
             dGV2.Columns.Add(hbt);
 
-
-            dgvwo.ColumnCount = 5;
+            dgvwo.ColumnCount = 7;
             dgvwo.RowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             dgvwo.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
             dgvwo.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
@@ -116,6 +115,10 @@ namespace SMTCSHARP
             dgvwo.Columns[3].DefaultCellStyle.Format = "N0";
             dgvwo.Columns[4].Name = "DO Number";
             dgvwo.Columns[4].Width = 170;
+            dgvwo.Columns[5].Name = "Part Name";
+            dgvwo.Columns[5].Width = 170;
+            dgvwo.Columns[6].Name = "Rack Code";
+            dgvwo.Columns[6].Width = 170;
 
         }
 
@@ -387,6 +390,8 @@ namespace SMTCSHARP
                 row.Cells[2].Value = r["lot_code"];
                 row.Cells[3].Value = Convert.ToDecimal(r["quantity"]);
                 row.Cells[4].Value = r["doc_code"];
+                row.Cells[5].Value = r["SPTNO"];
+                row.Cells[6].Value = r["RACK_CD"];
                 rows.Add(row);
             }
             dgvwo.Rows.AddRange(rows.ToArray());
@@ -945,77 +950,103 @@ namespace SMTCSHARP
 
         private async void btnwo_print_Click(object sender, EventArgs e)
         {
-            if (txtwo_lotnumber.Text.Length == 0)
+            if (sUniqueCode.Length > 0)
             {
-                MessageBox.Show("Lot number should not be empty");
-                return;
-            }
-
-            if (txtwo_donumber.Text.Length == 0)
-            {
-                MessageBox.Show("DO Number should not be empty");
-                return;
-            }
-
-            if (!txtwo_qty.Text.All(char.IsNumber))
-            {
-                MessageBox.Show("Qty to print should not be zero");
-                return;
-            }
-
-            if (txtLotNumber.Text.Contains(" "))
-            {
-                MessageBox.Show("lot number should not contain any space char");
-                return;
-            }
-
-            Dictionary<string, string> datanya = new Dictionary<string, string>();
-            datanya.Add("doc", txtwo_donumber.Text);
-            datanya.Add("item_code", txtwo_partcode.Text);
-            datanya.Add("machineName", Environment.MachineName.ToString());
-            datanya.Add("qty", txtwo_qty.Text);
-            datanya.Add("lot_number", txtwo_lotnumber.Text.Trim());
-            datanya.Add("user_id", ASettings.getmyuserid());
-            datanya.Add("print_qty", nudwo_printqty.Value.ToString());
-            btnwo_print.Enabled = false;
-
-            string[] strings = await accessApiRegisterC3WithoutReference(datanya);
-
-            MessageBox.Show(strings[1]);
-
-            if (strings[1].Equals("OK"))
-            {
-                JObject jobject = JObject.Parse(strings[2]);
-                var data = jobject["data"];
-                var RSData = from r in jobject["data"] select r;
-
-                // cetak label
-                foreach (var r in RSData)
+                DialogResult dialogResult = MessageBox.Show("It will reprint, are you sure ?", "Decide", MessageBoxButtons.YesNo);
+                if (dialogResult != DialogResult.Yes)
                 {
-                    Dictionary<string, string> dataToPrint = new Dictionary<string, string>();
-                    dataToPrint.Add("rackCode", r["LOC"].ToString());
-                    dataToPrint.Add("itemQty", r["quantity"].ToString());
-                    dataToPrint.Add("itemCode", r["ITMCD"].ToString());
-                    dataToPrint.Add("itemLot", txtwo_lotnumber.Text.Trim());
-                    dataToPrint.Add("itemKey", r["code"].ToString());
-                    dataToPrint.Add("itemName", r["SPTNO"].ToString());
-                    dataToPrint.Add("nik", ASettings.getmyuserid());
-                    dataToPrint.Add("user_name", ASettings.getmyuserfname());
-                    dataToPrint.Add("mretrohs", "1");
-
-                    printsmtlabel(dataToPrint);
+                    return;
                 }
 
-                loadDetailPerDataEmergency(datanya);
+                Dictionary<string, string> dataToPrint = new Dictionary<string, string>();
+                dataToPrint.Add("rackCode", sRackCode);
+                dataToPrint.Add("itemQty", sQty);
+                dataToPrint.Add("itemCode", sItemCode);
+                dataToPrint.Add("itemLot", sLotCode);
+                dataToPrint.Add("itemKey", sUniqueCode);
+                dataToPrint.Add("itemName", sItemName);
+                dataToPrint.Add("nik", ASettings.getmyuserid());
+                dataToPrint.Add("user_name", ASettings.getmyuserfname());
+                dataToPrint.Add("mretrohs", "1");
+
+                printsmtlabel(dataToPrint);
+            }
+            else
+            {
+                if (txtwo_lotnumber.Text.Length == 0)
+                {
+                    MessageBox.Show("Lot number should not be empty");
+                    return;
+                }
+
+                if (txtwo_donumber.Text.Length == 0)
+                {
+                    MessageBox.Show("DO Number should not be empty");
+                    return;
+                }
+
+                if (!txtwo_qty.Text.All(char.IsNumber))
+                {
+                    MessageBox.Show("Qty to print should not be zero");
+                    return;
+                }
+
+                if (txtLotNumber.Text.Contains(" "))
+                {
+                    MessageBox.Show("lot number should not contain any space char");
+                    return;
+                }
+
+                Dictionary<string, string> datanya = new Dictionary<string, string>();
+                datanya.Add("doc", txtwo_donumber.Text);
+                datanya.Add("item_code", txtwo_partcode.Text);
+                datanya.Add("machineName", Environment.MachineName.ToString());
+                datanya.Add("qty", txtwo_qty.Text);
+                datanya.Add("lot_number", txtwo_lotnumber.Text.Trim());
+                datanya.Add("user_id", ASettings.getmyuserid());
+                datanya.Add("print_qty", nudwo_printqty.Value.ToString());
+                btnwo_print.Enabled = false;
+
+                string[] strings = await accessApiRegisterC3WithoutReference(datanya);
+
+                MessageBox.Show(strings[1]);
+
+                if (strings[1].Equals("OK"))
+                {
+                    JObject jobject = JObject.Parse(strings[2]);
+                    var data = jobject["data"];
+                    var RSData = from r in jobject["data"] select r;
+
+                    // cetak label
+                    foreach (var r in RSData)
+                    {
+                        Dictionary<string, string> dataToPrint = new Dictionary<string, string>();
+                        dataToPrint.Add("rackCode", r["LOC"].ToString());
+                        dataToPrint.Add("itemQty", r["quantity"].ToString());
+                        dataToPrint.Add("itemCode", r["ITMCD"].ToString());
+                        dataToPrint.Add("itemLot", txtwo_lotnumber.Text.Trim());
+                        dataToPrint.Add("itemKey", r["code"].ToString());
+                        dataToPrint.Add("itemName", r["SPTNO"].ToString());
+                        dataToPrint.Add("nik", ASettings.getmyuserid());
+                        dataToPrint.Add("user_name", ASettings.getmyuserfname());
+                        dataToPrint.Add("mretrohs", "1");
+
+                        printsmtlabel(dataToPrint);
+                    }
+
+                    loadDetailPerDataEmergency(datanya);
+
+                }
+
+                txtwo_partcode.Text = String.Empty;
+                txtwo_qty.Text = String.Empty;
+                txtwo_lotnumber.Text = String.Empty;
+                txtwo_partcode.Focus();
+
+                btnwo_print.Enabled = true;
 
             }
 
-            txtwo_partcode.Text = String.Empty;
-            txtwo_qty.Text = String.Empty;
-            txtwo_lotnumber.Text = String.Empty;
-            txtwo_partcode.Focus();
-
-            btnwo_print.Enabled = true;
         }
 
         private void txtwo_qty_KeyPress(object sender, KeyPressEventArgs e)
@@ -1073,7 +1104,7 @@ namespace SMTCSHARP
 
         private void txtwo_partcode_TextChanged(object sender, EventArgs e)
         {
-
+            sUniqueCode = String.Empty;
         }
 
         private void tabControl1_Click(object sender, EventArgs e)
@@ -1093,6 +1124,21 @@ namespace SMTCSHARP
                 Dictionary<string, string> datanya = new Dictionary<string, string>();
                 datanya.Add("doc", txtwo_donumber.Text.Trim());
                 loadDetailPerDataEmergency(datanya);
+            }
+        }
+
+        private void dgvwo_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow selectedRow = dgvwo.Rows[e.RowIndex];
+                sUniqueCode = selectedRow.Cells[0].Value.ToString();
+                sLotCode = selectedRow.Cells[2].Value.ToString();
+                sItemName = selectedRow.Cells[5].Value.ToString();
+                sRackCode = selectedRow.Cells[6].Value.ToString();
+                sItemCode = selectedRow.Cells[1].Value.ToString();
+
+                sQty = ((int)Convert.ToDouble(selectedRow.Cells[3].Value)).ToString();
             }
         }
     }
