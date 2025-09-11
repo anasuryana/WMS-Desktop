@@ -716,7 +716,14 @@ namespace SMTCSHARP
                 string keyword = txtPartCode.Text.Replace("'", "''");
                 string keyword2 = txtPallet.Text.Replace("'", "''");
                 string keyword3 = cbOutstandingOnly.Checked ? "AND balance_qty>0" : "";
-                bs.Filter = String.Format("part_code LIKE '%{0}%' and pallet LIKE '%{1}%' {2}", keyword, keyword2, keyword3);
+                if (txtPallet.Text.Length == 0)
+                {
+                    bs.Filter = String.Format("part_code LIKE '%{0}%' and pallet like '%{1}%' {2}", keyword, keyword2, keyword3);
+                }
+                else
+                {
+                    bs.Filter = String.Format("part_code LIKE '%{0}%' and pallet = '{1}' {2}", keyword, keyword2, keyword3);
+                }
             }
         }
 
@@ -775,15 +782,11 @@ namespace SMTCSHARP
                     }
                     else
                     {
+                        string[] an1 = txtPartCode.Text.Split(' ');
                         if (isContainSpace)
                         {
-                            string[] an1 = txtPartCode.Text.Split(' ');
-                            nudQty.Value = Convert.ToDecimal(an1[1]);
-                            sSupqty = an1[1];
-
                             int strleng = an1[0].Length - 3;
                             txtPartCode.Text = an1[0].Substring(3, strleng);
-                            txtQty.Text = an1[1];
                         }
                         else
                         {
@@ -792,14 +795,25 @@ namespace SMTCSHARP
                                 int strleng = txtPartCode.Text.Length - 3;
                                 txtPartCode.Text = txtPartCode.Text.Substring(3, strleng);
                             }
-
-                            nudQty.Value = 0;
                         }
 
                         if (dGV.Rows.Count == 1)
                         {
                             DataGridViewCellEventArgs args = new DataGridViewCellEventArgs(0, 0);
                             dGV_CellClick(dGV, args);
+
+                            if (isContainSpace)
+                            {
+                                nudQty.Value = Convert.ToDecimal(an1[1]);
+                                sSupqty = an1[1];
+
+                                int strleng = an1[0].Length - 3;
+                                txtQty.Text = an1[1];
+                            }
+                            else
+                            {
+                                nudQty.Value = 0;
+                            }
 
                             txtQty.Focus();
                         }

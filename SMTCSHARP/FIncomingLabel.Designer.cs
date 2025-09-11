@@ -162,7 +162,7 @@
             this.txtQty.Location = new System.Drawing.Point(5, 111);
             this.txtQty.MaxLength = 50;
             this.txtQty.Name = "txtQty";
-            this.txtQty.Size = new System.Drawing.Size(106, 25);
+            this.txtQty.Size = new System.Drawing.Size(119, 25);
             this.txtQty.TabIndex = 92;
             this.txtQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtQty_KeyPress);
             this.txtQty.Leave += new System.EventHandler(this.txtQty_Leave);
@@ -193,7 +193,7 @@
             // 
             // nudPrintQty
             // 
-            this.nudPrintQty.Location = new System.Drawing.Point(241, 111);
+            this.nudPrintQty.Location = new System.Drawing.Point(272, 111);
             this.nudPrintQty.Maximum = new decimal(new int[] {
             99,
             0,
@@ -220,7 +220,7 @@
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(238, 92);
+            this.label6.Location = new System.Drawing.Point(269, 92);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 18);
             this.label6.TabIndex = 88;
@@ -260,14 +260,14 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 93);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 18);
+            this.label3.Size = new System.Drawing.Size(120, 18);
             this.label3.TabIndex = 85;
-            this.label3.Text = "Part Qty";
+            this.label3.Text = "Part Qty [3N2]";
             // 
             // txtLotNumber
             // 
             this.txtLotNumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtLotNumber.Location = new System.Drawing.Point(117, 111);
+            this.txtLotNumber.Location = new System.Drawing.Point(148, 111);
             this.txtLotNumber.MaxLength = 25;
             this.txtLotNumber.Name = "txtLotNumber";
             this.txtLotNumber.Size = new System.Drawing.Size(106, 25);
@@ -280,7 +280,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(114, 92);
+            this.label2.Location = new System.Drawing.Point(145, 92);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(88, 18);
             this.label2.TabIndex = 83;
@@ -374,9 +374,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(189, 22);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 18);
+            this.label4.Size = new System.Drawing.Size(128, 18);
             this.label4.TabIndex = 85;
-            this.label4.Text = "Part Code";
+            this.label4.Text = "Part Code [3N1]";
             // 
             // lblInfo
             // 
