@@ -414,3 +414,5 @@ FodyWeavers.xsd
 /SMTCSHARP/obj/Debug/SMTCSHARP.csproj.FileListAbsolute.txt
 /SMTCSHARP/obj/Debug/SMTCSHARP.csproj.GenerateResource.Cache
 /SMTCSHARP/obj/Debug/SMTCSHARP.exe.manifest
+/SMTCSHARP/bin/Debug/Newtonsoft.Json.dll
+/SMTCSHARP/bin/Debug/Newtonsoft.Json.xml

@@ -81,10 +81,9 @@ namespace SMTCSHARP
             dGV.Columns[7].DataPropertyName = "rack";
 
 
-            dGV2.ColumnCount = 3;
+            dGV2.ColumnCount = 5;
             dGV2.RowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             dGV2.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
-            dGV2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dGV2.Columns[0].Name = "Unique Code";
             dGV2.Columns[0].Width = 150;
             dGV2.Columns[1].Name = "Lot Number";
@@ -93,6 +92,10 @@ namespace SMTCSHARP
             dGV2.Columns[2].Width = 75;
             dGV2.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dGV2.Columns[2].DefaultCellStyle.Format = "N0";
+            dGV2.Columns[3].Name = "Item Code";
+            dGV2.Columns[3].Visible = false;
+            dGV2.Columns[4].Name = "Rack Code";
+            dGV2.Columns[4].Visible = false;
 
             DataGridViewButtonColumn hbt = new DataGridViewButtonColumn();
             hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -352,7 +355,9 @@ namespace SMTCSHARP
                 row.Cells[0].Value = r["code"];
                 row.Cells[1].Value = r["lot_code"];
                 row.Cells[2].Value = Convert.ToDecimal(r["quantity"]);
-                row.Cells[3].Value = "Delete";
+                row.Cells[3].Value = r["item_code"];
+                row.Cells[4].Value = r["LOC"];
+                row.Cells[5].Value = r["doc_code"].ToString().Equals(txtDONumber.Text) ? "Delete" : "";
                 rows.Add(row);
             }
             dGV2.Rows.AddRange(rows.ToArray());
@@ -666,7 +671,8 @@ namespace SMTCSHARP
                 DataGridViewRow selectedRow = dGV2.Rows[e.RowIndex];
                 sUniqueCode = selectedRow.Cells[0].Value.ToString();
                 sLotCode = selectedRow.Cells[1].Value.ToString();
-
+                sItemCode = selectedRow.Cells[3].Value.ToString();
+                sRackCode = selectedRow.Cells[4].Value.ToString();
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[2].Value)).ToString();
             }
@@ -676,16 +682,19 @@ namespace SMTCSHARP
                 case 0:
 
                     break;
-                case 3:
-                    if (MessageBox.Show("Are you sure want to delete ?", "Decide", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                case 5:
+                    if (dGV2.CurrentCell.Value.ToString().Equals("Delete"))
                     {
-                        Dictionary<string, string> dataToDelete = new Dictionary<string, string>();
-                        dataToDelete.Add("code", sUniqueCode);
+                        if (MessageBox.Show("Are you sure want to delete ?", "Decide", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                        {
+                            Dictionary<string, string> dataToDelete = new Dictionary<string, string>();
+                            dataToDelete.Add("code", sUniqueCode);
 
-                        string[] strings = await accessApiDeleteLabel(dataToDelete);
-                        MessageBox.Show(strings[1]);
+                            string[] strings = await accessApiDeleteLabel(dataToDelete);
+                            MessageBox.Show(strings[1]);
 
-                        reloadAll();
+                            reloadAll();
+                        }
                     }
                     break;
             }

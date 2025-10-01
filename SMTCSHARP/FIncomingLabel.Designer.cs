@@ -582,6 +582,7 @@
             // 
             // txtwo_donumber
             // 
+            this.txtwo_donumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtwo_donumber.Location = new System.Drawing.Point(123, 29);
             this.txtwo_donumber.Name = "txtwo_donumber";
             this.txtwo_donumber.Size = new System.Drawing.Size(230, 25);
