@@ -3,10 +3,8 @@ using IniParser.Model;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +13,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace SMTCSHARP
 {
@@ -30,6 +27,7 @@ namespace SMTCSHARP
         string sLotCode = String.Empty;
         string sItemName = String.Empty;
         BindingSource bs = new BindingSource();
+        BindingSource bsRank = new BindingSource();
         string sSupqty = String.Empty;
 
         public FIncomingLabel()
@@ -218,6 +216,33 @@ namespace SMTCSHARP
             return new string[] { returnCode, message, data };
         }
 
+        private async Task<string[]> accessApiItemRank()
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+
+            using (HttpClient hc = new HttpClient())
+            {
+                string theUrl = String.Format(serverURLEnpoint + "/item/rank-list");
+
+                var response = await hc.GetAsync(theUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    returnCode = "0";
+                    message = "the response is not success yet";
+                }
+            }
+
+            return new string[] { returnCode, message, data };
+        }
+
         private async Task<string[]> accessApiDeleteLabel(Dictionary<string, string> dataInput)
         {
             string message = "";
@@ -373,6 +398,35 @@ namespace SMTCSHARP
             }
         }
 
+        private async void loadRankList()
+        {
+            string[] strings = await accessApiItemRank();
+            if (strings[0].Equals("0"))
+            {
+                MessageBox.Show(strings[1]);
+                return;
+            }
+            JObject jobject = JObject.Parse(strings[2]);
+            var RSData = from r in jobject["data"] select r;
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("group");
+            dataTable.Columns.Add("grade");
+
+            foreach (var r in RSData)
+            {
+                dataTable.Rows.Add(
+                    r["ITMGRP"].ToString(),
+                    r["ITMGRD"].ToString()
+                );
+            }
+
+            bsRank.DataSource = dataTable;
+            cmbRank.DataSource = bsRank;
+            cmbRank.DisplayMember = "grade";
+            cmbRank.ValueMember = "grade";
+        }
+
         private async void loadDetailPerDataEmergency(Dictionary<string, string> dataInput)
         {
             dgvwo.Rows.Clear();
@@ -412,6 +466,9 @@ namespace SMTCSHARP
             serverURLEnpoint = data["SERVER"]["ADDRESS"];
 
             nudQty.Controls[0].Visible = false;
+
+            loadRankList();
+            
         }
 
         private void txtLotNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -736,6 +793,15 @@ namespace SMTCSHARP
             }
         }
 
+        private void filterRankData()
+        {
+            if (bsRank.DataSource != null)
+            {
+                string keyword = txtwo_partcode.Text.Replace("'", "''");
+                bsRank.Filter = String.Format("group = '{0}' ", keyword);
+            }
+        }
+
         private void txtPallet_TextChanged(object sender, EventArgs e)
         {
             filterDGV();
@@ -1022,7 +1088,7 @@ namespace SMTCSHARP
 
                 Dictionary<string, string> datanya = new Dictionary<string, string>();
                 datanya.Add("doc", txtwo_donumber.Text);
-                datanya.Add("item_code", txtwo_partcode.Text);
+                datanya.Add("item_code", cmbRank.Enabled ? cmbRank.SelectedValue.ToString() : txtwo_partcode.Text);
                 datanya.Add("machineName", Environment.MachineName.ToString());
                 datanya.Add("qty", txtwo_qty.Text);
                 datanya.Add("lot_number", txtwo_lotnumber.Text.Trim());
@@ -1128,6 +1194,12 @@ namespace SMTCSHARP
         private void txtwo_partcode_TextChanged(object sender, EventArgs e)
         {
             sUniqueCode = String.Empty;
+
+            string lastTwoChars = txtwo_donumber.Text.Length >= 2 ? txtwo_donumber.Text.Substring(txtwo_donumber.Text.Length - 2) : txtwo_donumber.Text;
+            if (lastTwoChars.Equals("-I"))
+            {
+                filterRankData();
+            }
         }
 
         private void tabControl1_Click(object sender, EventArgs e)
@@ -1148,6 +1220,12 @@ namespace SMTCSHARP
                 datanya.Add("doc", txtwo_donumber.Text.Trim());
                 loadDetailPerDataEmergency(datanya);
             }
+
+            string lastTwoChars = txtwo_donumber.Text.Length >= 2 ? txtwo_donumber.Text.Substring(txtwo_donumber.Text.Length - 2) : txtwo_donumber.Text;
+
+            cmbRank.Enabled = lastTwoChars.Equals("-I");
+
+            filterRankData();
         }
 
         private void dgvwo_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -1163,6 +1241,14 @@ namespace SMTCSHARP
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[3].Value)).ToString();
             }
+        }
+
+        private void cmbRank_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cmbRank.SelectedValue != null)
+            {
+                txtwo_qty.Focus();
+            }            
         }
     }
 }
