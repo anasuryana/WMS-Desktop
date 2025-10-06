@@ -3,10 +3,8 @@ using IniParser.Model;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +13,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Windows.Forms;
-using System.Xml.Linq;
 
 namespace SMTCSHARP
 {
@@ -30,6 +27,7 @@ namespace SMTCSHARP
         string sLotCode = String.Empty;
         string sItemName = String.Empty;
         BindingSource bs = new BindingSource();
+        BindingSource bsRank = new BindingSource();
         string sSupqty = String.Empty;
 
         public FIncomingLabel()
@@ -81,10 +79,9 @@ namespace SMTCSHARP
             dGV.Columns[7].DataPropertyName = "rack";
 
 
-            dGV2.ColumnCount = 3;
+            dGV2.ColumnCount = 5;
             dGV2.RowsDefaultCellStyle.BackColor = Color.WhiteSmoke;
             dGV2.AlternatingRowsDefaultCellStyle.BackColor = Color.GreenYellow;
-            dGV2.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dGV2.Columns[0].Name = "Unique Code";
             dGV2.Columns[0].Width = 150;
             dGV2.Columns[1].Name = "Lot Number";
@@ -93,6 +90,10 @@ namespace SMTCSHARP
             dGV2.Columns[2].Width = 75;
             dGV2.Columns[2].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dGV2.Columns[2].DefaultCellStyle.Format = "N0";
+            dGV2.Columns[3].Name = "Item Code";
+            dGV2.Columns[3].Visible = false;
+            dGV2.Columns[4].Name = "Rack Code";
+            dGV2.Columns[4].Visible = false;
 
             DataGridViewButtonColumn hbt = new DataGridViewButtonColumn();
             hbt.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
@@ -197,6 +198,33 @@ namespace SMTCSHARP
                 string base64 = Convert.ToBase64String(bytes);
 
                 string theUrl = String.Format(serverURLEnpoint + "/receive/document-emergency/{0}", base64);
+
+                var response = await hc.GetAsync(theUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    data = content;
+                    message = "OK";
+                }
+                else
+                {
+                    returnCode = "0";
+                    message = "the response is not success yet";
+                }
+            }
+
+            return new string[] { returnCode, message, data };
+        }
+
+        private async Task<string[]> accessApiItemRank()
+        {
+            string message = "";
+            string data = "";
+            string returnCode = "1";
+
+            using (HttpClient hc = new HttpClient())
+            {
+                string theUrl = String.Format(serverURLEnpoint + "/item/rank-list");
 
                 var response = await hc.GetAsync(theUrl);
                 if (response.IsSuccessStatusCode)
@@ -352,7 +380,9 @@ namespace SMTCSHARP
                 row.Cells[0].Value = r["code"];
                 row.Cells[1].Value = r["lot_code"];
                 row.Cells[2].Value = Convert.ToDecimal(r["quantity"]);
-                row.Cells[3].Value = "Delete";
+                row.Cells[3].Value = r["item_code"];
+                row.Cells[4].Value = r["LOC"];
+                row.Cells[5].Value = r["doc_code"].ToString().Equals(txtDONumber.Text) ? "Delete" : "";
                 rows.Add(row);
             }
             dGV2.Rows.AddRange(rows.ToArray());
@@ -366,6 +396,35 @@ namespace SMTCSHARP
                     nudQty.Maximum = Convert.ToDecimal(r["total_bal_qty"]);
                 }
             }
+        }
+
+        private async void loadRankList()
+        {
+            string[] strings = await accessApiItemRank();
+            if (strings[0].Equals("0"))
+            {
+                MessageBox.Show(strings[1]);
+                return;
+            }
+            JObject jobject = JObject.Parse(strings[2]);
+            var RSData = from r in jobject["data"] select r;
+
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("group");
+            dataTable.Columns.Add("grade");
+
+            foreach (var r in RSData)
+            {
+                dataTable.Rows.Add(
+                    r["ITMGRP"].ToString(),
+                    r["ITMGRD"].ToString()
+                );
+            }
+
+            bsRank.DataSource = dataTable;
+            cmbRank.DataSource = bsRank;
+            cmbRank.DisplayMember = "grade";
+            cmbRank.ValueMember = "grade";
         }
 
         private async void loadDetailPerDataEmergency(Dictionary<string, string> dataInput)
@@ -407,6 +466,9 @@ namespace SMTCSHARP
             serverURLEnpoint = data["SERVER"]["ADDRESS"];
 
             nudQty.Controls[0].Visible = false;
+
+            loadRankList();
+            
         }
 
         private void txtLotNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -666,7 +728,8 @@ namespace SMTCSHARP
                 DataGridViewRow selectedRow = dGV2.Rows[e.RowIndex];
                 sUniqueCode = selectedRow.Cells[0].Value.ToString();
                 sLotCode = selectedRow.Cells[1].Value.ToString();
-
+                sItemCode = selectedRow.Cells[3].Value.ToString();
+                sRackCode = selectedRow.Cells[4].Value.ToString();
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[2].Value)).ToString();
             }
@@ -676,16 +739,19 @@ namespace SMTCSHARP
                 case 0:
 
                     break;
-                case 3:
-                    if (MessageBox.Show("Are you sure want to delete ?", "Decide", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                case 5:
+                    if (dGV2.CurrentCell.Value.ToString().Equals("Delete"))
                     {
-                        Dictionary<string, string> dataToDelete = new Dictionary<string, string>();
-                        dataToDelete.Add("code", sUniqueCode);
+                        if (MessageBox.Show("Are you sure want to delete ?", "Decide", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                        {
+                            Dictionary<string, string> dataToDelete = new Dictionary<string, string>();
+                            dataToDelete.Add("code", sUniqueCode);
 
-                        string[] strings = await accessApiDeleteLabel(dataToDelete);
-                        MessageBox.Show(strings[1]);
+                            string[] strings = await accessApiDeleteLabel(dataToDelete);
+                            MessageBox.Show(strings[1]);
 
-                        reloadAll();
+                            reloadAll();
+                        }
                     }
                     break;
             }
@@ -716,7 +782,23 @@ namespace SMTCSHARP
                 string keyword = txtPartCode.Text.Replace("'", "''");
                 string keyword2 = txtPallet.Text.Replace("'", "''");
                 string keyword3 = cbOutstandingOnly.Checked ? "AND balance_qty>0" : "";
-                bs.Filter = String.Format("part_code LIKE '%{0}%' and pallet LIKE '%{1}%' {2}", keyword, keyword2, keyword3);
+                if (txtPallet.Text.Length == 0)
+                {
+                    bs.Filter = String.Format("part_code LIKE '%{0}%' and pallet like '%{1}%' {2}", keyword, keyword2, keyword3);
+                }
+                else
+                {
+                    bs.Filter = String.Format("part_code LIKE '%{0}%' and pallet = '{1}' {2}", keyword, keyword2, keyword3);
+                }
+            }
+        }
+
+        private void filterRankData()
+        {
+            if (bsRank.DataSource != null)
+            {
+                string keyword = txtwo_partcode.Text.Replace("'", "''");
+                bsRank.Filter = String.Format("group = '{0}' ", keyword);
             }
         }
 
@@ -775,15 +857,11 @@ namespace SMTCSHARP
                     }
                     else
                     {
+                        string[] an1 = txtPartCode.Text.Split(' ');
                         if (isContainSpace)
                         {
-                            string[] an1 = txtPartCode.Text.Split(' ');
-                            nudQty.Value = Convert.ToDecimal(an1[1]);
-                            sSupqty = an1[1];
-
                             int strleng = an1[0].Length - 3;
                             txtPartCode.Text = an1[0].Substring(3, strleng);
-                            txtQty.Text = an1[1];
                         }
                         else
                         {
@@ -792,14 +870,25 @@ namespace SMTCSHARP
                                 int strleng = txtPartCode.Text.Length - 3;
                                 txtPartCode.Text = txtPartCode.Text.Substring(3, strleng);
                             }
-
-                            nudQty.Value = 0;
                         }
 
                         if (dGV.Rows.Count == 1)
                         {
                             DataGridViewCellEventArgs args = new DataGridViewCellEventArgs(0, 0);
                             dGV_CellClick(dGV, args);
+
+                            if (isContainSpace)
+                            {
+                                nudQty.Value = Convert.ToDecimal(an1[1]);
+                                sSupqty = an1[1];
+
+                                int strleng = an1[0].Length - 3;
+                                txtQty.Text = an1[1];
+                            }
+                            else
+                            {
+                                nudQty.Value = 0;
+                            }
 
                             txtQty.Focus();
                         }
@@ -999,7 +1088,7 @@ namespace SMTCSHARP
 
                 Dictionary<string, string> datanya = new Dictionary<string, string>();
                 datanya.Add("doc", txtwo_donumber.Text);
-                datanya.Add("item_code", txtwo_partcode.Text);
+                datanya.Add("item_code", cmbRank.Enabled ? cmbRank.SelectedValue.ToString() : txtwo_partcode.Text);
                 datanya.Add("machineName", Environment.MachineName.ToString());
                 datanya.Add("qty", txtwo_qty.Text);
                 datanya.Add("lot_number", txtwo_lotnumber.Text.Trim());
@@ -1105,6 +1194,12 @@ namespace SMTCSHARP
         private void txtwo_partcode_TextChanged(object sender, EventArgs e)
         {
             sUniqueCode = String.Empty;
+
+            string lastTwoChars = txtwo_donumber.Text.Length >= 2 ? txtwo_donumber.Text.Substring(txtwo_donumber.Text.Length - 2) : txtwo_donumber.Text;
+            if (lastTwoChars.Equals("-I"))
+            {
+                filterRankData();
+            }
         }
 
         private void tabControl1_Click(object sender, EventArgs e)
@@ -1125,6 +1220,12 @@ namespace SMTCSHARP
                 datanya.Add("doc", txtwo_donumber.Text.Trim());
                 loadDetailPerDataEmergency(datanya);
             }
+
+            string lastTwoChars = txtwo_donumber.Text.Length >= 2 ? txtwo_donumber.Text.Substring(txtwo_donumber.Text.Length - 2) : txtwo_donumber.Text;
+
+            cmbRank.Enabled = lastTwoChars.Equals("-I");
+
+            filterRankData();
         }
 
         private void dgvwo_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -1140,6 +1241,14 @@ namespace SMTCSHARP
 
                 sQty = ((int)Convert.ToDouble(selectedRow.Cells[3].Value)).ToString();
             }
+        }
+
+        private void cmbRank_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(cmbRank.SelectedValue != null)
+            {
+                txtwo_qty.Focus();
+            }            
         }
     }
 }

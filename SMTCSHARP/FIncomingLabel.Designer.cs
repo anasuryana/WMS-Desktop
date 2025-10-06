@@ -32,7 +32,6 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtQty = new System.Windows.Forms.TextBox();
             this.lblPartCode = new System.Windows.Forms.Label();
@@ -69,6 +68,8 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtwo_donumber = new System.Windows.Forms.TextBox();
+            this.cmbRank = new System.Windows.Forms.ComboBox();
+            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -125,15 +126,6 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Labeling Progress";
             // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(9, 24);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(314, 30);
-            this.progressBar1.TabIndex = 84;
-            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -151,7 +143,7 @@
             this.groupBox2.Controls.Add(this.dGV2);
             this.groupBox2.Location = new System.Drawing.Point(661, 9);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(584, 487);
+            this.groupBox2.Size = new System.Drawing.Size(584, 422);
             this.groupBox2.TabIndex = 89;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Detail";
@@ -162,7 +154,7 @@
             this.txtQty.Location = new System.Drawing.Point(5, 111);
             this.txtQty.MaxLength = 50;
             this.txtQty.Name = "txtQty";
-            this.txtQty.Size = new System.Drawing.Size(106, 25);
+            this.txtQty.Size = new System.Drawing.Size(119, 25);
             this.txtQty.TabIndex = 92;
             this.txtQty.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtQty_KeyPress);
             this.txtQty.Leave += new System.EventHandler(this.txtQty_Leave);
@@ -193,7 +185,7 @@
             // 
             // nudPrintQty
             // 
-            this.nudPrintQty.Location = new System.Drawing.Point(241, 111);
+            this.nudPrintQty.Location = new System.Drawing.Point(272, 111);
             this.nudPrintQty.Maximum = new decimal(new int[] {
             99,
             0,
@@ -220,7 +212,7 @@
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(238, 92);
+            this.label6.Location = new System.Drawing.Point(269, 92);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(80, 18);
             this.label6.TabIndex = 88;
@@ -260,14 +252,14 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(4, 93);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(72, 18);
+            this.label3.Size = new System.Drawing.Size(120, 18);
             this.label3.TabIndex = 85;
-            this.label3.Text = "Part Qty";
+            this.label3.Text = "Part Qty [3N2]";
             // 
             // txtLotNumber
             // 
             this.txtLotNumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtLotNumber.Location = new System.Drawing.Point(117, 111);
+            this.txtLotNumber.Location = new System.Drawing.Point(148, 111);
             this.txtLotNumber.MaxLength = 25;
             this.txtLotNumber.Name = "txtLotNumber";
             this.txtLotNumber.Size = new System.Drawing.Size(106, 25);
@@ -280,7 +272,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(114, 92);
+            this.label2.Location = new System.Drawing.Point(145, 92);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(88, 18);
             this.label2.TabIndex = 83;
@@ -297,7 +289,7 @@
             this.dGV2.Name = "dGV2";
             this.dGV2.ReadOnly = true;
             this.dGV2.RowHeadersWidth = 51;
-            this.dGV2.Size = new System.Drawing.Size(573, 337);
+            this.dGV2.Size = new System.Drawing.Size(573, 272);
             this.dGV2.TabIndex = 82;
             this.dGV2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV2_CellClick);
             // 
@@ -324,7 +316,7 @@
             this.groupBox1.Controls.Add(this.dGV);
             this.groupBox1.Location = new System.Drawing.Point(10, 81);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(645, 415);
+            this.groupBox1.Size = new System.Drawing.Size(645, 350);
             this.groupBox1.TabIndex = 88;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Resume";
@@ -374,9 +366,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(189, 22);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(80, 18);
+            this.label4.Size = new System.Drawing.Size(128, 18);
             this.label4.TabIndex = 85;
-            this.label4.Text = "Part Code";
+            this.label4.Text = "Part Code [3N1]";
             // 
             // lblInfo
             // 
@@ -402,7 +394,7 @@
             this.dGV.Name = "dGV";
             this.dGV.ReadOnly = true;
             this.dGV.RowHeadersWidth = 51;
-            this.dGV.Size = new System.Drawing.Size(633, 337);
+            this.dGV.Size = new System.Drawing.Size(633, 272);
             this.dGV.TabIndex = 81;
             this.dGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellClick);
             this.dGV.SelectionChanged += new System.EventHandler(this.dGV_SelectionChanged);
@@ -427,6 +419,7 @@
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.cmbRank);
             this.tabPage2.Controls.Add(this.nudwo_printqty);
             this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.dgvwo);
@@ -582,12 +575,33 @@
             // 
             // txtwo_donumber
             // 
+            this.txtwo_donumber.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.txtwo_donumber.Location = new System.Drawing.Point(123, 29);
             this.txtwo_donumber.Name = "txtwo_donumber";
             this.txtwo_donumber.Size = new System.Drawing.Size(230, 25);
             this.txtwo_donumber.TabIndex = 88;
             this.txtwo_donumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtwo_donumber_KeyPress);
             this.txtwo_donumber.Leave += new System.EventHandler(this.txtwo_donumber_Leave);
+            // 
+            // cmbRank
+            // 
+            this.cmbRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRank.Enabled = false;
+            this.cmbRank.FormattingEnabled = true;
+            this.cmbRank.Location = new System.Drawing.Point(295, 87);
+            this.cmbRank.Name = "cmbRank";
+            this.cmbRank.Size = new System.Drawing.Size(190, 26);
+            this.cmbRank.TabIndex = 102;
+            this.cmbRank.SelectedIndexChanged += new System.EventHandler(this.cmbRank_SelectedIndexChanged);
+            // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(9, 24);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(314, 30);
+            this.progressBar1.TabIndex = 84;
             // 
             // FIncomingLabel
             // 
@@ -662,5 +676,6 @@
         private System.Windows.Forms.DataGridView dgvwo;
         private System.Windows.Forms.NumericUpDown nudwo_printqty;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.ComboBox cmbRank;
     }
 }
