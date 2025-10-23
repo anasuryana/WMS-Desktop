@@ -32,6 +32,7 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtQty = new System.Windows.Forms.TextBox();
             this.lblPartCode = new System.Windows.Forms.Label();
@@ -46,6 +47,7 @@
             this.dGV2 = new System.Windows.Forms.DataGridView();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnTriggerModalPNM = new System.Windows.Forms.Button();
             this.cbOutstandingOnly = new System.Windows.Forms.CheckBox();
             this.txtPallet = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -56,6 +58,7 @@
             this.btnFindpsn = new System.Windows.Forms.Button();
             this.txtDONumber = new System.Windows.Forms.TextBox();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.cmbRank = new System.Windows.Forms.ComboBox();
             this.nudwo_printqty = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.dgvwo = new System.Windows.Forms.DataGridView();
@@ -68,8 +71,6 @@
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtwo_donumber = new System.Windows.Forms.TextBox();
-            this.cmbRank = new System.Windows.Forms.ComboBox();
-            this.progressBar1 = new SMTCSHARP.ProgressBarWithText();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -126,6 +127,15 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Labeling Progress";
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.progressBar1.Location = new System.Drawing.Point(9, 24);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(314, 30);
+            this.progressBar1.TabIndex = 84;
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -143,7 +153,7 @@
             this.groupBox2.Controls.Add(this.dGV2);
             this.groupBox2.Location = new System.Drawing.Point(661, 9);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(584, 422);
+            this.groupBox2.Size = new System.Drawing.Size(584, 512);
             this.groupBox2.TabIndex = 89;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Detail";
@@ -289,7 +299,7 @@
             this.dGV2.Name = "dGV2";
             this.dGV2.ReadOnly = true;
             this.dGV2.RowHeadersWidth = 51;
-            this.dGV2.Size = new System.Drawing.Size(573, 272);
+            this.dGV2.Size = new System.Drawing.Size(573, 362);
             this.dGV2.TabIndex = 82;
             this.dGV2.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV2_CellClick);
             // 
@@ -307,6 +317,7 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.btnTriggerModalPNM);
             this.groupBox1.Controls.Add(this.cbOutstandingOnly);
             this.groupBox1.Controls.Add(this.txtPallet);
             this.groupBox1.Controls.Add(this.label5);
@@ -316,15 +327,25 @@
             this.groupBox1.Controls.Add(this.dGV);
             this.groupBox1.Location = new System.Drawing.Point(10, 81);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(645, 350);
+            this.groupBox1.Size = new System.Drawing.Size(645, 440);
             this.groupBox1.TabIndex = 88;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Resume";
             // 
+            // btnTriggerModalPNM
+            // 
+            this.btnTriggerModalPNM.Image = ((System.Drawing.Image)(resources.GetObject("btnTriggerModalPNM.Image")));
+            this.btnTriggerModalPNM.Location = new System.Drawing.Point(363, 41);
+            this.btnTriggerModalPNM.Name = "btnTriggerModalPNM";
+            this.btnTriggerModalPNM.Size = new System.Drawing.Size(33, 27);
+            this.btnTriggerModalPNM.TabIndex = 90;
+            this.btnTriggerModalPNM.UseVisualStyleBackColor = true;
+            this.btnTriggerModalPNM.Click += new System.EventHandler(this.btnTriggerModalPNM_Click);
+            // 
             // cbOutstandingOnly
             // 
             this.cbOutstandingOnly.AutoSize = true;
-            this.cbOutstandingOnly.Location = new System.Drawing.Point(373, 43);
+            this.cbOutstandingOnly.Location = new System.Drawing.Point(449, 43);
             this.cbOutstandingOnly.Name = "cbOutstandingOnly";
             this.cbOutstandingOnly.Size = new System.Drawing.Size(155, 22);
             this.cbOutstandingOnly.TabIndex = 89;
@@ -394,7 +415,7 @@
             this.dGV.Name = "dGV";
             this.dGV.ReadOnly = true;
             this.dGV.RowHeadersWidth = 51;
-            this.dGV.Size = new System.Drawing.Size(633, 272);
+            this.dGV.Size = new System.Drawing.Size(633, 362);
             this.dGV.TabIndex = 81;
             this.dGV.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dGV_CellClick);
             this.dGV.SelectionChanged += new System.EventHandler(this.dGV_SelectionChanged);
@@ -439,6 +460,17 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Without Reference";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // cmbRank
+            // 
+            this.cmbRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRank.Enabled = false;
+            this.cmbRank.FormattingEnabled = true;
+            this.cmbRank.Location = new System.Drawing.Point(295, 87);
+            this.cmbRank.Name = "cmbRank";
+            this.cmbRank.Size = new System.Drawing.Size(190, 26);
+            this.cmbRank.TabIndex = 102;
+            this.cmbRank.SelectedIndexChanged += new System.EventHandler(this.cmbRank_SelectedIndexChanged);
             // 
             // nudwo_printqty
             // 
@@ -583,26 +615,6 @@
             this.txtwo_donumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtwo_donumber_KeyPress);
             this.txtwo_donumber.Leave += new System.EventHandler(this.txtwo_donumber_Leave);
             // 
-            // cmbRank
-            // 
-            this.cmbRank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbRank.Enabled = false;
-            this.cmbRank.FormattingEnabled = true;
-            this.cmbRank.Location = new System.Drawing.Point(295, 87);
-            this.cmbRank.Name = "cmbRank";
-            this.cmbRank.Size = new System.Drawing.Size(190, 26);
-            this.cmbRank.TabIndex = 102;
-            this.cmbRank.SelectedIndexChanged += new System.EventHandler(this.cmbRank_SelectedIndexChanged);
-            // 
-            // progressBar1
-            // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(9, 24);
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(314, 30);
-            this.progressBar1.TabIndex = 84;
-            // 
             // FIncomingLabel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 18F);
@@ -677,5 +689,6 @@
         private System.Windows.Forms.NumericUpDown nudwo_printqty;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ComboBox cmbRank;
+        private System.Windows.Forms.Button btnTriggerModalPNM;
     }
 }

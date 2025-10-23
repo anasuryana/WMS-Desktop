@@ -273,6 +273,12 @@
     <Compile Include="FKitting.Designer.cs">
       <DependentUpon>FKitting.cs</DependentUpon>
     </Compile>
+    <Compile Include="FP_FindItemByName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FP_FindItemByName.Designer.cs">
+      <DependentUpon>FP_FindItemByName.cs</DependentUpon>
+    </Compile>
     <Compile Include="FP_IncomingDocument.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -360,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FKitting.resx">
       <DependentUpon>FKitting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FP_FindItemByName.resx">
+      <DependentUpon>FP_FindItemByName.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FP_IncomingDocument.resx">
       <DependentUpon>FP_IncomingDocument.cs</DependentUpon>

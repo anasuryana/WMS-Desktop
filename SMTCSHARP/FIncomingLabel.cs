@@ -468,7 +468,7 @@ namespace SMTCSHARP
             nudQty.Controls[0].Visible = false;
 
             loadRankList();
-            
+
         }
 
         private void txtLotNumber_KeyPress(object sender, KeyPressEventArgs e)
@@ -1245,10 +1245,22 @@ namespace SMTCSHARP
 
         private void cmbRank_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(cmbRank.SelectedValue != null)
+            if (cmbRank.SelectedValue != null)
             {
                 txtwo_qty.Focus();
-            }            
+            }
+        }
+
+        private void btnTriggerModalPNM_Click(object sender, EventArgs e)
+        {
+            using (var pf = new FP_FindItemByName(new string[] {txtDONumber.Text}))
+            {
+                var res = pf.ShowDialog();
+                if (res == DialogResult.OK)
+                {
+                    txtPartCode.Text = pf.ReturnValue1;
+                }
+            }
         }
     }
 }
